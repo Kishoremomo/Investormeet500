@@ -1,0 +1,236 @@
+@import "tailwindcss";
+
+:root {
+  --canvas: #fafaf8;
+  --surface: #ffffff;
+  --surface-subtle: #f3f1ec;
+  --surface-cool: #f8fafc;
+  --obsidian: #0c121d;
+  --obsidian-elevated: #131c2b;
+  --navy-deep: #091326;
+  --navy-royal: #172554;
+  --royal-blue: #1d4ed8;
+  --indigo: #4338ca;
+  --violet: #6d28d9;
+  --teal: #0d9488;
+  --teal-bright: #14b8a6;
+  --ink: #0f172a;
+  --ink-secondary: #334155;
+  --ink-muted: #526075;
+  --border-hairline: #e4dfd5;
+  --border-strong: #cfc8b8;
+
+  --bronze: #c49a45;
+  --bronze-hover: #b38934;
+  --bronze-ink: #8a5d14;
+  --bronze-on-dark: #e6c67e;
+
+  --on-dark: #f8f7f3;
+  --on-dark-muted: #cbd5e1;
+  --on-dark-dim: #94a3b8;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", Menlo, monospace;
+
+  /* Backward compatibility aliases */
+  --night: #0c121d;
+  --near-black: #090e17;
+  --surface-dark: #131c2b;
+  --gold: #c49a45;
+  --gold-light: #e6c67e;
+  --gold-ink: #8a5d14;
+  --paper: #fafaf8;
+  --paper-border: #e4dfd5;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  .font-display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+
+  .font-mono,
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 2px;
+  }
+}
+
+/* Primary Action Button — Crisp Matte Institutional Bronze */
+.btn-gold {
+  background-color: #c49a45;
+  color: #0b1019;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.18s ease,
+    box-shadow 0.22s ease;
+}
+
+.btn-gold:hover {
+  background-color: #d4aa53;
+  box-shadow: 0 8px 20px -8px rgba(196, 154, 69, 0.48);
+}
+
+.btn-gold:active {
+  transform: translateY(1px);
+}
+
+/* Primary Action Button on Light Ground */
+.btn-obsidian {
+  background-color: #091326;
+  color: #f8f7f3;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.18s ease,
+    box-shadow 0.22s ease;
+}
+
+.btn-obsidian:hover {
+  background-color: #172554;
+  box-shadow: 0 8px 22px -10px rgba(23, 37, 84, 0.48);
+}
+
+.btn-obsidian:active {
+  transform: translateY(1px);
+}
+
+/* Subtle Architectural Grid Pattern (no stock photography) */
+.architectural-grid {
+  background-image: linear-gradient(to right, rgba(226, 194, 125, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 194, 125, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.architectural-grid-light {
+  background-image: linear-gradient(to right, rgba(29, 78, 216, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(29, 78, 216, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Cursor-tracked Interactive Card Spotlight */
+.interactive-card {
+  position: relative;
+  --mx: 50%;
+  --my: 50%;
+  --spot-opacity: 0;
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease,
+    box-shadow 0.24s ease,
+    background-color 0.2s ease;
+  will-change: transform;
+}
+
+.interactive-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--spot-opacity);
+  transition: opacity 0.24s ease;
+  background: radial-gradient(
+    420px circle at var(--mx) var(--my),
+    rgba(29, 78, 216, 0.08),
+    rgba(196, 154, 69, 0.06) 35%,
+    transparent 65%
+  );
+}
+
+.interactive-card-dark::after {
+  background: radial-gradient(
+    440px circle at var(--mx) var(--my),
+    rgba(230, 198, 126, 0.14),
+    rgba(59, 130, 246, 0.1) 38%,
+    transparent 68%
+  );
+}
+
+.interactive-card[role="button"]:active,
+button.interactive-card:active {
+  transform: scale(0.988) !important;
+}
+
+.card-elevated {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease,
+    box-shadow 0.22s ease;
+}
+
+.card-elevated:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -14px rgba(9, 19, 38, 0.14);
+}
+
+.card-elevated-dark {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease,
+    box-shadow 0.22s ease;
+}
+
+.card-elevated-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.5);
+}
+
+.portrait-ring {
+  box-shadow: 0 0 0 1.5px rgba(196, 154, 69, 0.55), 0 6px 16px -6px rgba(12, 18, 29, 0.25);
+}
+
+.interactive-media {
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+  will-change: transform;
+}
+
+.group:hover .interactive-media,
+.group:focus-visible .interactive-media,
+.interactive-card:hover .interactive-media {
+  transform: scale(1.045);
+}
+
+.hero-image-enhanced {
+  filter: contrast(1.06) brightness(1.04) saturate(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-card,
+  .card-elevated:hover,
+  .card-elevated-dark:hover,
+  .btn-gold:active,
+  .btn-obsidian:active,
+  .interactive-card[role="button"]:active,
+  button.interactive-card:active {
+    transform: none !important;
+  }
+  .interactive-card::after {
+    display: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

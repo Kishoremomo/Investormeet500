@@ -1,0 +1,8 @@
+{
+  "name": "Investor Meet 500",
+  "description": "Capital. Connections. Lasting Impact. A premier platform connecting entrepreneurs, investors, banks, and corporates in Chennai on 20 February 2027.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
