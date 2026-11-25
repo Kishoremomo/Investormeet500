@@ -11,6 +11,35 @@ import {
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
+function useReachedViewport<T extends HTMLElement>(ref: React.RefObject<T | null>) {
+  const inView = useInView(ref, { once: true, amount: 'some' });
+  const [reached, setReached] = useState(false);
+
+  useEffect(() => {
+    if (inView) {
+      setReached(true);
+      return;
+    }
+    const checkPosition = () => {
+      const el = ref.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 1.08) {
+        setReached(true);
+      }
+    };
+    checkPosition();
+    window.addEventListener('scroll', checkPosition, { passive: true });
+    window.addEventListener('resize', checkPosition, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', checkPosition);
+      window.removeEventListener('resize', checkPosition);
+    };
+  }, [inView, ref]);
+
+  return reached;
+}
+
 export function ScrollReveal({
   children,
   className = '',
@@ -24,7 +53,10 @@ export function ScrollReveal({
   y?: number;
   id?: string;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const visible = useReachedViewport(ref);
+
   if (reduced) {
     return (
       <div id={id} className={className}>
@@ -35,11 +67,11 @@ export function ScrollReveal({
 
   return (
     <motion.div
+      ref={ref}
       id={id}
       initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.12 }}
-      transition={{ duration: 0.44, delay, ease: EASE_OUT_EXPO }}
+      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration: 0.4, delay, ease: EASE_OUT_EXPO }}
       className={className}
     >
       {children}
@@ -86,16 +118,19 @@ export function StaggerGrid({
   className?: string;
   stagger?: number;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const visible = useReachedViewport(ref);
+
   if (reduced) {
     return <div className={className}>{children}</div>;
   }
 
   return (
     <motion.div
+      ref={ref}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.08 }}
+      animate={visible ? 'visible' : 'hidden'}
       variants={{
         hidden: {},
         visible: {

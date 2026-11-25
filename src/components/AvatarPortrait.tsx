@@ -6,15 +6,16 @@ interface AvatarPortraitProps {
   src?: string | null;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   theme?: 'light' | 'dark';
+  shape?: 'rounded' | 'circle';
   className?: string;
 }
 
 const SIZE_CLASSES: Record<NonNullable<AvatarPortraitProps['size']>, string> = {
-  xs: 'w-8 h-8 text-[11px]',
-  sm: 'w-10 h-10 text-xs',
-  md: 'w-14 h-14 text-base',
-  lg: 'w-20 h-20 text-xl',
-  xl: 'w-24 h-24 text-2xl',
+  xs: 'w-9 h-9 text-xs',
+  sm: 'w-11 h-11 text-sm',
+  md: 'w-20 h-20 text-xl',
+  lg: 'w-24 h-24 text-2xl',
+  xl: 'w-28 h-28 text-3xl',
 };
 
 export function AvatarPortrait({
@@ -22,14 +23,21 @@ export function AvatarPortrait({
   src,
   size = 'md',
   theme = 'light',
+  shape = 'rounded',
   className = '',
 }: AvatarPortraitProps) {
   const sizeCls = SIZE_CLASSES[size];
+  const radiusCls =
+    shape === 'circle'
+      ? 'rounded-full'
+      : size === 'xs' || size === 'sm'
+      ? 'rounded-xl'
+      : 'rounded-2xl';
 
   if (src) {
     return (
       <div
-        className={`${sizeCls} rounded-full overflow-hidden shrink-0 portrait-ring bg-[#071522] ${className}`}
+        className={`${sizeCls} ${radiusCls} overflow-hidden shrink-0 portrait-ring bg-[#091326] shadow-sm ring-1 ring-[#c49a45]/35 ${className}`}
       >
         <img
           src={src}
@@ -44,15 +52,16 @@ export function AvatarPortrait({
   const initials = getInitials(name);
   const bgCls =
     theme === 'dark'
-      ? 'bg-[#0f2342] text-[#ebd29a] border border-[#d9b66f]/45'
-      : 'bg-[#071522] text-[#ebd29a] border border-[#d9b66f]/40';
+      ? 'bg-gradient-to-br from-[#0f2342] via-[#172554] to-[#091326] text-[#e6c67e] border border-[#c49a45]/45'
+      : 'bg-gradient-to-br from-[#091326] via-[#172554] to-[#1e3a8a] text-[#e6c67e] border border-[#c49a45]/40';
 
   return (
     <div
       aria-hidden="true"
-      className={`${sizeCls} ${bgCls} rounded-full shrink-0 flex items-center justify-center font-display font-bold tracking-wider select-none ${className}`}
+      className={`${sizeCls} ${radiusCls} ${bgCls} shrink-0 flex items-center justify-center font-display font-bold tracking-wider select-none shadow-sm ${className}`}
     >
       {initials}
     </div>
   );
 }
+

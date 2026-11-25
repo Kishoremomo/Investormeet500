@@ -72,8 +72,56 @@ export interface InquiryRecord {
   status: 'New' | 'Reviewed';
 }
 
+export interface NotificationLogEntry {
+  id: string;
+  recipient: string;
+  eventType: 'Registration Submitted' | 'Category Registration' | 'Consultation / Inquiry';
+  referenceId: string;
+  applicantName: string;
+  companyOrSubject: string;
+  trackOrCategory: string;
+  summary: string;
+  deliveryChannel: 'Notification Outbox' | 'Webhook Relay';
+  status: 'Logged (SMTP relay required for email delivery)' | 'Dispatched via Webhook';
+  createdAt: string;
+}
+
+export function createNotificationEntry(params: {
+  id: string;
+  eventType: NotificationLogEntry['eventType'];
+  referenceId: string;
+  applicantName: string;
+  companyOrSubject: string;
+  trackOrCategory: string;
+  summary: string;
+  createdAt: string;
+  dispatchedViaWebhook?: boolean;
+}): NotificationLogEntry {
+  return {
+    id: params.id,
+    recipient: ORGANISER_NOTIFICATION_EMAIL,
+    eventType: params.eventType,
+    referenceId: params.referenceId,
+    applicantName: params.applicantName,
+    companyOrSubject: params.companyOrSubject,
+    trackOrCategory: params.trackOrCategory,
+    summary: params.summary,
+    deliveryChannel: params.dispatchedViaWebhook ? 'Webhook Relay' : 'Notification Outbox',
+    status: params.dispatchedViaWebhook
+      ? 'Dispatched via Webhook'
+      : 'Logged (SMTP relay required for email delivery)',
+    createdAt: params.createdAt,
+  };
+}
+
 export const EVENT_DATE_ISO = '2027-02-20T08:00:00+05:30';
 export const REGISTRATION_DEADLINE_TEXT = '1 February 2027';
+export const REGISTRATION_CUTOFF_DATE_CODE = '01-02-2027';
+export const EVENT_DATE_CODE = '20-02-2027';
+export const ORGANISER_NOTIFICATION_EMAIL = 'sevenidatamanager@gmail.com';
+export const REGISTRATION_STRATEGY = 'Available slots only';
+export const REFERENCE_COMPLETED_COUNT = 100;
+export const REFERENCE_PENDING_COUNT = 400;
 
 export const PRIMARY_TRACKS: InvestmentTrack[] = [
   'Startups',
@@ -762,3 +810,86 @@ export function computeRegistrationTrend(
     };
   });
 }
+
+export interface StatusStackedRow {
+  key: string;
+  label: string;
+  count: number;
+  target: number;
+  pctOfTarget: number;
+  approved: number;
+  underReview: number;
+  pending: number;
+  rejected: number;
+  color: string;
+}
+
+export function computeTrackStatusStackedRows(
+  registrations: RegistrationRecord[],
+  targets: RegistrationTargets
+): StatusStackedRow[] {
+  return ALL_REGISTRATION_CATEGORIES.map((category) => {
+    const matching = registrations.filter(
+      (r) => normalizeTrackToAdminCategory(r.track) === category
+    );
+    let approved = 0;
+    let underReview = 0;
+    let pending = 0;
+    let rejected = 0;
+    for (const r of matching) {
+      if (r.validationStatus === 'Approved') approved += 1;
+      else if (r.validationStatus === 'Under review') underReview += 1;
+      else if (r.validationStatus === 'Pending') pending += 1;
+      else if (r.validationStatus === 'Rejected') rejected += 1;
+    }
+    const count = matching.length;
+    const target = targets.byCategory[category] ?? 0;
+    return {
+      key: category,
+      label: category,
+      count,
+      target,
+      pctOfTarget: target > 0 ? Math.min(100, Math.round((count / target) * 1000) / 10) : 0,
+      approved,
+      underReview,
+      pending,
+      rejected,
+      color: CATEGORY_SLICE_COLORS[category] ?? '#1d4ed8',
+    };
+  });
+}
+
+export function computeParticipantStatusStackedRows(
+  registrations: RegistrationRecord[],
+  targets: RegistrationTargets
+): StatusStackedRow[] {
+  const types: ParticipantType[] = ['Entrepreneur', 'Investor', 'Exhibitor'];
+  return types.map((t) => {
+    const matching = registrations.filter((r) => r.participantType === t);
+    let approved = 0;
+    let underReview = 0;
+    let pending = 0;
+    let rejected = 0;
+    for (const r of matching) {
+      if (r.validationStatus === 'Approved') approved += 1;
+      else if (r.validationStatus === 'Under review') underReview += 1;
+      else if (r.validationStatus === 'Pending') pending += 1;
+      else if (r.validationStatus === 'Rejected') rejected += 1;
+    }
+    const count = matching.length;
+    const target = targets.byParticipantType[t] ?? 0;
+    return {
+      key: t,
+      label: t,
+      count,
+      target,
+      pctOfTarget: target > 0 ? Math.min(100, Math.round((count / target) * 1000) / 10) : 0,
+      approved,
+      underReview,
+      pending,
+      rejected,
+      color: PARTICIPANT_TYPE_COLORS[t],
+    };
+  });
+}
+

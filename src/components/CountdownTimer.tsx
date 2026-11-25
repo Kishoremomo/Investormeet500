@@ -23,24 +23,26 @@ export function CountdownTimer() {
   return (
     <section
       aria-label="Save the date countdown"
-      className="relative overflow-hidden bg-[#091326] text-[#f8f7f3] border-y border-white/10"
+      className="relative overflow-hidden bg-gradient-to-b from-[#102242] via-[#091326] to-[#0d1c36] text-[#f8f7f3] border-y border-white/10"
     >
-      <div className="architectural-grid absolute inset-0 pointer-events-none opacity-60" aria-hidden="true" />
+      <div className="architectural-grid absolute inset-0 pointer-events-none opacity-65" aria-hidden="true" />
+      <div className="ambient-glow-blue absolute inset-0 pointer-events-none" aria-hidden="true" />
       <ScrollReveal className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-        <div className="space-y-2 max-w-xl">
+        <div className="space-y-2.5 max-w-xl">
           <div className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e]">
             <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Save the date · Chennai</span>
+            <span>Save the date · 20-02-2027 · Chennai</span>
           </div>
           <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
             20 February 2027
           </h2>
           <p className="text-sm text-[#cbd5e1]">
-            Final registration closes{' '}
+            Final registration cutoff{' '}
             <strong className="text-[#e6c67e] font-semibold">
-              {REGISTRATION_DEADLINE_TEXT}
+              {REGISTRATION_DEADLINE_TEXT} (01-02-2027)
             </strong>
-            . 90-day preparation window active for track screening.
+            . 90 Days Policy window active · Registration strategy:{' '}
+            <strong className="text-[#5eead4] font-semibold">Available slots only</strong> (100 Completed · 400 Pending).
           </p>
         </div>
 

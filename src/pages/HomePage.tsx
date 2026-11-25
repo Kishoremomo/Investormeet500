@@ -32,8 +32,10 @@ import {
   MEDIA_ASSETS,
   PARTNERS_MARQUEE,
   STATE_GOVT_RESOURCES,
+  TRACKS_TERM_EXPLANATION,
   VIDEO_ASSETS,
 } from '../data/homeAndPrograms';
+import { ORGANISER_CONTACT } from '../data/siteNavigation';
 import {
   COMMITTEE_REVIEWER_PROFILES,
   PARTICIPANT_HIGHLIGHTS,
@@ -232,9 +234,9 @@ const SOCIAL_CHANNELS = [
   {
     id: 'whatsapp',
     name: 'WhatsApp Desk',
-    handle: '+91 96772 28759 · Organiser Briefings',
+    handle: '9962253522 · Organiser Briefings',
     accent: '#14b8a6',
-    desc: 'Direct participant reminders, document checklist links, and hall-access updates for verified applicants.',
+    desc: 'Direct participant reminders, document checklist links, and hall-access updates for verified applicants via Mr. Rajganesh.',
     href: '/contact',
     cta: 'Message Organiser Desk',
   },
@@ -284,7 +286,6 @@ export function HomePage() {
   const [activeJourneyNo, setActiveJourneyNo] = useState<string>('01');
   const [expandedTrackId, setExpandedTrackId] = useState<string | null>(null);
   const [spotlightTab, setSpotlightTab] = useState<SpotlightTab>('All');
-  const [govTab, setGovTab] = useState<'state' | 'central'>('state');
   const [activeGuidanceNo, setActiveGuidanceNo] = useState<string>(FIRST_LEVEL_GUIDANCE_STEPS[0].no);
   const [activeAiId, setActiveAiId] = useState<string>(AI_EXPERT_MODULES[0].id);
   const [expandedCommitteeTitle, setExpandedCommitteeTitle] = useState<string | null>(
@@ -331,8 +332,8 @@ export function HomePage() {
       id: highlight.id,
       full_name: highlight.fullName,
       company: highlight.company,
-      email: 'organiser-desk@investormeet500.in',
-      phone: '+91 96772 28759',
+      email: ORGANISER_CONTACT.email,
+      phone: ORGANISER_CONTACT.phone,
       industry: highlight.roleTitle,
       track: highlight.track as RegistrationRecord['track'],
       participantType: highlight.category === 'Founder' ? 'Entrepreneur' : highlight.category,
@@ -373,10 +374,8 @@ export function HomePage() {
       ? PARTICIPANT_HIGHLIGHTS.slice(0, 6)
       : [];
 
-  const activeGovList = govTab === 'state' ? STATE_GOVT_RESOURCES : CENTRAL_GOVT_RESOURCES;
-
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#091326] text-[#f8f7f3]">
       {/* 1. HERO SECTION (RESTORED ORIGINAL SKYLINE EXECUTIVE + AMBIENT MOTION) */}
       <section
         id="section-hero"
@@ -395,7 +394,7 @@ export function HomePage() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-[#091326]/90 via-transparent to-[#091326]/45 pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-t from-[#0b172c] via-transparent to-[#091326]/45 pointer-events-none"
         />
 
         <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24">
@@ -409,7 +408,7 @@ export function HomePage() {
               <div className="flex items-center gap-3 mb-5">
                 <span className="w-8 h-[1px] bg-[#c49a45]" aria-hidden="true" />
                 <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#e6c67e]">
-                  INVESTOR MEET 500 · 20 FEBRUARY 2027 · CHENNAI
+                  INVESTOR MEET 500 · 20-02-2027 · CHENNAI · AVAILABLE SLOTS ONLY
                 </p>
               </div>
 
@@ -426,12 +425,12 @@ export function HomePage() {
                 growth enterprises, scheduled banks, and investors across three halls in Chennai.
               </p>
 
-              <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 border border-white/15 rounded-xl bg-[#091326]/85 divide-y sm:divide-y-0 sm:divide-x divide-white/12 overflow-hidden">
+              <div className="mt-7 grid grid-cols-2 sm:grid-cols-4 border border-white/15 rounded-xl bg-[#091326]/85 divide-y sm:divide-y-0 sm:divide-x divide-white/12 overflow-hidden">
                 {[
-                  { num: 500, label: 'Participants', Icon: Users },
-                  { num: 5, label: 'Investment Tracks', Icon: Briefcase },
-                  { num: 1, label: 'Day', Icon: Calendar },
-                  { num: 3, label: 'Pitch Halls', Icon: Network },
+                  { num: '500', label: 'Participants Cap', Icon: Users },
+                  { num: '100', label: 'Completed Slots', Icon: ShieldCheck },
+                  { num: '400', label: 'Pending Slots', Icon: Calendar },
+                  { num: '3', label: 'Pitch Halls', Icon: Network },
                 ].map((stat) => (
                   <div key={stat.label} className="px-4 py-3.5 flex items-center gap-3">
                     <stat.Icon className="w-4 h-4 text-[#e6c67e] shrink-0" aria-hidden="true" />
@@ -445,7 +444,13 @@ export function HomePage() {
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3.5">
+              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-[#cbd5e1]">
+                <span>Cutoff: <strong className="text-[#e6c67e]">01-02-2027</strong></span>
+                <span>Strategy: <strong className="text-[#5eead4]">Available slots only</strong></span>
+                <span>Funding: <strong className="text-white">₹50L – ₹500Cr</strong></span>
+              </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-3.5">
                 <MagneticAction>
                   <Link
                     href="/apply"
@@ -566,18 +571,20 @@ export function HomePage() {
       <section
         id="section-about"
         data-section-order="2"
-        className="bg-white border-b border-[#e4dfd5] py-16 sm:py-20"
+        className="relative overflow-hidden bg-gradient-to-b from-[#0b172c] via-[#102140] to-[#14294f] text-[#f8f7f3] border-b border-white/10 py-12 sm:py-16"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          <ScrollReveal className="lg:col-span-6 space-y-6">
+        <div className="architectural-grid-blue absolute inset-0 pointer-events-none opacity-60" aria-hidden="true" />
+        <div className="ambient-glow-blue absolute inset-0 pointer-events-none" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          <ScrollReveal className="lg:col-span-6 space-y-5">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1d4ed8] mb-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] mb-2">
                 02 · PLATFORM ARCHITECTURE
               </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a]">
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
                 About Investor Meet 500
               </h2>
-              <p className="mt-3 text-[15px] sm:text-base text-[#334155] leading-relaxed max-w-xl">
+              <p className="mt-3 text-[15px] sm:text-base text-[#cbd5e1] leading-relaxed max-w-xl">
                 Investor Meet 500 unites Indian entrepreneurs, expansion-stage businesses, scheduled
                 banks, and institutional capital under structured committee validation—replacing noisy
                 trade fairs with scheduled deal-room workflows.
@@ -600,13 +607,13 @@ export function HomePage() {
                     onClick={() => setActiveCapId(item.id)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left text-sm font-medium transition-all cursor-pointer ${
                       active
-                        ? 'bg-[#091326] text-[#f8f7f3] border-[#091326] shadow-sm'
-                        : 'bg-[#fafaf8] text-[#0f172a] border-[#e4dfd5] hover:border-[#1d4ed8]/50'
+                        ? 'bg-[#e6c67e] text-[#091326] border-[#e6c67e] font-semibold shadow-sm'
+                        : 'bg-[#15284c]/90 text-[#e2e8f0] border-white/15 hover:border-[#60a5fa]/60 hover:bg-[#19305b]'
                     }`}
                   >
                     <item.Icon
                       className={`w-4 h-4 shrink-0 ${
-                        active ? 'text-[#e6c67e]' : 'text-[#1d4ed8]'
+                        active ? 'text-[#091326]' : 'text-[#e6c67e]'
                       }`}
                       aria-hidden="true"
                     />
@@ -616,37 +623,40 @@ export function HomePage() {
               })}
             </div>
 
-            <InteractiveCard className="bg-[#f8fafc] rounded-2xl border border-[#e4dfd5] p-6 space-y-4">
-              <div className="flex items-center justify-between gap-4 pb-3 border-b border-[#e4dfd5]">
+            <InteractiveCard
+              dark
+              className="!bg-[#132547]/95 rounded-2xl border-white/15 p-6 space-y-4"
+            >
+              <div className="flex items-center justify-between gap-4 pb-3 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-[#091326] text-[#e6c67e] flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-lg bg-[#1d4ed8]/30 border border-[#60a5fa]/35 text-[#e6c67e] flex items-center justify-center">
                     <activeCap.Icon className="w-4 h-4" aria-hidden="true" />
                   </div>
                   <div>
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#1d4ed8] block">
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#93c5fd] block">
                       CAPABILITY DETAIL
                     </span>
-                    <h3 className="font-display text-xl font-semibold text-[#0f172a]">
+                    <h3 className="font-display text-xl font-semibold text-white">
                       {activeCap.label}
                     </h3>
                   </div>
                 </div>
-                <span className="font-mono text-xs text-[#526075] tabular-nums">₹50L – ₹500Cr</span>
+                <span className="font-mono text-xs text-[#e6c67e] tabular-nums">₹50L – ₹500Cr</span>
               </div>
 
-              <p className="text-sm text-[#334155] leading-relaxed">{activeCap.detail}</p>
+              <p className="text-sm text-[#cbd5e1] leading-relaxed">{activeCap.detail}</p>
 
               <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
                 <Link
                   href={activeCap.href}
-                  className="btn-obsidian inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold"
+                  className="btn-gold inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold"
                 >
                   <span>{activeCap.cta}</span>
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/about"
-                  className="text-xs font-semibold text-[#1d4ed8] hover:underline inline-flex items-center gap-1"
+                  className="text-xs font-semibold text-[#93c5fd] hover:text-[#e6c67e] hover:underline inline-flex items-center gap-1"
                 >
                   <span>Full Summit Overview</span>
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -657,7 +667,10 @@ export function HomePage() {
 
           <ScrollReveal delay={0.06} className="lg:col-span-6">
             <Link href="/about" className="block group">
-              <InteractiveCard className="rounded-2xl overflow-hidden flex flex-col">
+              <InteractiveCard
+                dark
+                className="rounded-2xl overflow-hidden flex flex-col !bg-[#132547]/95 border-white/15"
+              >
                 <ParallaxFrame offset={18} className="aspect-[16/10] w-full bg-[#091326] relative">
                   <img
                     src={MEDIA_ASSETS.aboutReception}
@@ -667,7 +680,7 @@ export function HomePage() {
                   />
                   <div
                     aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-t from-[#091326]/90 via-transparent to-transparent"
+                    className="absolute inset-0 bg-gradient-to-t from-[#0d1a33]/95 via-transparent to-transparent"
                   />
                   <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 flex items-end justify-between gap-4">
                     <div>
@@ -680,12 +693,12 @@ export function HomePage() {
                     </div>
                   </div>
                 </ParallaxFrame>
-                <div className="p-6 flex flex-wrap items-center justify-between gap-4 bg-white">
-                  <p className="text-xs sm:text-sm text-[#334155] max-w-md leading-relaxed">
+                <div className="p-6 flex flex-wrap items-center justify-between gap-4 bg-[#10203d] border-t border-white/10">
+                  <p className="text-xs sm:text-sm text-[#cbd5e1] max-w-md leading-relaxed">
                     Structured 20–30 minute scheduled meetings across Halls 1, 2, and 3 backed by
                     90-day committee screening.
                   </p>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1d4ed8] shrink-0 group-hover:translate-x-0.5 transition-transform">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#e6c67e] shrink-0 group-hover:translate-x-0.5 transition-transform">
                     <span>About Summit</span>
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
@@ -700,19 +713,20 @@ export function HomePage() {
       <section
         id="section-journey"
         data-section-order="3"
-        className="bg-[#fafaf8] text-[#0f172a] py-16 sm:py-20 border-b border-[#e4dfd5]"
+        className="relative overflow-hidden bg-gradient-to-b from-[#14294f] via-[#18315c] to-[#102242] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="ambient-glow-teal absolute inset-0 pointer-events-none" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <ScrollReveal className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6d28d9] mb-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5eead4] mb-2">
                 03 · FOUR-STAGE WORKFLOW
               </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a]">
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
                 Investment Journey
               </h2>
             </div>
-            <p className="text-xs text-[#526075]">
+            <p className="text-xs text-[#cbd5e1]">
               Select any stage below to inspect committee screening protocol.
             </p>
           </ScrollReveal>
@@ -728,55 +742,61 @@ export function HomePage() {
                 <InteractiveCard
                   key={step.no}
                   as="button"
+                  dark
                   onClick={() => setActiveJourneyNo(step.no)}
                   className={`rounded-xl p-5 flex flex-col justify-between gap-3 ${
-                    active ? 'ring-2 ring-[#1d4ed8] border-[#1d4ed8] bg-[#f8fafc]' : ''
+                    active
+                      ? 'ring-2 ring-[#e6c67e] !border-[#e6c67e] !bg-[#1c386b]'
+                      : '!bg-[#12264a]/90 border-white/15'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <span className="font-mono text-xs font-semibold text-[#1d4ed8]">
+                    <span className="font-mono text-xs font-semibold text-[#93c5fd]">
                       STAGE {step.no}
                     </span>
                     <div
                       className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
                         active
-                          ? 'bg-[#091326] text-[#e6c67e]'
-                          : 'bg-[#f1f5f9] text-[#172554]'
+                          ? 'bg-[#e6c67e] text-[#091326]'
+                          : 'bg-white/10 text-[#e6c67e]'
                       }`}
                     >
                       <step.icon className="w-4 h-4" aria-hidden="true" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-display text-2xl font-semibold text-[#0f172a]">
+                    <h3 className="font-display text-2xl font-semibold text-white">
                       {step.title}
                     </h3>
-                    <p className="mt-1 text-xs text-[#526075]">{step.desc}</p>
+                    <p className="mt-1 text-xs text-[#cbd5e1]">{step.desc}</p>
                   </div>
                 </InteractiveCard>
               );
             })}
           </div>
 
-          <InteractiveCard className="bg-white rounded-xl border border-[#e4dfd5] p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <InteractiveCard
+            dark
+            className="!bg-[#0e1e3a]/95 rounded-xl border-[#c49a45]/30 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+          >
             <div className="space-y-1">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#0d9488]">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#5eead4]">
                 STAGE {activeJourney.no} PROTOCOL · {activeJourney.title}
               </span>
-              <p className="text-sm text-[#334155] leading-relaxed">{activeJourney.protocol}</p>
+              <p className="text-sm text-[#e2e8f0] leading-relaxed">{activeJourney.protocol}</p>
             </div>
             <div className="flex items-center gap-4 shrink-0">
               <Link
                 href="/payments"
-                className="text-xs font-semibold text-[#1d4ed8] hover:underline whitespace-nowrap"
+                className="text-xs font-semibold text-[#93c5fd] hover:text-[#e6c67e] hover:underline whitespace-nowrap"
               >
                 Fee Ladder (9 Options)
               </Link>
               <Link
                 href="/registration-policy"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0f172a] hover:text-[#8a5d14] whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#e6c67e] hover:underline whitespace-nowrap"
               >
-                <span>90-Day Policy</span>
+                <span>90 Days Policy</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             </div>
@@ -789,37 +809,51 @@ export function HomePage() {
         <CountdownTimer />
       </div>
 
-      {/* 5. INVESTMENT TRACK */}
+      {/* 5. INVESTMENT TRACK (COORDINATED SAPPHIRE-SLATE TEMPLATE + MEANING CLARIFICATION #3 & #4) */}
       <section
         id="section-tracks"
         data-section-order="5"
-        className="bg-white text-[#0f172a] py-16 sm:py-20 border-b border-[#e4dfd5]"
+        className="relative overflow-hidden bg-gradient-to-b from-[#0d1c36] via-[#14284b] to-[#1a3461] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="architectural-grid-blue absolute inset-0 pointer-events-none opacity-55" aria-hidden="true" />
+        <div className="ambient-glow-blue absolute inset-0 pointer-events-none" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <ScrollReveal className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div className="max-w-2xl">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a5d14] mb-2">
-                05 · FIVE DEDICATED PATHWAYS
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] mb-2">
+                05 · FIVE DEDICATED PATHWAYS · INSTITUTIONAL MANDATES
               </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a]">
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
                 Explore Our Investment Tracks
               </h2>
-              <p className="mt-2.5 text-sm sm:text-base text-[#334155] leading-relaxed">
-                Choose the pathway that aligns with your venture stage or lending structure. Click
-                &ldquo;Quick Specs&rdquo; on any track card to preview eligibility or proceed directly
-                to application.
+              <p className="mt-2.5 text-sm sm:text-base text-[#cbd5e1] leading-relaxed">
+                Choose the pathway that matches how your company raises capital—equity venture pitches,
+                enterprise credit, growth expansion, scheduled banking, or blended capital.
               </p>
             </div>
             <Link
               href="/tracks"
-              className="text-xs font-semibold text-[#1d4ed8] hover:underline inline-flex items-center gap-1 whitespace-nowrap"
+              className="btn-gold inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap"
             >
-              <span>Compare Full Track Eligibility</span>
+              <span>Compare All 5 Tracks &amp; Meanings</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </Link>
           </ScrollReveal>
 
-          <StaggerGrid className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {/* Plain-English meaning of "Investment Tracks" */}
+          <div className="rounded-2xl border border-[#60a5fa]/30 bg-[#102242]/90 p-5 sm:p-6 space-y-1.5">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#93c5fd] block">
+              TERMINOLOGY CLARIFICATION
+            </span>
+            <h3 className="font-display text-xl sm:text-2xl font-semibold text-white">
+              {TRACKS_TERM_EXPLANATION.heading}
+            </h3>
+            <p className="text-sm text-[#cbd5e1] leading-relaxed max-w-4xl">
+              {TRACKS_TERM_EXPLANATION.summary}
+            </p>
+          </div>
+
+          <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {INVESTMENT_TRACKS.map((track) => {
               const expanded = expandedTrackId === track.id;
               return (
@@ -827,39 +861,37 @@ export function HomePage() {
                   <InteractiveCard
                     as="article"
                     dark
-                    className="rounded-xl overflow-hidden flex flex-col justify-between h-full group !bg-[#091326]"
+                    className="rounded-xl overflow-hidden flex flex-col justify-between h-full group !bg-[#112445]/95 border-white/15"
                   >
                     <div>
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#0c121d]">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#091326]">
                         <img
                           src={track.image}
                           alt={track.imageAlt}
                           referrerPolicy="no-referrer"
                           className="w-full h-full object-cover object-center hero-image-enhanced interactive-media"
                         />
-                        <div
-                          aria-hidden="true"
-                          className="absolute inset-0 bg-gradient-to-t from-[#091326] via-[#091326]/25 to-transparent"
-                        />
+                        <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded bg-[#091326]/90 border border-[#e6c67e]/40 text-[#e6c67e] font-mono text-[10px] font-bold tracking-wider shadow-sm">
+                          TRACK {track.number}
+                        </div>
                       </div>
 
                       <div className="p-5 pb-3">
-                        <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#e6c67e] block mb-1">
-                          TRACK {track.number}
-                        </span>
                         <h3 className="font-display text-2xl font-semibold text-white">
                           {track.title}
                         </h3>
+                        <p className="mt-1.5 text-xs font-semibold text-[#93c5fd]">
+                          {track.lead} {track.subline}
+                        </p>
                         <p className="mt-2 text-xs text-[#cbd5e1] leading-relaxed">
-                          {track.lead}{' '}
-                          <span className="block text-[#94a3b8] mt-0.5">{track.subline}</span>
+                          {track.meaning}
                         </p>
 
                         {expanded && (
-                          <ul className="mt-3 pt-3 border-t border-white/10 space-y-1.5 text-[11px] text-[#cbd5e1]">
+                          <ul className="mt-3 pt-3 border-t border-white/10 space-y-1.5 text-[11px] text-[#e2e8f0]">
                             {track.eligibility.map((item) => (
                               <li key={item} className="flex items-start gap-1.5">
-                                <Check className="w-3 h-3 text-[#14b8a6] mt-0.5 shrink-0" aria-hidden="true" />
+                                <Check className="w-3 h-3 text-[#5eead4] mt-0.5 shrink-0" aria-hidden="true" />
                                 <span>{item}</span>
                               </li>
                             ))}
@@ -868,12 +900,12 @@ export function HomePage() {
                       </div>
                     </div>
 
-                    <div className="p-5 pt-3 border-t border-white/10 space-y-2">
+                    <div className="p-4 pt-3 border-t border-white/10 bg-[#0d1c36]/90 space-y-2">
                       <button
                         type="button"
                         onClick={() => setExpandedTrackId(expanded ? null : track.id)}
                         aria-expanded={expanded}
-                        className="w-full inline-flex items-center justify-between px-3 py-1.5 rounded-lg border border-white/15 bg-white/5 hover:border-[#c49a45]/60 text-[11px] font-medium text-[#cbd5e1] hover:text-white cursor-pointer transition-colors"
+                        className="w-full inline-flex items-center justify-between px-3 py-1.5 rounded-lg border border-white/15 bg-[#152b52] hover:border-[#e6c67e]/60 text-[11px] font-semibold text-[#e2e8f0] cursor-pointer transition-colors"
                       >
                         <span>{expanded ? 'Hide Eligibility Specs' : 'Quick Eligibility Specs'}</span>
                         <ChevronRight
@@ -887,9 +919,9 @@ export function HomePage() {
                       <Link
                         href={`/apply?track=${encodeURIComponent(track.title)}`}
                         aria-label={`Apply for ${track.title}`}
-                        className="btn-gold w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-xs font-semibold"
+                        className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#1d4ed8] hover:bg-[#2563eb] text-white text-xs font-semibold transition-colors"
                       >
-                        <span>Apply Now</span>
+                        <span>Apply for {track.title}</span>
                         <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                       </Link>
                     </div>
@@ -905,59 +937,63 @@ export function HomePage() {
       <section
         id="section-startup"
         data-section-order="6"
-        className="bg-[#f8fafc] text-[#0f172a] py-16 sm:py-20 border-b border-[#e4dfd5]"
+        className="relative overflow-hidden bg-gradient-to-b from-[#1a3461] via-[#1c396b] to-[#132648] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div className="ambient-glow-teal absolute inset-0 pointer-events-none" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-stretch">
             <div className="lg:col-span-6 flex flex-col justify-between gap-6">
-              <InteractiveCard className="rounded-2xl p-7 sm:p-8 flex flex-col justify-between gap-5 h-full">
+              <InteractiveCard
+                dark
+                className="!bg-[#112344]/95 border-white/15 rounded-2xl p-6 sm:p-7 flex flex-col justify-between gap-5 h-full"
+              >
                 <div className="space-y-3">
-                  <div className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1d4ed8]">
+                  <div className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5eead4]">
                     <Rocket className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>06 · STARTUP STREAM · 100 VALIDATED VENTURES</span>
                   </div>
-                  <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a]">
+                  <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
                     Dedicated Pathway for 100 Validated Startups
                   </h2>
-                  <p className="text-sm sm:text-base text-[#334155] leading-relaxed">
+                  <p className="text-sm sm:text-base text-[#cbd5e1] leading-relaxed">
                     Early-stage and growth startups undergo structured scrutiny covering product
                     traction, pitch deck quality, 5-year financial projections, and capital risk
                     prior to receiving confirmed Hall 1 &amp; Hall 2 pitch windows.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-3 border border-[#e4dfd5] rounded-xl bg-[#fafaf8] divide-x divide-[#e4dfd5]">
+                <div className="grid grid-cols-3 border border-white/15 rounded-xl bg-[#0c1933]/85 divide-x divide-white/15">
                   <div className="p-3.5">
-                    <span className="block font-mono text-lg font-bold text-[#091326] tabular-nums">
+                    <span className="block font-mono text-lg font-bold text-white tabular-nums">
                       100
                     </span>
-                    <span className="text-[11px] text-[#526075]">Target Startups</span>
+                    <span className="text-[11px] text-[#cbd5e1]">Target Startups</span>
                   </div>
                   <div className="p-3.5">
-                    <span className="block font-mono text-lg font-bold text-[#1d4ed8] tabular-nums">
+                    <span className="block font-mono text-lg font-bold text-[#e6c67e] tabular-nums">
                       ₹50L+
                     </span>
-                    <span className="text-[11px] text-[#526075]">Minimum Raise</span>
+                    <span className="text-[11px] text-[#cbd5e1]">Minimum Raise</span>
                   </div>
                   <div className="p-3.5">
-                    <span className="block font-mono text-lg font-bold text-[#0d9488] tabular-nums">
+                    <span className="block font-mono text-lg font-bold text-[#5eead4] tabular-nums">
                       Hall 1–2
                     </span>
-                    <span className="text-[11px] text-[#526075]">Pitch Allocation</span>
+                    <span className="text-[11px] text-[#cbd5e1]">Pitch Allocation</span>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-[#e4dfd5] flex flex-wrap items-center justify-between gap-3">
+                <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
                   <Link
                     href="/startup"
-                    className="btn-obsidian inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold"
+                    className="btn-gold inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold"
                   >
                     <span>Open Startup Stream</span>
                     <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                   </Link>
                   <Link
                     href="/women-entrepreneurs"
-                    className="text-xs font-semibold text-[#6d28d9] hover:underline inline-flex items-center gap-1"
+                    className="text-xs font-semibold text-[#93c5fd] hover:text-[#e6c67e] hover:underline inline-flex items-center gap-1"
                   >
                     <span>Women Entrepreneurs Directory</span>
                     <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -974,18 +1010,19 @@ export function HomePage() {
                 caption={VIDEO_ASSETS.startupEcosystem.caption}
                 kicker="STARTUP VALIDATION FILM · CHENNAI PITCH FLOW"
                 heightClass="h-full min-h-[300px]"
+                className="!border-white/20"
               />
             </div>
           </div>
 
           {/* Startup & Investor Spotlight Matrix */}
-          <div className="space-y-6 pt-2">
+          <div className="space-y-5 pt-1">
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
               <div>
-                <h3 className="font-display text-2xl font-semibold text-[#0f172a]">
+                <h3 className="font-display text-2xl font-semibold text-white">
                   Validated Cohort &amp; Capital Network Profiles
                 </h3>
-                <p className="text-xs sm:text-sm text-[#526075] mt-1">
+                <p className="text-xs sm:text-sm text-[#cbd5e1] mt-1">
                   Click any founder, investor, or reviewer card to inspect mandate details and pitch
                   hall allocation.
                 </p>
@@ -1014,8 +1051,8 @@ export function HomePage() {
                       onClick={() => setSpotlightTab(tab.id)}
                       className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
                         active
-                          ? 'bg-[#091326] text-[#e6c67e]'
-                          : 'bg-white text-[#334155] border border-[#e4dfd5] hover:border-[#1d4ed8]'
+                          ? 'bg-[#e6c67e] text-[#091326]'
+                          : 'bg-[#112344]/90 text-[#cbd5e1] border border-white/15 hover:border-[#60a5fa]'
                       }`}
                     >
                       {tab.label}
@@ -1031,28 +1068,29 @@ export function HomePage() {
                   <InteractiveCard
                     key={rev.name}
                     as="button"
+                    dark
                     onClick={() => setActiveReviewer(rev)}
-                    className="rounded-xl p-6 flex flex-col justify-between gap-4"
+                    className="!bg-[#122546]/95 border-white/15 rounded-xl p-6 flex flex-col justify-between gap-4"
                   >
                     <div>
                       <div className="flex items-center gap-3.5">
-                        <AvatarPortrait name={rev.name} src={rev.portraitUrl} size="md" />
+                        <AvatarPortrait name={rev.name} src={rev.portraitUrl} size="md" theme="dark" />
                         <div className="min-w-0">
-                          <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#1d4ed8] block">
+                          <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#93c5fd] block">
                             {rev.hallFocus}
                           </span>
-                          <h4 className="font-display text-xl font-semibold text-[#0f172a] leading-snug">
+                          <h4 className="font-display text-xl font-semibold text-white leading-snug">
                             {rev.name}
                           </h4>
                         </div>
                       </div>
-                      <p className="mt-3 text-xs font-semibold text-[#334155]">{rev.role}</p>
-                      <p className="mt-2 text-xs text-[#526075] leading-relaxed line-clamp-3">
+                      <p className="mt-3 text-xs font-semibold text-[#e6c67e]">{rev.role}</p>
+                      <p className="mt-2 text-xs text-[#cbd5e1] leading-relaxed line-clamp-3">
                         &ldquo;{rev.perspective}&rdquo;
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-[#e4dfd5] flex items-center justify-between text-xs font-semibold text-[#1d4ed8] w-full">
+                    <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold text-[#93c5fd] w-full">
                       <span>Inspect Reviewer Profile</span>
                       <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                     </div>
@@ -1061,246 +1099,354 @@ export function HomePage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {filteredParticipants.map((person) => (
-                  <InteractiveCard
-                    key={person.id}
-                    as="button"
-                    onClick={() => openParticipantHighlight(person)}
-                    className="rounded-xl p-6 flex flex-col justify-between gap-4"
-                  >
-                    <div>
-                      <div className="flex items-start gap-4">
-                        <AvatarPortrait name={person.fullName} src={person.portraitUrl} size="md" />
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#1d4ed8]">
-                              {person.track}
-                            </span>
-                            <span className="text-[11px] font-medium text-[#526075]">
-                              {person.category}
-                            </span>
+                {filteredParticipants.slice(0, 9).map((person) => {
+                  const accent =
+                    person.track === 'Startups'
+                      ? '#60a5fa'
+                      : person.track === 'Business Expansion'
+                      ? '#a78bfa'
+                      : person.track === 'Bank Loans' || person.track === 'Business Loan'
+                      ? '#2dd4bf'
+                      : '#e6c67e';
+                  return (
+                    <InteractiveCard
+                      key={person.id}
+                      as="button"
+                      dark
+                      onClick={() => openParticipantHighlight(person)}
+                      className="!bg-[#122546]/95 border-white/15 rounded-xl overflow-hidden flex flex-col justify-between gap-4 text-left"
+                    >
+                      <div className="h-1.5 w-full" style={{ backgroundColor: accent }} aria-hidden="true" />
+                      <div className="px-6 pt-2 flex-1 w-full">
+                        <div className="flex items-start gap-4">
+                          <AvatarPortrait name={person.fullName} src={person.portraitUrl} size="md" theme="dark" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between gap-2">
+                              <span
+                                className="font-mono text-[10px] font-semibold uppercase tracking-wider"
+                                style={{ color: accent }}
+                              >
+                                {person.track}
+                              </span>
+                              <span className="text-[11px] font-medium text-[#cbd5e1]">
+                                {person.category}
+                              </span>
+                            </div>
+                            <h4 className="mt-0.5 font-display text-2xl font-semibold text-white leading-tight">
+                              {person.fullName}
+                            </h4>
+                            <p className="text-xs font-medium text-[#cbd5e1] mt-0.5">
+                              {person.roleTitle} · {person.company}
+                            </p>
                           </div>
-                          <h4 className="mt-0.5 font-display text-2xl font-semibold text-[#0f172a] leading-tight">
-                            {person.fullName}
-                          </h4>
-                          <p className="text-xs font-medium text-[#334155] mt-0.5">
-                            {person.roleTitle} · {person.company}
-                          </p>
                         </div>
+
+                        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-[#cbd5e1]">
+                          <span className="font-mono font-semibold text-[#e6c67e]">
+                            {person.mandate}
+                          </span>
+                          <span className="inline-flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-[#5eead4]" aria-hidden="true" />
+                            {person.location}
+                          </span>
+                        </div>
+
+                        <blockquote className="mt-3 pt-3 border-t border-white/10 text-xs text-[#e2e8f0] leading-relaxed flex items-start gap-2">
+                          <Quote className="w-3.5 h-3.5 text-[#e6c67e] shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>{person.quote}</span>
+                        </blockquote>
                       </div>
 
-                      <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-[#526075]">
-                        <span className="font-mono font-semibold text-[#091326]">
-                          {person.mandate}
-                        </span>
+                      <div className="px-6 pb-5 pt-2 flex items-center justify-between text-xs font-semibold text-[#93c5fd] w-full">
+                        <span className="text-[#cbd5e1] font-normal">{person.stage}</span>
                         <span className="inline-flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-[#0d9488]" aria-hidden="true" />
-                          {person.location}
+                          <span>View Dossier</span>
+                          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                         </span>
                       </div>
-
-                      <blockquote className="mt-3 pt-3 border-t border-[#e4dfd5] text-xs text-[#334155] leading-relaxed flex items-start gap-2">
-                        <Quote className="w-3.5 h-3.5 text-[#c49a45] shrink-0 mt-0.5" aria-hidden="true" />
-                        <span>{person.quote}</span>
-                      </blockquote>
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs font-semibold text-[#1d4ed8] w-full">
-                      <span className="text-[#526075] font-normal">{person.stage}</span>
-                      <span className="inline-flex items-center gap-1">
-                        <span>View Dossier</span>
-                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                      </span>
-                    </div>
-                  </InteractiveCard>
-                ))}
+                    </InteractiveCard>
+                  );
+                })}
               </div>
             )}
 
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-1 text-xs text-[#526075]">
+            <div className="flex flex-wrap items-center justify-between gap-4 pt-1 text-xs text-[#cbd5e1]">
               <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-[#0d9488]" aria-hidden="true" />
+                <ShieldCheck className="w-4 h-4 text-[#5eead4]" aria-hidden="true" />
                 Representative seeded profiles &amp; committee reviewers. Unconfirmed Chief Guests
                 remain marked as awaiting confirmation.
               </span>
-              <Link
-                href="/investors#pipeline"
-                className="font-semibold text-[#1d4ed8] hover:underline inline-flex items-center gap-1"
-              >
-                <span>Browse Live Investor Pipeline</span>
-                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-              </Link>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  href="/entrepreneurs"
+                  className="font-semibold text-[#e6c67e] hover:underline inline-flex items-center gap-1"
+                >
+                  <span>Explore 100 Entrepreneurs Directory</span>
+                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/investors#pipeline"
+                  className="font-semibold text-[#93c5fd] hover:underline inline-flex items-center gap-1"
+                >
+                  <span>Browse Live Investor Pipeline</span>
+                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. GOVERNMENT AND GUIDANCE */}
+      {/* 7. GOVERNMENT AND FIRST LEVEL BUSINESS GUIDANCE + CONSULTATION TOPIC (#16, #18, #33, #34) */}
       <section
         id="section-government-guidance"
         data-section-order="7"
-        className="bg-white text-[#0f172a] py-16 sm:py-20 border-b border-[#e4dfd5]"
+        className="relative overflow-hidden bg-gradient-to-b from-[#132648] via-[#152b52] to-[#0d1c36] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Government Reference Portals */}
-          <ScrollReveal className="lg:col-span-6 space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="architectural-grid-blue absolute inset-0 pointer-events-none opacity-50" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-9">
+          {/* Top Block: State vs Central Government Side-by-Side Comparison (#16, #18) */}
+          <div className="space-y-5">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0d9488] mb-1.5">
-                  07 · PUBLIC POLICY &amp; FACILITATION
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5eead4] mb-1.5">
+                  07 · STATE &amp; CENTRAL GOVERNMENT PORTALS (SIDE-BY-SIDE COMPARISON)
                 </p>
-                <h2 className="font-display text-3xl font-semibold text-[#0f172a]">
-                  Government &amp; Policy Reference
+                <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
+                  Government &amp; Institutional Guidance
                 </h2>
+                <p className="mt-2 text-sm sm:text-base text-[#cbd5e1] max-w-3xl leading-relaxed">
+                  Compare Tamil Nadu State industrial facilitation agencies directly alongside Central
+                  Government investment and MSME portals before preparing your compliance dossier.
+                </p>
               </div>
-
-              <div
-                className="inline-flex rounded-lg border border-[#e4dfd5] bg-[#f8fafc] p-0.5 text-xs"
-                role="tablist"
-                aria-label="Government portal tier"
-              >
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={govTab === 'state'}
-                  onClick={() => setGovTab('state')}
-                  className={`px-3 py-1.5 rounded-md font-semibold cursor-pointer transition-colors ${
-                    govTab === 'state'
-                      ? 'bg-[#091326] text-[#e6c67e]'
-                      : 'text-[#526075] hover:text-[#0f172a]'
-                  }`}
-                >
-                  Tamil Nadu
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={govTab === 'central'}
-                  onClick={() => setGovTab('central')}
-                  className={`px-3 py-1.5 rounded-md font-semibold cursor-pointer transition-colors ${
-                    govTab === 'central'
-                      ? 'bg-[#091326] text-[#e6c67e]'
-                      : 'text-[#526075] hover:text-[#0f172a]'
-                  }`}
-                >
-                  Central India
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2.5">
-              {activeGovList.map((agency) => (
-                <a
-                  key={agency.name}
-                  href={agency.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block group"
-                >
-                  <InteractiveCard className="rounded-xl p-4 flex items-center justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <Landmark className="w-3.5 h-3.5 text-[#0d9488] shrink-0" aria-hidden="true" />
-                        <h3 className="font-display text-lg font-semibold text-[#0f172a] group-hover:text-[#1d4ed8] transition-colors truncate">
-                          {agency.name}
-                        </h3>
-                      </div>
-                      <p className="mt-1 text-xs text-[#526075] line-clamp-2">
-                        {agency.description}
-                      </p>
-                    </div>
-                    <ExternalLink
-                      className="w-4 h-4 text-[#8a5d14] group-hover:text-[#1d4ed8] shrink-0"
-                      aria-hidden="true"
-                    />
-                  </InteractiveCard>
-                </a>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[#526075] pt-1">
-              <span>External official portals provided strictly as ecosystem reference.</span>
               <Link
                 href="/government"
-                className="font-semibold text-[#1d4ed8] hover:underline inline-flex items-center gap-1"
+                className="btn-gold inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap"
               >
                 <span>Open Full Government Index</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             </div>
-          </ScrollReveal>
 
-          {/* First-Level Business Guidance Desk */}
-          <ScrollReveal delay={0.06} className="lg:col-span-6 space-y-5">
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a5d14] mb-1.5">
-                FIRST-LEVEL READINESS CLINIC
-              </p>
-              <h2 className="font-display text-3xl font-semibold text-[#0f172a]">
-                Business Guidance &amp; Consultation
-              </h2>
-              <p className="mt-2 text-sm text-[#334155] leading-relaxed">
-                Select any readiness step from our 10-point preparation checklist before booking an
-                advisory desk consultation.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-              {FIRST_LEVEL_GUIDANCE_STEPS.map((g) => {
-                const active = g.no === activeGuidanceNo;
-                return (
-                  <button
-                    key={g.no}
-                    type="button"
-                    onClick={() => setActiveGuidanceNo(g.no)}
-                    className={`px-3 py-2.5 rounded-lg border text-left transition-colors cursor-pointer ${
-                      active
-                        ? 'bg-[#091326] text-[#e6c67e] border-[#091326]'
-                        : 'bg-[#fafaf8] text-[#334155] border-[#e4dfd5] hover:border-[#1d4ed8]/50'
-                    }`}
-                  >
-                    <span className="font-mono text-[10px] font-semibold block opacity-80">
-                      STEP {g.no}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left Column: Tamil Nadu State Government */}
+              <div className="rounded-2xl border border-[#14b8a6]/35 bg-[#0c2334]/90 p-5 sm:p-6 space-y-4">
+                <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#14b8a6]/25">
+                  <div>
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#5eead4]">
+                      STATE GOVERNMENT · TAMIL NADU
                     </span>
-                    <span className="text-xs font-semibold line-clamp-1 mt-0.5">{g.title}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <InteractiveCard className="rounded-2xl p-6 bg-[#f8fafc] space-y-4">
-              <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#e4dfd5]">
-                <div>
-                  <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#1d4ed8]">
-                    GUIDANCE MODULE {activeGuidance.no} OF 10
-                  </span>
-                  <h3 className="font-display text-2xl font-semibold text-[#0f172a] mt-0.5">
-                    {activeGuidance.title}
-                  </h3>
+                    <h3 className="font-display text-2xl font-semibold text-white mt-0.5">
+                      Tamil Nadu Nodal Agencies (5)
+                    </h3>
+                  </div>
+                  <Landmark className="w-6 h-6 text-[#5eead4]" aria-hidden="true" />
                 </div>
-                <Handshake className="w-5 h-5 text-[#c49a45] shrink-0" aria-hidden="true" />
+
+                <div className="space-y-2.5">
+                  {STATE_GOVT_RESOURCES.map((agency) => (
+                    <a
+                      key={agency.name}
+                      href={agency.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block group"
+                    >
+                      <div className="rounded-xl border border-white/12 bg-[#0a1a28]/85 hover:border-[#14b8a6] hover:bg-[#0e273a] p-4 flex items-center justify-between gap-4 transition-colors">
+                        <div className="min-w-0">
+                          <h4 className="font-display text-lg font-semibold text-white group-hover:text-[#5eead4] transition-colors truncate">
+                            {agency.name}
+                          </h4>
+                          <p className="mt-0.5 text-xs text-[#cbd5e1] line-clamp-2">
+                            {agency.description}
+                          </p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[#5eead4] shrink-0" aria-hidden="true" />
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
 
-              <p className="text-sm text-[#334155] leading-relaxed">{activeGuidance.desc}</p>
+              {/* Right Column: Central Government of India */}
+              <div className="rounded-2xl border border-[#60a5fa]/35 bg-[#0f2247]/90 p-5 sm:p-6 space-y-4">
+                <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#60a5fa]/25">
+                  <div>
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#93c5fd]">
+                      CENTRAL GOVERNMENT · UNION OF INDIA
+                    </span>
+                    <h3 className="font-display text-2xl font-semibold text-white mt-0.5">
+                      National Ministries &amp; Portals (5)
+                    </h3>
+                  </div>
+                  <Globe className="w-6 h-6 text-[#93c5fd]" aria-hidden="true" />
+                </div>
 
-              <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
-                <Link
-                  href="/contact?subject=Consultation"
-                  className="btn-obsidian inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold"
-                >
-                  <span>Request Organiser Consultation</span>
-                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                </Link>
-                <Link
-                  href="/business-guidance"
-                  className="text-xs font-semibold text-[#1d4ed8] hover:underline inline-flex items-center gap-1"
-                >
-                  <span>Explore All 10 Guidance Steps</span>
-                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                </Link>
+                <div className="space-y-2.5">
+                  {CENTRAL_GOVT_RESOURCES.map((agency) => (
+                    <a
+                      key={agency.name}
+                      href={agency.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block group"
+                    >
+                      <div className="rounded-xl border border-white/12 bg-[#0b1936]/85 hover:border-[#60a5fa] hover:bg-[#10254f] p-4 flex items-center justify-between gap-4 transition-colors">
+                        <div className="min-w-0">
+                          <h4 className="font-display text-lg font-semibold text-white group-hover:text-[#93c5fd] transition-colors truncate">
+                            {agency.name}
+                          </h4>
+                          <p className="mt-0.5 text-xs text-[#cbd5e1] line-clamp-2">
+                            {agency.description}
+                          </p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[#93c5fd] shrink-0" aria-hidden="true" />
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </InteractiveCard>
-          </ScrollReveal>
+            </div>
+          </div>
+
+          {/* Bottom Split: First Level Business Guidance + Highlighted Consultation Topic (#33, #34) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start pt-6 border-t border-white/10">
+            <ScrollReveal className="lg:col-span-7 space-y-5">
+              <div>
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#a5b4fc] mb-1.5">
+                  10-STEP READINESS CLINIC
+                </p>
+                <h2 className="font-display text-3xl font-semibold text-white">
+                  First Level Business Guidance
+                </h2>
+                <p className="mt-2 text-sm text-[#cbd5e1] leading-relaxed">
+                  Inspect each step of the 10-point First Level Business Guidance checklist before
+                  selecting your track or booking an Organiser Consultation.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {FIRST_LEVEL_GUIDANCE_STEPS.map((g) => {
+                  const active = g.no === activeGuidanceNo;
+                  return (
+                    <button
+                      key={g.no}
+                      type="button"
+                      onClick={() => setActiveGuidanceNo(g.no)}
+                      className={`px-3 py-2.5 rounded-lg border text-left transition-colors cursor-pointer ${
+                        active
+                          ? 'bg-[#e6c67e] text-[#091326] border-[#e6c67e] font-semibold'
+                          : 'bg-[#0f1f3d]/90 text-[#e2e8f0] border-white/15 hover:border-[#93c5fd]/60'
+                      }`}
+                    >
+                      <span className="font-mono text-[10px] font-semibold block opacity-85">
+                        STEP {g.no}
+                      </span>
+                      <span className="text-xs font-semibold line-clamp-1 mt-0.5">{g.title}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <InteractiveCard
+                dark
+                className="!bg-[#102242]/95 border-white/15 rounded-2xl p-6 space-y-4"
+              >
+                <div className="flex items-center justify-between gap-2 pb-3 border-b border-white/10">
+                  <div>
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#93c5fd]">
+                      FIRST LEVEL GUIDANCE MODULE {activeGuidance.no} OF 10
+                    </span>
+                    <h3 className="font-display text-2xl font-semibold text-white mt-0.5">
+                      {activeGuidance.title}
+                    </h3>
+                  </div>
+                  <Handshake className="w-5 h-5 text-[#e6c67e] shrink-0" aria-hidden="true" />
+                </div>
+
+                <p className="text-sm text-[#cbd5e1] leading-relaxed">{activeGuidance.desc}</p>
+
+                <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
+                  <Link
+                    href="/business-guidance"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#1d4ed8] hover:bg-[#2563eb] text-white text-xs font-semibold transition-colors"
+                  >
+                    <span>Explore All 10 Guidance Steps</span>
+                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  </Link>
+                  <Link
+                    href="/contact?subject=Consultation"
+                    className="text-xs font-semibold text-[#e6c67e] hover:underline inline-flex items-center gap-1"
+                  >
+                    <span>Book First-Level Guidance Slot</span>
+                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  </Link>
+                </div>
+              </InteractiveCard>
+            </ScrollReveal>
+
+            {/* Standalone Highlighted Consultation Topic Card (#34) */}
+            <ScrollReveal delay={0.06} className="lg:col-span-5">
+              <div
+                id="section-consultation"
+                className="rounded-2xl bg-gradient-to-br from-[#0b152a] via-[#132242] to-[#1e1b4b] text-[#f8f7f3] p-6 sm:p-7 space-y-5 border border-[#c49a45]/45 shadow-lg"
+              >
+                <div className="flex items-center justify-between gap-3 pb-3 border-b border-white/10">
+                  <div>
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] block">
+                      DEDICATED CONSULTATION DESK
+                    </span>
+                    <h3 className="font-display text-2xl sm:text-3xl font-semibold text-white mt-0.5">
+                      One-to-One Pre-Summit Consultation
+                    </h3>
+                  </div>
+                  <Briefcase className="w-6 h-6 text-[#e6c67e] shrink-0" aria-hidden="true" />
+                </div>
+
+                <p className="text-sm text-[#cbd5e1] leading-relaxed">
+                  Unsure whether your proposal belongs under Startups, Business Loans, Expansion, or
+                  Mixed Capital? Schedule a pre-validation Consultation with Mr. Rajganesh’s Organiser
+                  Desk prior to 01-02-2027.
+                </p>
+
+                <ul className="space-y-2.5 text-xs sm:text-sm text-[#e2e8f0]">
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-[#5eead4] mt-0.5 shrink-0" aria-hidden="true" />
+                    <span>Investment track &amp; ticket-size suitability check (₹50L–₹500Cr)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-[#5eead4] mt-0.5 shrink-0" aria-hidden="true" />
+                    <span>Pitch deck &amp; Project Financial Report document review</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-[#5eead4] mt-0.5 shrink-0" aria-hidden="true" />
+                    <span>Payment tier selection guidance (₹10,000–₹50,000, Available slots only)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-[#5eead4] mt-0.5 shrink-0" aria-hidden="true" />
+                    <span>Direct alerts dispatched to {ORGANISER_CONTACT.notificationEmail}</span>
+                  </li>
+                </ul>
+
+                <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-xs font-mono text-[#cbd5e1]">
+                    <span className="block text-[#e6c67e] font-semibold">
+                      {ORGANISER_CONTACT.contactPerson} · {ORGANISER_CONTACT.phone}
+                    </span>
+                    <span>{ORGANISER_CONTACT.email}</span>
+                  </div>
+                  <Link
+                    href="/contact?subject=Consultation"
+                    className="btn-gold inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap"
+                  >
+                    <span>Book Consultation</span>
+                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  </Link>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
@@ -1308,11 +1454,12 @@ export function HomePage() {
       <section
         id="section-ai-expert"
         data-section-order="8"
-        className="bg-[#091326] text-[#f8f7f3] py-16 sm:py-20 border-b border-white/10"
+        className="relative overflow-hidden bg-gradient-to-b from-[#0d1c36] via-[#091326] to-[#112242] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="ambient-glow-blue absolute inset-0 pointer-events-none" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <ScrollReveal className="lg:col-span-6">
-            <InteractiveCard dark className="rounded-2xl overflow-hidden group !bg-[#111927]">
+            <InteractiveCard dark className="rounded-2xl overflow-hidden group !bg-[#111e38] border-white/15">
               <ParallaxFrame offset={16} className="relative h-64 sm:h-80 w-full bg-[#0c121d]">
                 <img
                   src={MEDIA_ASSETS.aiExpertsStage}
@@ -1322,7 +1469,7 @@ export function HomePage() {
                 />
                 <div
                   aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-[#111927] via-[#111927]/35 to-transparent"
+                  className="absolute inset-0 bg-gradient-to-t from-[#111e38] via-[#111e38]/35 to-transparent"
                 />
                 <div className="absolute inset-x-0 bottom-0 p-6 flex items-center justify-between gap-2">
                   <div className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e]">
@@ -1376,7 +1523,7 @@ export function HomePage() {
                     className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                       active
                         ? 'bg-[#6d28d9] text-white border border-[#8b5cf6]'
-                        : 'bg-[#111927] text-[#cbd5e1] border border-white/15 hover:border-[#c49a45]/60'
+                        : 'bg-[#111e38] text-[#cbd5e1] border border-white/15 hover:border-[#c49a45]/60'
                     }`}
                   >
                     {mod.kicker}
@@ -1385,7 +1532,7 @@ export function HomePage() {
               })}
             </div>
 
-            <InteractiveCard dark className="rounded-2xl p-6 sm:p-7 space-y-5 !bg-[#111927]">
+            <InteractiveCard dark className="rounded-2xl p-6 sm:p-7 space-y-5 !bg-[#111e38] border-white/15">
               <div>
                 <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#14b8a6]">
                   PLENARY TRACK FOCUS · {activeAi.kicker}
@@ -1426,32 +1573,33 @@ export function HomePage() {
       <section
         id="section-committees"
         data-section-order="9"
-        className="bg-[#fafaf8] text-[#0f172a] py-16 sm:py-20 border-b border-[#e4dfd5]"
+        className="relative overflow-hidden bg-gradient-to-b from-[#112242] via-[#172e58] to-[#0e1c36] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="architectural-grid-blue absolute inset-0 pointer-events-none opacity-55" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
           <ScrollReveal className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div className="max-w-2xl">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1d4ed8] mb-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#93c5fd] mb-2">
                 09 · GOVERNANCE STRUCTURE
               </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a]">
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
                 Five Planning Committees
               </h2>
-              <p className="mt-2 text-sm text-[#334155] leading-relaxed">
+              <p className="mt-2 text-sm text-[#cbd5e1] leading-relaxed">
                 Click any committee card below to inspect review scope and governance oversight.
                 Confirmed chair names will be published upon written acceptance.
               </p>
             </div>
             <Link
               href="/team"
-              className="text-xs font-semibold text-[#1d4ed8] hover:underline inline-flex items-center gap-1 whitespace-nowrap"
+              className="text-xs font-semibold text-[#e6c67e] hover:underline inline-flex items-center gap-1 whitespace-nowrap"
             >
               <span>Inspect Five Operational Teams</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </Link>
           </ScrollReveal>
 
-          <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <StaggerGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {COMMITTEES.map((committee, idx) => {
               const Icon = committeeIcons[idx % committeeIcons.length];
               const isExpanded = expandedCommitteeTitle === committee.title;
@@ -1459,46 +1607,60 @@ export function HomePage() {
                 <StaggerCard key={committee.title} className="h-full">
                   <InteractiveCard
                     as="button"
+                    dark
                     ariaExpanded={isExpanded}
                     onClick={() =>
                       setExpandedCommitteeTitle(isExpanded ? null : committee.title)
                     }
-                    className={`rounded-xl p-5 flex flex-col justify-between h-full transition-colors ${
-                      isExpanded ? 'ring-2 ring-[#1d4ed8] border-[#1d4ed8] bg-[#f8fafc]' : ''
+                    className={`rounded-2xl overflow-hidden flex flex-col justify-between h-full transition-colors ${
+                      isExpanded
+                        ? 'ring-2 ring-[#e6c67e] !border-[#e6c67e] !bg-[#1a3463]'
+                        : '!bg-[#112445]/95 border-white/15'
                     }`}
                   >
-                    <div>
-                      <div className="flex items-center justify-between gap-2 mb-4">
+                    <div className="w-full">
+                      {/* Large Individual Committee Scene Photo (#20) */}
+                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#091326]">
+                        <img
+                          src={committee.image}
+                          alt={committee.imageAlt}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover object-center hero-image-enhanced interactive-media"
+                        />
                         <div
-                          className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                            isExpanded
-                              ? 'bg-[#091326] text-[#e6c67e]'
-                              : 'bg-[#eff6ff] text-[#1d4ed8]'
-                          }`}
-                        >
-                          <Icon className="w-4 h-4" aria-hidden="true" />
+                          aria-hidden="true"
+                          className="absolute inset-0 bg-gradient-to-t from-[#0d1c36]/90 via-[#0d1c36]/20 to-transparent"
+                        />
+                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
+                          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#e6c67e]">
+                            COMMITTEE 0{idx + 1}
+                          </span>
+                          <div className="w-7 h-7 rounded-md bg-white/15 backdrop-blur-sm text-white flex items-center justify-center">
+                            <Icon className="w-3.5 h-3.5" aria-hidden="true" />
+                          </div>
                         </div>
-                        <span className="font-mono text-[10px] font-semibold text-[#526075]">
-                          0{idx + 1} · TBC
-                        </span>
                       </div>
-                      <h3 className="font-display text-xl font-semibold text-[#0f172a] leading-snug">
-                        {committee.title}
-                      </h3>
-                      <p className="mt-2 text-xs text-[#334155] leading-relaxed">
-                        {committee.description}
-                      </p>
-                      {isExpanded && (
-                        <p className="mt-3 pt-3 border-t border-[#e4dfd5] text-[11px] text-[#1d4ed8] font-medium">
-                          Governs 90-day pre-summit eligibility verification and hall slot alignment.
+
+                      <div className="p-5 pb-3">
+                        <h3 className="font-display text-xl font-semibold text-white leading-snug">
+                          {committee.title}
+                        </h3>
+                        <p className="mt-2 text-xs text-[#cbd5e1] leading-relaxed">
+                          {committee.description}
                         </p>
-                      )}
+                        {isExpanded && (
+                          <p className="mt-3 pt-3 border-t border-white/10 text-[11px] text-[#93c5fd] font-medium">
+                            Governs 90 Days Policy pre-summit eligibility verification and hall slot alignment.
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <p className="mt-4 pt-3 border-t border-[#e4dfd5] font-mono text-[10px] uppercase tracking-wider text-[#526075] w-full flex items-center justify-between">
+
+                    <p className="px-5 pb-4 pt-3 border-t border-white/10 font-mono text-[10px] uppercase tracking-wider text-[#94a3b8] w-full flex items-center justify-between">
                       <span>Awaiting confirmation</span>
                       <ChevronRight
                         className={`w-3.5 h-3.5 transition-transform ${
-                          isExpanded ? 'rotate-90 text-[#1d4ed8]' : ''
+                          isExpanded ? 'rotate-90 text-[#e6c67e]' : ''
                         }`}
                         aria-hidden="true"
                       />
@@ -1511,24 +1673,25 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 10. SOCIAL MEDIA PROMOTION */}
+      {/* 10. SOCIAL MEDIA PROMOTION (#24 Instagram / YouTube / LinkedIn Concrete Campaign Cards + #42) */}
       <section
         id="section-social-media"
         data-section-order="10"
-        className="bg-[#091326] text-[#f8f7f3] py-16 sm:py-20 border-b border-white/10"
+        className="relative overflow-hidden bg-gradient-to-b from-[#0e1c36] via-[#091326] to-[#10203e] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="ambient-glow-teal absolute inset-0 pointer-events-none" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
           <ScrollReveal className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div className="max-w-2xl">
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] mb-2">
-                10 · OFFICIAL CHANNELS &amp; CAMPAIGN PROMOTION
+                10 · INSTAGRAM · YOUTUBE · LINKEDIN CAMPAIGN PREVIEWS
               </p>
               <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
                 Social Media Promotion
               </h2>
               <p className="mt-2 text-sm text-[#cbd5e1] leading-relaxed">
-                Managed by the Investor Meet 500 Social Media Team to coordinate approved summit
-                announcements, countdown visuals ahead of 1 February 2027, and founder stories.
+                Coordinated campaign visuals across Instagram, YouTube, LinkedIn, X, and WhatsApp
+                ahead of the 01-02-2027 registration cutoff and 20-02-2027 summit day.
               </p>
             </div>
 
@@ -1560,6 +1723,135 @@ export function HomePage() {
             </div>
           </ScrollReveal>
 
+          {/* 3 Featured Post Previews: Instagram, YouTube, LinkedIn */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Instagram Post Preview */}
+            <article className="rounded-2xl overflow-hidden border border-[#db2777]/35 bg-[#111e38] flex flex-col justify-between">
+              <div>
+                <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[#f472b6]">
+                    <SocialPlatformIcon id="instagram" />
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider">
+                      Instagram Post Preview
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-[#94a3b8]">1:1 Reel / Tile</span>
+                </div>
+                <div className="relative aspect-[16/10] bg-[#0c121d]">
+                  <img
+                    src={MEDIA_ASSETS.womenLeadershipForum}
+                    alt="Instagram countdown campaign spotlight for Investor Meet 500 Chennai"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#091326] via-transparent to-transparent" />
+                  <div className="absolute bottom-3 left-4 right-4">
+                    <span className="font-mono text-[10px] font-bold text-[#e6c67e] uppercase">
+                      SAVE THE DATE · 20-02-2027
+                    </span>
+                    <p className="font-display text-lg font-semibold text-white">
+                      500 Verified Founders &amp; Investors · Chennai
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4 text-xs text-[#cbd5e1] leading-relaxed">
+                  <p>
+                    &ldquo;Applications close <strong className="text-white">01-02-2027</strong>. Available
+                    slots only across Startups, Business Loan, Expansion, Bank Loans &amp; Mixed Capital.&rdquo;
+                  </p>
+                </div>
+              </div>
+              <div className="px-4 pb-4 text-[11px] font-mono text-[#f472b6]">
+                #InvestorMeet500 #ChennaiStartups #MSMEGrowth
+              </div>
+            </article>
+
+            {/* YouTube Video Post Preview */}
+            <article className="rounded-2xl overflow-hidden border border-[#ef4444]/35 bg-[#111e38] flex flex-col justify-between">
+              <div>
+                <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[#f87171]">
+                    <SocialPlatformIcon id="youtube" />
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider">
+                      YouTube Explainer Post
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-[#94a3b8]">16:9 Stage Film</span>
+                </div>
+                <div className="relative aspect-[16/10] bg-[#0c121d]">
+                  <img
+                    src={MEDIA_ASSETS.aiExpertsStage}
+                    alt="YouTube explainer thumbnail featuring Chennai plenary stage and pitch halls"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#091326] via-transparent to-transparent" />
+                  <div className="absolute bottom-3 left-4 right-4">
+                    <span className="font-mono text-[10px] font-bold text-[#f87171] uppercase">
+                      FOUNDER READINESS BRIEFING
+                    </span>
+                    <p className="font-display text-lg font-semibold text-white">
+                      How 90 Days Validation Prepares Your Pitch
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4 text-xs text-[#cbd5e1] leading-relaxed">
+                  <p>
+                    Step-by-step walkthrough of Validation Team checks, Hall 1–3 Pitch Area slots,
+                    CFO Points, and First Level Business Guidance.
+                  </p>
+                </div>
+              </div>
+              <div className="px-4 pb-4 flex items-center justify-between text-[11px] font-mono text-[#f87171]">
+                <span>8:00 AM – 6:00 PM Format</span>
+                <Link href="/pitch-area" className="underline hover:text-white">
+                  View Pitch Area →
+                </Link>
+              </div>
+            </article>
+
+            {/* LinkedIn Executive Post Preview */}
+            <article className="rounded-2xl overflow-hidden border border-[#3b82f6]/40 bg-[#111e38] flex flex-col justify-between">
+              <div>
+                <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[#60a5fa]">
+                    <SocialPlatformIcon id="linkedin" />
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider">
+                      LinkedIn Executive Post
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-[#94a3b8]">B2B &amp; Institutional</span>
+                </div>
+                <div className="relative aspect-[16/10] bg-[#0c121d]">
+                  <img
+                    src={MEDIA_ASSETS.msmeCreditBoardroom}
+                    alt="LinkedIn executive digest preview for banking managers, CFOs and corporate leaders"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#091326] via-transparent to-transparent" />
+                  <div className="absolute bottom-3 left-4 right-4">
+                    <span className="font-mono text-[10px] font-bold text-[#60a5fa] uppercase">
+                      CXO &amp; BANKING DELEGATIONS
+                    </span>
+                    <p className="font-display text-lg font-semibold text-white">
+                      ₹50 Lakhs to ₹500 Crore Capital Mandate
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4 text-xs text-[#cbd5e1] leading-relaxed">
+                  <p>
+                    Inviting Scheduled Bank Managers, CFOs, Angel Networks &amp; Tamil Nadu Association
+                    Heads to Chennai on 20 February 2027.
+                  </p>
+                </div>
+              </div>
+              <div className="px-4 pb-4 flex items-center justify-between text-[11px] font-mono text-[#60a5fa]">
+                <span>Organiser: {ORGANISER_CONTACT.contactPerson}</span>
+                <Link href="/speakers" className="underline hover:text-white">
+                  Chief Guests →
+                </Link>
+              </div>
+            </article>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {SOCIAL_CHANNELS.map((ch) => {
               const active = ch.id === activeSocialId;
@@ -1569,8 +1861,8 @@ export function HomePage() {
                   as="button"
                   dark
                   onClick={() => setActiveSocialId(ch.id)}
-                  className={`rounded-xl p-5 flex flex-col justify-between gap-4 !bg-[#111927] ${
-                    active ? 'ring-2 ring-[#e6c67e] border-[#e6c67e]' : ''
+                  className={`rounded-xl p-5 flex flex-col justify-between gap-4 !bg-[#111e38] ${
+                    active ? 'ring-2 ring-[#e6c67e] border-[#e6c67e]' : 'border-white/15'
                   }`}
                 >
                   <div>
@@ -1582,7 +1874,7 @@ export function HomePage() {
                         <SocialPlatformIcon id={ch.id} />
                       </div>
                       <span className="font-mono text-[10px] uppercase tracking-wider text-[#94a3b8]">
-                        Official Desk
+                        Campaign Channel
                       </span>
                     </div>
                     <h3 className="font-display text-xl font-semibold text-white">{ch.name}</h3>
@@ -1598,7 +1890,7 @@ export function HomePage() {
             })}
           </div>
 
-          <InteractiveCard dark tilt={false} className="rounded-2xl p-6 !bg-[#111927] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <InteractiveCard dark tilt={false} className="rounded-2xl p-6 !bg-[#111e38] border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#14b8a6]">
                 CHANNEL WORKFLOW · {activeSocial.name}
@@ -1620,18 +1912,20 @@ export function HomePage() {
       <section
         id="section-partners"
         data-section-order="11"
-        className="bg-white py-16 sm:py-20 border-b border-[#e4dfd5]"
+        className="relative overflow-hidden bg-gradient-to-b from-[#10203e] via-[#162d54] to-[#0b162b] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
       >
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="architectural-grid-blue absolute inset-0 pointer-events-none opacity-55" aria-hidden="true" />
+        <div className="ambient-glow-blue absolute inset-0 pointer-events-none" aria-hidden="true" />
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <ScrollReveal className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1d4ed8] mb-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#93c5fd] mb-2">
                 11 · PARTNERS &amp; ECOSYSTEM OUTREACH
               </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a]">
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
                 Partners &amp; Institutional Directory
               </h2>
-              <p className="mt-1.5 text-xs sm:text-sm text-[#526075] max-w-2xl">
+              <p className="mt-1.5 text-xs sm:text-sm text-[#cbd5e1] max-w-2xl">
                 Featured industrial &amp; corporate outreach entities referenced in the summit event
                 plan alongside curated directories. Listing reflects outreach scope, not implied
                 endorsement.
@@ -1639,7 +1933,7 @@ export function HomePage() {
             </div>
             <Link
               href="/sponsors"
-              className="btn-obsidian inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap"
+              className="btn-gold inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap"
             >
               <span>Inspect Sponsorship Tiers</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1657,14 +1951,17 @@ export function HomePage() {
                 aria-label={`${partner.fullName} external website`}
                 className="block group"
               >
-                <InteractiveCard className="rounded-xl p-4 h-full flex flex-col justify-between gap-3">
+                <InteractiveCard
+                  dark
+                  className="rounded-xl p-4 h-full flex flex-col justify-between gap-3 !bg-[#122546]/95 border-white/15"
+                >
                   <InstitutionLogoMark name={partner.fullName} size="marquee" />
                   <div className="flex items-start justify-between gap-2 pt-1">
-                    <span className="text-xs font-semibold text-[#0f172a] group-hover:text-[#1d4ed8] leading-snug">
+                    <span className="text-xs font-semibold text-[#f1f5f9] group-hover:text-[#e6c67e] leading-snug">
                       {partner.fullName}
                     </span>
                     <ExternalLink
-                      className="w-3.5 h-3.5 text-[#8a5d14] shrink-0 mt-0.5"
+                      className="w-3.5 h-3.5 text-[#e6c67e] shrink-0 mt-0.5"
                       aria-hidden="true"
                     />
                   </div>
@@ -1682,17 +1979,20 @@ export function HomePage() {
               { label: 'Industry Associations', count: '15', sub: 'Chambers & Trade Guilds', href: '/associations' },
             ].map((dir) => (
               <Link key={dir.href} href={dir.href} className="block group">
-                <InteractiveCard className="rounded-xl p-5 h-full flex flex-col justify-between bg-[#fafaf8]">
+                <InteractiveCard
+                  dark
+                  className="rounded-xl p-5 h-full flex flex-col justify-between !bg-[#0f1f3d]/95 border-white/15 hover:border-[#60a5fa]/60"
+                >
                   <div>
-                    <span className="font-mono text-2xl sm:text-3xl font-semibold text-[#091326] group-hover:text-[#1d4ed8] transition-colors tabular-nums">
+                    <span className="font-mono text-2xl sm:text-3xl font-semibold text-[#e6c67e] group-hover:text-[#93c5fd] transition-colors tabular-nums">
                       {dir.count}
                     </span>
-                    <h3 className="mt-2 font-display text-xl font-semibold text-[#0f172a]">
+                    <h3 className="mt-2 font-display text-xl font-semibold text-white">
                       {dir.label}
                     </h3>
-                    <p className="mt-1 text-xs text-[#526075]">{dir.sub}</p>
+                    <p className="mt-1 text-xs text-[#cbd5e1]">{dir.sub}</p>
                   </div>
-                  <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#1d4ed8]">
+                  <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#93c5fd] group-hover:text-[#e6c67e]">
                     <span>Browse Directory</span>
                     <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                   </span>
@@ -1704,7 +2004,7 @@ export function HomePage() {
       </section>
 
       {/* Final Editorial CTA */}
-      <section className="bg-[#091326] text-[#f8f7f3] py-14 sm:py-16">
+      <section className="bg-gradient-to-b from-[#0b162b] to-[#091326] text-[#f8f7f3] py-12 sm:py-14">
         <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e]">

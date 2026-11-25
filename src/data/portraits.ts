@@ -32,6 +32,19 @@ export const PARTICIPANT_PORTRAIT_BY_ID: Record<string, string> = {
   'IM500-2027-0106': '/src/assets/images/portrait_vikramaditya_exec_1794983008750.jpg',
   'IM500-2027-0107': '/src/assets/images/portrait_deepak_medtech_1794983009242.jpg',
   'IM500-2027-0108': '/src/assets/images/portrait_kavitha_engineering_1794983009512.jpg',
+  'IM500-2027-0109': '/src/assets/images/entrepreneur_ashok_manufacturing_1795161282480.jpg',
+  'IM500-2027-0110': '/src/assets/images/entrepreneur_nandini_fintech_1795161282853.jpg',
+  'IM500-2027-0111': '/src/assets/images/entrepreneur_karthikeyan_agro_1795161283294.jpg',
+  'IM500-2027-0112': '/src/assets/images/entrepreneur_divya_biotech_1795161282811.jpg',
+  'IM500-2027-0113': '/src/assets/images/entrepreneur_rajesh_infra_1795161284403.jpg',
+  'IM500-2027-0114': '/src/assets/images/portrait_woman_textile_founder_1795502295123.jpg',
+  'IM500-2027-0115': '/src/assets/images/portrait_woman_ev_founder_1795502295863.jpg',
+  'IM500-2027-0116': '/src/assets/images/portrait_woman_saas_founder_1795502296369.jpg',
+};
+
+export const ORGANISER_PORTRAIT_BY_NAME: Record<string, string> = {
+  'Mr. Rajganesh': '/src/assets/images/portrait_rajganesh_organiser_1795502294638.jpg',
+  Rajganesh: '/src/assets/images/portrait_rajganesh_organiser_1795502294638.jpg',
 };
 
 export const REVIEWER_PORTRAIT_BY_NAME: Record<string, string> = {
@@ -187,6 +200,118 @@ export const PARTICIPANT_HIGHLIGHTS: ParticipantProfileHighlight[] = [
     portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0108'],
     stage: 'Early revenue · Resubmitting',
   },
+  {
+    id: 'IM500-2027-0109',
+    fullName: 'Ashok Kumaravel',
+    roleTitle: 'Founder & Chief Executive',
+    company: 'Chola Precision Tooling Pvt Ltd',
+    category: 'Founder',
+    track: 'Business Expansion',
+    location: 'Coimbatore',
+    mandate: '₹9.5 Crore · Aerospace & EV Component Plant',
+    quote:
+      'Expanding five-axis CNC aerospace machining capacity in Coimbatore to serve tier-one European and Indian electric mobility programs.',
+    portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0109'],
+    stage: 'Growth · Approved',
+  },
+  {
+    id: 'IM500-2027-0110',
+    fullName: 'Nandini Venkataraman',
+    roleTitle: 'Co-Founder & CEO',
+    company: 'TidelPay MSME Ledger Technologies',
+    category: 'Founder',
+    track: 'Startups',
+    location: 'Chennai',
+    mandate: '₹4.2 Crore · GST Invoice Financing SaaS',
+    quote:
+      'Automating GST-verified supply-chain credit scoring for 8,500 southern Indian manufacturing suppliers through scheduled bank APIs.',
+    portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0110'],
+    stage: 'Early revenue · Approved',
+  },
+  {
+    id: 'IM500-2027-0111',
+    fullName: 'Karthikeyan Shanmugam',
+    roleTitle: 'Managing Founder',
+    company: 'Vaigai Agri-Cold Networks',
+    category: 'Founder',
+    track: 'Bank Loans',
+    location: 'Trichy / Madurai',
+    mandate: '₹7.8 Crore · Solar-Powered Horticulture Hubs',
+    quote:
+      'Post-harvest solar cold-storage nodes cut perishable spice and mango spoilage across Delta districts while integrating farmer FPO contracts.',
+    portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0111'],
+    stage: 'Growth · Under review',
+  },
+  {
+    id: 'IM500-2027-0112',
+    fullName: 'Dr. Divya Narayanan',
+    roleTitle: 'Founder & Scientific Director',
+    company: 'Adyar BioDiagnostics Pvt Ltd',
+    category: 'Founder',
+    track: 'Startups',
+    location: 'Chennai',
+    mandate: '₹5.5 Crore · Point-of-Care Immunoassay Devices',
+    quote:
+      'Developing CDSCO-certified rapid clinical testing cartridges incubated at IIT Madras Research Park for tier-2 hospital networks.',
+    portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0112'],
+    stage: 'Clinical Pilot · Approved',
+  },
+  {
+    id: 'IM500-2027-0113',
+    fullName: 'Rajeshwar Natarajan',
+    roleTitle: 'Managing Director',
+    company: 'Coromandel Clean Energy Infrastructure',
+    category: 'Founder',
+    track: 'Mixed Loans',
+    location: 'Tuticorin / Chennai',
+    mandate: '₹48 Crore · Industrial Rooftop & Battery Storage',
+    quote:
+      'Blended project debt and green infrastructure equity delivering captive solar-plus-storage microgrids for textile and chemical exporters.',
+    portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0113'],
+    stage: 'Established · Approved',
+  },
+  {
+    id: 'IM500-2027-0114',
+    fullName: 'Deepa Soundararajan',
+    roleTitle: 'Founder & Creative Director',
+    company: 'Kongu EarthLoom Exports Pvt Ltd',
+    category: 'Founder',
+    track: 'Business Expansion',
+    location: 'Tiruppur / Coimbatore',
+    mandate: '₹8.2 Crore · Sustainable Hemp & Organic Knitwear Unit',
+    quote:
+      'Scaling zero-liquid-discharge organic apparel manufacturing in Tiruppur for Scandinavian and Japanese private-label sustainability partners.',
+    portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0114'],
+    stage: 'Growth · Approved',
+  },
+  {
+    id: 'IM500-2027-0115',
+    fullName: 'Lakshmi Priya Raman',
+    roleTitle: 'Co-Founder & Chief Technology Officer',
+    company: 'Arcot Motion EV Systems',
+    category: 'Founder',
+    track: 'Startups',
+    location: 'Chennai / Hosur',
+    mandate: '₹6.5 Crore · Two-Wheeler BMS & Thermal Packs',
+    quote:
+      'Indigenous battery-management firmware and liquid-cooled modular packs engineered in Chennai for commercial last-mile electric fleets.',
+    portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0115'],
+    stage: 'Series A Readiness · Approved',
+  },
+  {
+    id: 'IM500-2027-0116',
+    fullName: 'Kavya Subramani',
+    roleTitle: 'Founder & Managing CEO',
+    company: 'Vaigai Treasury Cloud LLP',
+    category: 'Founder',
+    track: 'Startups',
+    location: 'Madurai / Chennai',
+    mandate: '₹3.6 Crore · MSME Cashflow & Treasury Automation',
+    quote:
+      'Empowering tier-2 textile and agro-processing CFOs with automated working-capital reconciliation and bank-ready DSCR forecasting.',
+    portraitUrl: PARTICIPANT_PORTRAIT_BY_ID['IM500-2027-0116'],
+    stage: 'Early revenue · Under review',
+  },
 ];
 
 export const COMMITTEE_REVIEWER_PROFILES: CommitteeReviewerProfile[] = [
@@ -247,11 +372,16 @@ export function resolvePortraitUrl(nameOrId?: string, id?: string): string | nul
   if (!nameOrId) return null;
   const trimmed = nameOrId.trim();
   if (PARTICIPANT_PORTRAIT_BY_ID[trimmed]) return PARTICIPANT_PORTRAIT_BY_ID[trimmed];
+  if (ORGANISER_PORTRAIT_BY_NAME[trimmed]) return ORGANISER_PORTRAIT_BY_NAME[trimmed];
   if (REVIEWER_PORTRAIT_BY_NAME[trimmed]) return REVIEWER_PORTRAIT_BY_NAME[trimmed];
   if (VERIFIED_LEADER_PORTRAIT_BY_NAME[trimmed]) {
     return VERIFIED_LEADER_PORTRAIT_BY_NAME[trimmed];
   }
   const lower = trimmed.toLowerCase();
+  const organiserMatch = Object.entries(ORGANISER_PORTRAIT_BY_NAME).find(
+    ([k]) => k.toLowerCase() === lower
+  );
+  if (organiserMatch) return organiserMatch[1];
   if (NORMALIZED_LEADER_PORTRAITS[lower]) {
     return NORMALIZED_LEADER_PORTRAITS[lower];
   }

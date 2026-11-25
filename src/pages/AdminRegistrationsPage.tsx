@@ -4,6 +4,7 @@ import {
   Download,
   Eye,
   Lock,
+  Mail,
   RotateCcw,
   Search,
   ShieldCheck,
@@ -13,15 +14,21 @@ import {
 } from 'lucide-react';
 import {
   ALL_REGISTRATION_CATEGORIES,
+  ORGANISER_NOTIFICATION_EMAIL,
+  REGISTRATION_CUTOFF_DATE_CODE,
+  REGISTRATION_STRATEGY,
   computeCategorySlices,
+  computeParticipantStatusStackedRows,
   computeParticipantTypeComparison,
   computePaymentStatusBreakdown,
   computeRegistrationStats,
   computeRegistrationTrend,
   computeTrackBreakdown,
+  computeTrackStatusStackedRows,
   computeValidationStatusBreakdown,
   formatLakhsToDisplay,
   registrationsToCsv,
+  type NotificationLogEntry,
   type PaymentStatus,
   type RegistrationRecord,
   type RegistrationStats,
@@ -44,6 +51,7 @@ import { ParticipantDossierModal } from '../components/ProfileModal';
 
 export function AdminRegistrationsPage() {
   const [registrations, setRegistrations] = useState<RegistrationRecord[]>([]);
+  const [notifications, setNotifications] = useState<NotificationLogEntry[]>([]);
   const [allCount, setAllCount] = useState<number>(0);
   const [stats, setStats] = useState<RegistrationStats | null>(null);
   const [targets, setTargets] = useState<RegistrationTargets | null>(null);
@@ -84,13 +92,21 @@ export function AdminRegistrationsPage() {
       if (dateFrom) params.set('dateFrom', dateFrom);
       if (dateTo) params.set('dateTo', dateTo);
 
-      const res = await fetch(`/api/registrations?${params.toString()}`);
+      const [res, notifRes] = await Promise.all([
+        fetch(`/api/registrations?${params.toString()}`),
+        fetch('/api/notifications'),
+      ]);
       if (!res.ok) throw new Error('Failed to load registrations');
       const data = await res.json();
       setRegistrations(data.registrations || []);
       setAllCount(typeof data.allCount === 'number' ? data.allCount : (data.registrations || []).length);
       setStats(data.stats || null);
       setTargets(data.targets || null);
+
+      if (notifRes.ok) {
+        const notifData = await notifRes.json();
+        setNotifications(notifData.notifications || []);
+      }
 
       if (data.registrations?.length > 0) {
         setSelectedId((prev) =>
@@ -243,6 +259,12 @@ export function AdminRegistrationsPage() {
   const participantComparison = targets
     ? computeParticipantTypeComparison(registrations, targets)
     : [];
+  const stackedTrackRows = targets
+    ? computeTrackStatusStackedRows(registrations, targets)
+    : [];
+  const stackedRoleRows = targets
+    ? computeParticipantStatusStackedRows(registrations, targets)
+    : [];
   const registrationTrend = computeRegistrationTrend(registrations);
 
   return (
@@ -303,54 +325,11 @@ export function AdminRegistrationsPage() {
           </button>
         </div>
 
-        {/* Initial Reference Figures */}
-        <InteractiveCard
-          dark
-          tilt={false}
-          className="rounded-2xl p-6 sm:p-8 space-y-5 !bg-gradient-to-br from-[#091326] via-[#0f1c3a] to-[#172554] border-white/15"
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e]">
-                REFERENCE FIGURES · NOT LIVE DATA
-              </span>
-              <h2 className="mt-1.5 font-display text-2xl sm:text-3xl font-medium text-white">
-                Initial reference figures
-              </h2>
-            </div>
-            <p className="text-xs text-[#cbd5e1] max-w-md">
-              Organiser baseline reference figures. Live KPI cards and interactive visualizations below
-              update dynamically from submitted records and active filters.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/15 border border-white/15 rounded-xl bg-[#091326]/70">
-            <div className="p-5 text-center">
-              <div className="font-mono text-3xl sm:text-4xl font-semibold text-[#14b8a6] tabular-nums">
-                100
-              </div>
-              <div className="mt-1 text-xs text-[#cbd5e1]">Completed (reference)</div>
-            </div>
-            <div className="p-5 text-center">
-              <div className="font-mono text-3xl sm:text-4xl font-semibold text-[#e6c67e] tabular-nums">
-                400
-              </div>
-              <div className="mt-1 text-xs text-[#cbd5e1]">Pending (reference)</div>
-            </div>
-            <div className="p-5 text-center">
-              <div className="font-mono text-3xl sm:text-4xl font-semibold text-[#93c5fd] tabular-nums">
-                500
-              </div>
-              <div className="mt-1 text-xs text-[#cbd5e1]">Target participants</div>
-            </div>
-          </div>
-        </InteractiveCard>
-
         {/* Live Database Operations KPIs & Interactive Charts */}
         {liveFilteredStats && (
           <div className="space-y-6">
             {/* Primary KPI Telemetry Bar */}
-            <div className="bg-white rounded-2xl border border-[#e4dfd5] overflow-hidden">
+            <div className="bg-white rounded-2xl border border-[#e4dfd5] overflow-hidden shadow-[0_6px_24px_-16px_rgba(9,19,38,0.12)]">
               <div className="px-5 py-3 border-b border-[#e4dfd5] bg-[#f8fafc] flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#1d4ed8]">
@@ -438,11 +417,15 @@ export function AdminRegistrationsPage() {
                 validationSlices={validationSlices}
                 paymentSlices={paymentSlices}
                 activeStatus={validationStatus}
+                activePaymentStatus={paymentStatus}
                 onSelectStatus={(nextStatus) => setValidationStatus(nextStatus)}
+                onSelectPaymentStatus={(nextPayment) => setPaymentStatus(nextPayment)}
               />
               <TrackComparisonBarChart
                 trackRows={trackBreakdown}
                 participantRows={participantComparison}
+                stackedTrackRows={stackedTrackRows}
+                stackedRoleRows={stackedRoleRows}
                 activeCategory={category}
                 onSelectCategory={(nextCat) => setCategory(nextCat)}
               />
@@ -453,15 +436,18 @@ export function AdminRegistrationsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
               <div className="lg:col-span-8 bg-white rounded-2xl border border-[#e4dfd5] grid grid-cols-2 sm:grid-cols-3 divide-y sm:divide-x divide-[#e4dfd5] overflow-hidden">
                 {[
-                  { label: 'Startup Registrations', value: liveFilteredStats.byCategory['Startups'] ?? 0 },
-                  { label: 'Bank Loan Registrations', value: liveFilteredStats.byCategory['Bank Loan'] ?? 0 },
-                  { label: 'Business Loan Registrations', value: liveFilteredStats.byCategory['Business Loan'] ?? 0 },
-                  { label: 'Business Expansion Registrations', value: liveFilteredStats.byCategory['Business Expansion'] ?? 0 },
-                  { label: 'International Opportunity', value: liveFilteredStats.byCategory['International Opportunity'] ?? 0 },
-                  { label: 'Other Investment Tracks', value: liveFilteredStats.byCategory['Other Investment Tracks'] ?? 0 },
+                  { label: 'Startup Registrations', value: liveFilteredStats.byCategory['Startups'] ?? 0, dot: '#1d4ed8' },
+                  { label: 'Bank Loan Registrations', value: liveFilteredStats.byCategory['Bank Loan'] ?? 0, dot: '#0d9488' },
+                  { label: 'Business Loan Registrations', value: liveFilteredStats.byCategory['Business Loan'] ?? 0, dot: '#c49a45' },
+                  { label: 'Business Expansion Registrations', value: liveFilteredStats.byCategory['Business Expansion'] ?? 0, dot: '#6d28d9' },
+                  { label: 'International Opportunity', value: liveFilteredStats.byCategory['International Opportunity'] ?? 0, dot: '#0284c7' },
+                  { label: 'Other Investment Tracks', value: liveFilteredStats.byCategory['Other Investment Tracks'] ?? 0, dot: '#4338ca' },
                 ].map((kpi) => (
                   <div key={kpi.label} className="p-4 flex flex-col justify-between">
-                    <span className="text-[11px] font-medium text-[#526075]">{kpi.label}</span>
+                    <span className="text-[11px] font-medium text-[#526075] flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: kpi.dot }} />
+                      <span className="truncate">{kpi.label}</span>
+                    </span>
                     <strong className="mt-1 font-mono text-xl font-semibold text-[#091326] tabular-nums">
                       <AnimatedCounter value={kpi.value} durationMs={500} />
                     </strong>
@@ -471,15 +457,15 @@ export function AdminRegistrationsPage() {
 
               <div className="lg:col-span-4 bg-white rounded-2xl border border-[#e4dfd5] grid grid-cols-3 divide-x divide-[#e4dfd5] overflow-hidden">
                 {[
-                  { label: 'Entrepreneurs', value: liveFilteredStats.byParticipantType.Entrepreneur },
-                  { label: 'Investors', value: liveFilteredStats.byParticipantType.Investor },
-                  { label: 'Exhibitors', value: liveFilteredStats.byParticipantType.Exhibitor },
+                  { label: 'Entrepreneurs', value: liveFilteredStats.byParticipantType.Entrepreneur, cls: 'text-[#1d4ed8]' },
+                  { label: 'Investors', value: liveFilteredStats.byParticipantType.Investor, cls: 'text-[#6d28d9]' },
+                  { label: 'Exhibitors', value: liveFilteredStats.byParticipantType.Exhibitor, cls: 'text-[#0d9488]' },
                 ].map((kpi) => (
                   <div key={kpi.label} className="p-4 flex flex-col justify-between">
                     <span className="text-[11px] font-medium text-[#526075] leading-snug">
                       {kpi.label}
                     </span>
-                    <strong className="mt-2 font-mono text-xl font-semibold text-[#1d4ed8] tabular-nums">
+                    <strong className={`mt-2 font-mono text-xl font-semibold tabular-nums ${kpi.cls}`}>
                       <AnimatedCounter value={kpi.value} durationMs={500} />
                     </strong>
                   </div>
@@ -488,6 +474,48 @@ export function AdminRegistrationsPage() {
             </div>
           </div>
         )}
+
+        {/* Initial Reference Figures (Organiser Baseline) */}
+        <InteractiveCard
+          dark
+          tilt={false}
+          className="rounded-2xl p-6 sm:p-7 space-y-4 !bg-gradient-to-br from-[#091326] via-[#0f1c3a] to-[#172554] border-white/15"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e]">
+                REFERENCE FIGURES · STRATEGY: {REGISTRATION_STRATEGY} · CUTOFF: {REGISTRATION_CUTOFF_DATE_CODE}
+              </span>
+              <h2 className="mt-1 font-display text-2xl font-medium text-white">
+                Initial reference figures (Available slots only)
+              </h2>
+            </div>
+            <p className="text-xs text-[#cbd5e1] max-w-md">
+              Completed – 100 · Pending – 400 · Cutoff {REGISTRATION_CUTOFF_DATE_CODE}. Live database KPIs and charts above reflect real submitted records.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/15 border border-white/15 rounded-xl bg-[#091326]/70">
+            <div className="p-4 text-center">
+              <div className="font-mono text-3xl font-semibold text-[#14b8a6] tabular-nums">
+                100
+              </div>
+              <div className="mt-1 text-xs text-[#cbd5e1]">Completed (reference)</div>
+            </div>
+            <div className="p-4 text-center">
+              <div className="font-mono text-3xl font-semibold text-[#e6c67e] tabular-nums">
+                400
+              </div>
+              <div className="mt-1 text-xs text-[#cbd5e1]">Pending (reference)</div>
+            </div>
+            <div className="p-4 text-center">
+              <div className="font-mono text-3xl font-semibold text-[#93c5fd] tabular-nums">
+                500
+              </div>
+              <div className="mt-1 text-xs text-[#cbd5e1]">Target participants</div>
+            </div>
+          </div>
+        </InteractiveCard>
 
         {/* Participant Target & Editable Category Targets */}
         {stats && targets && (
@@ -1034,6 +1062,98 @@ export function AdminRegistrationsPage() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Notification Dispatch Log (sevenidatamanager@gmail.com) */}
+        <div className="rounded-2xl border border-[#e4dfd5] bg-white p-4 sm:p-8 space-y-5">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#e4dfd5] pb-4">
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-800 shrink-0">
+                <Mail className="w-5 h-5" aria-hidden="true" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-teal-800">
+                  ORGANISER ALERT ROUTING
+                </p>
+                <h2 className="font-display text-xl sm:text-2xl font-medium text-[#0f172a] break-words">
+                  Notification Dispatch Log{' '}
+                  <span className="text-base sm:text-xl font-mono break-all text-[#334155]">
+                    ({ORGANISER_NOTIFICATION_EMAIL})
+                  </span>
+                </h2>
+                <p className="text-xs text-[#526075] mt-0.5 break-words">
+                  Every form submission creates a timestamped alert targeting{' '}
+                  <strong className="text-[#0f172a] break-all">{ORGANISER_NOTIFICATION_EMAIL}</strong> and relays
+                  via webhook when configured.
+                </p>
+              </div>
+            </div>
+            <span className="px-3 py-1 rounded-full bg-[#f5f3ee] border border-[#e4dfd5] font-mono text-xs font-semibold text-[#091326] shrink-0">
+              {notifications.length} Dispatch{notifications.length === 1 ? '' : 'es'} Logged
+            </span>
+          </div>
+
+          <div className="overflow-x-auto border border-[#e4dfd5] rounded-xl">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-[#f5f3ee] text-[#526075] border-b border-[#e4dfd5]">
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">Dispatch ID</th>
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">Event Type</th>
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">Ref ID</th>
+                  <th className="py-2.5 px-3 font-semibold">Applicant / Venture</th>
+                  <th className="py-2.5 px-3 font-semibold">Recipient Target</th>
+                  <th className="py-2.5 px-3 font-semibold">Delivery Status</th>
+                  <th className="py-2.5 px-3 font-semibold whitespace-nowrap">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#e4dfd5]">
+                {notifications.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-6 text-center text-[#526075]">
+                      No organiser notifications dispatched yet.
+                    </td>
+                  </tr>
+                ) : (
+                  notifications.map((notif) => (
+                    <tr key={notif.id} className="hover:bg-[#fafaf8]">
+                      <td className="py-2.5 px-3 font-mono text-[11px] font-semibold text-[#091326] whitespace-nowrap">
+                        {notif.id}
+                      </td>
+                      <td className="py-2.5 px-3 whitespace-nowrap text-[#0f172a] font-medium">
+                        {notif.eventType}
+                      </td>
+                      <td className="py-2.5 px-3 font-mono text-[11px] text-[#1d4ed8] whitespace-nowrap">
+                        {notif.referenceId}
+                      </td>
+                      <td className="py-2.5 px-3 max-w-[220px]">
+                        <div className="font-semibold text-[#0f172a] truncate">{notif.applicantName}</div>
+                        <div className="text-[11px] text-[#526075] truncate">
+                          {notif.companyOrSubject} · {notif.trackOrCategory}
+                        </div>
+                      </td>
+                      <td className="py-2.5 px-3 font-mono text-[11px] text-[#0f172a] whitespace-nowrap">
+                        {notif.recipient}
+                      </td>
+                      <td className="py-2.5 px-3 whitespace-nowrap">
+                        <span
+                          className={`inline-block px-2 py-0.5 rounded border text-[11px] font-medium ${
+                            notif.deliveryChannel === 'Webhook Relay'
+                              ? 'bg-teal-50 text-teal-900 border-teal-200'
+                              : 'bg-amber-50 text-amber-900 border-amber-200'
+                          }`}
+                        >
+                          {notif.status}
+                        </span>
+                      </td>
+                      <td className="py-2.5 px-3 font-mono text-[11px] text-[#526075] whitespace-nowrap">
+                        {notif.createdAt.slice(0, 16).replace('T', ' ')}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

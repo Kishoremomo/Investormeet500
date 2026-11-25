@@ -19,7 +19,7 @@ export function CtaBanner({
         <InteractiveCard
           dark
           tilt={false}
-          className="rounded-2xl px-6 sm:px-10 py-10 sm:py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+          className="rounded-2xl overflow-hidden !bg-gradient-to-br from-[#091326] via-[#0f1c3a] to-[#172554] px-6 sm:px-10 py-10 sm:py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border-white/15"
         >
           <div>
             <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#e6c67e] mb-2">

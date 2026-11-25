@@ -1,14 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  EVENT_DATE_CODE,
+  ORGANISER_NOTIFICATION_EMAIL,
+  REGISTRATION_CUTOFF_DATE_CODE,
+  REGISTRATION_STRATEGY,
   computeCategorySlices,
   computeCountdown,
+  computeParticipantStatusStackedRows,
   computeParticipantTypeComparison,
   computePaymentStatusBreakdown,
   computeRegistrationStats,
   computeRegistrationTrend,
   computeTrackBreakdown,
+  computeTrackStatusStackedRows,
   computeValidationStatusBreakdown,
+  createNotificationEntry,
   filterDirectoryItems,
   filterDiscoveryOpportunities,
   filterRegistrations,
@@ -24,6 +31,7 @@ import {
 } from './domain';
 import { INSTITUTION_LOGOS } from '../data/logos';
 import { resolvePortraitUrl } from '../data/portraits';
+import { EVENT_TEAMS, PAYMENT_OPTIONS } from '../data/homeAndPrograms';
 
 const sampleRegistrations: RegistrationRecord[] = [
   {
@@ -319,5 +327,58 @@ test('chart analytics helpers compute category slices, status breakdowns, partic
 
   assert.deepEqual(computeRegistrationTrend([]), []);
   assert.equal(computeCategorySlices([]).every((s) => s.percentage === 0), true);
+
+  const stackedTracks = computeTrackStatusStackedRows(sampleRegistrations, sampleTargets);
+  const stRow = stackedTracks.find((r) => r.key === 'Startups');
+  const bkRow = stackedTracks.find((r) => r.key === 'Bank Loan');
+  assert.equal(stRow?.approved, 1);
+  assert.equal(stRow?.count, 1);
+  assert.equal(bkRow?.pending, 1);
+  assert.equal(bkRow?.count, 1);
+
+  const stackedRoles = computeParticipantStatusStackedRows(sampleRegistrations, sampleTargets);
+  const entStacked = stackedRoles.find((r) => r.key === 'Entrepreneur');
+  assert.equal(entStacked?.count, 2);
+  assert.equal(entStacked?.approved, 1);
+  assert.equal(entStacked?.pending, 1);
+  assert.equal(
+    (entStacked?.approved ?? 0) +
+      (entStacked?.underReview ?? 0) +
+      (entStacked?.pending ?? 0) +
+      (entStacked?.rejected ?? 0),
+    entStacked?.count
+  );
 });
+
+test('42-point compliance: 9 payment options have 5 points, 5 teams have 5 member slots, and notifications target sevenidatamanager@gmail.com', () => {
+  assert.equal(PAYMENT_OPTIONS.length, 9);
+  for (const option of PAYMENT_OPTIONS) {
+    assert.equal(option.points.length, 5, `${option.tierLabel} should have exactly 5 points`);
+  }
+
+  assert.equal(EVENT_TEAMS.length, 5);
+  for (const team of EVENT_TEAMS) {
+    assert.equal(team.members.length, 5, `${team.title} should have 5 member slots`);
+  }
+
+  assert.equal(ORGANISER_NOTIFICATION_EMAIL, 'sevenidatamanager@gmail.com');
+  assert.equal(REGISTRATION_STRATEGY, 'Available slots only');
+  assert.equal(REGISTRATION_CUTOFF_DATE_CODE, '01-02-2027');
+  assert.equal(EVENT_DATE_CODE, '20-02-2027');
+
+  const notif = createNotificationEntry({
+    id: 'NTF-TEST-01',
+    eventType: 'Registration Submitted',
+    referenceId: 'IM500-2027-0099',
+    applicantName: 'Karthik Subramanian',
+    companyOrSubject: 'Kaveri Mobility',
+    trackOrCategory: 'Startups',
+    summary: 'Seed round application',
+    createdAt: '2026-11-23T10:00:00.000Z',
+  });
+  assert.equal(notif.recipient, 'sevenidatamanager@gmail.com');
+  assert.equal(notif.deliveryChannel, 'Notification Outbox');
+});
+
+
 

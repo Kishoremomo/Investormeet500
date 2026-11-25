@@ -24,12 +24,16 @@ import {
 } from './pages/DirectoriesPages';
 import {
   AboutPage,
+  AiExpertsPage,
   BusinessGuidancePage,
+  CfoPointsPage,
   ContactPage,
   EventProgramPage,
   GovernmentPage,
   InternationalPage,
   InvestorsPage,
+  InvestorTeamPage,
+  PitchAreaPage,
   PrivacyPage,
   RegistrationPolicyPage,
   SchedulePage,
@@ -37,6 +41,7 @@ import {
   StartupPage,
   TeamPage,
   TermsPage,
+  ValidationTeamPage,
 } from './pages/InfoAndGovernancePages';
 
 import { PageTransition } from './components/MotionPrimitives';
@@ -98,7 +103,18 @@ function RouteSwitch() {
       case '/event-program':
         return <EventProgramPage />;
       case '/speakers':
+      case '/chief-guests':
         return <SpeakersPage />;
+      case '/validation-team':
+        return <ValidationTeamPage />;
+      case '/pitch-area':
+        return <PitchAreaPage />;
+      case '/ai-experts':
+        return <AiExpertsPage />;
+      case '/cfo-points':
+        return <CfoPointsPage />;
+      case '/investor-team':
+        return <InvestorTeamPage />;
       case '/investors':
         return <InvestorsPage />;
       case '/startup':

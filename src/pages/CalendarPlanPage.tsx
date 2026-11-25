@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Search, X } from 'lucide-react';
 import type { CalendarTask } from '../lib/domain';
+import { MEDIA_ASSETS } from '../data/homeAndPrograms';
 import { Link } from '../lib/router';
 import { CtaBanner } from '../components/CtaBanner';
 import { InteractiveCard } from '../components/MotionPrimitives';
@@ -14,6 +15,15 @@ const CATEGORIES: CalendarTask['category'][] = [
   'Programs & Events',
   'Marketing & Media',
 ];
+
+const STREAM_ACCENT: Record<CalendarTask['category'], string> = {
+  'Finance & Revenue': '#1d4ed8',
+  Registrations: '#0d9488',
+  'Team & Planning': '#6d28d9',
+  'Government & Committees': '#4338ca',
+  'Programs & Events': '#0284c7',
+  'Marketing & Media': '#c49a45',
+};
 
 const STATUS_FILTERS: Array<'All' | CalendarTask['status']> = [
   'All',
@@ -100,11 +110,13 @@ export function CalendarPlanPage() {
   };
 
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#f8fafc] text-[#0f172a]">
       <PageHero
         kicker="SUMMIT EXECUTION ROADMAP"
         title="Calendar Plan"
         subtitle="39 operational planning tasks across six streams leading up to 20 February 2027."
+        image={MEDIA_ASSETS.cfoAuditBriefing}
+        imageAlt="Summit planning leads reviewing execution schedules and milestone checklists"
         stats={[
           { value: `${overallCompletion}%`, label: 'Overall Progress' },
           { value: String(tasks.length || 39), label: 'Tasks' },
@@ -117,19 +129,19 @@ export function CalendarPlanPage() {
           <span className="px-3.5 py-1.5 rounded-lg border border-[#e4dfd5] bg-white text-xs font-mono uppercase tracking-wider text-[#526075]">
             Operations
           </span>
-          <span className="px-4 py-1.5 rounded-lg bg-[#0c121d] text-xs font-semibold text-[#e6c67e]">
+          <span className="px-4 py-1.5 rounded-lg bg-[#091326] text-xs font-semibold text-[#e6c67e]">
             Calendar plan
           </span>
           <Link
             href="/admin/registrations"
-            className="px-4 py-1.5 rounded-lg border border-[#e4dfd5] bg-white hover:border-[#0c121d] text-xs font-medium text-[#0f172a] transition-colors"
+            className="px-4 py-1.5 rounded-lg border border-[#e4dfd5] bg-white hover:border-[#1d4ed8] text-xs font-medium text-[#0f172a] transition-colors"
           >
             Registration dashboard
           </Link>
         </div>
 
         {/* Timeline & Progress Summary */}
-        <div className="rounded-2xl border border-[#e4dfd5] bg-white p-6 space-y-6">
+        <div className="rounded-2xl border border-[#e4dfd5] bg-white p-6 space-y-6 shadow-sm border-t-4 border-t-[#1d4ed8]">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="flex flex-wrap items-end gap-4">
               <label className="text-xs text-[#526075]">
@@ -138,7 +150,7 @@ export function CalendarPlanPage() {
                   type="month"
                   value={startMonth}
                   onChange={(e) => setStartMonth(e.target.value)}
-                  className="px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8] text-xs focus:outline-none focus:border-[#0c121d]"
+                  className="px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#f8fafc] text-xs focus:outline-none focus:border-[#1d4ed8]"
                 />
               </label>
               <label className="text-xs text-[#526075]">
@@ -147,7 +159,7 @@ export function CalendarPlanPage() {
                   type="month"
                   value={endMonth}
                   onChange={(e) => setEndMonth(e.target.value)}
-                  className="px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8] text-xs focus:outline-none focus:border-[#0c121d]"
+                  className="px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#f8fafc] text-xs focus:outline-none focus:border-[#1d4ed8]"
                 />
               </label>
               <div className="w-full sm:w-64">
@@ -162,15 +174,15 @@ export function CalendarPlanPage() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Title, stream or owner..."
-                    className="w-full pl-8 pr-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8] text-xs focus:outline-none focus:border-[#0c121d]"
+                    className="w-full pl-8 pr-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#f8fafc] text-xs focus:outline-none focus:border-[#1d4ed8]"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center divide-x divide-[#e4dfd5] border border-[#e4dfd5] rounded-xl bg-[#fafaf8]">
+            <div className="flex items-center divide-x divide-[#e4dfd5] border border-[#e4dfd5] rounded-xl bg-[#f8fafc]">
               <div className="px-4 py-2.5 text-center">
-                <div className="font-mono text-2xl font-bold text-[#0c121d] tabular-nums">
+                <div className="font-mono text-2xl font-bold text-[#1d4ed8] tabular-nums">
                   {overallCompletion}%
                 </div>
                 <div className="text-[10px] font-mono uppercase tracking-wider text-[#526075]">
@@ -178,7 +190,7 @@ export function CalendarPlanPage() {
                 </div>
               </div>
               <div className="px-4 py-2.5 text-center">
-                <div className="font-mono text-lg font-bold text-emerald-700 tabular-nums">
+                <div className="font-mono text-lg font-bold text-[#059669] tabular-nums">
                   {statusCounts.Completed}
                 </div>
                 <div className="text-[10px] font-mono uppercase tracking-wider text-[#526075]">
@@ -186,7 +198,7 @@ export function CalendarPlanPage() {
                 </div>
               </div>
               <div className="px-4 py-2.5 text-center">
-                <div className="font-mono text-lg font-bold text-[#8a5d14] tabular-nums">
+                <div className="font-mono text-lg font-bold text-[#6d28d9] tabular-nums">
                   {statusCounts['In progress']}
                 </div>
                 <div className="text-[10px] font-mono uppercase tracking-wider text-[#526075]">
@@ -212,26 +224,34 @@ export function CalendarPlanPage() {
                 onClick={() => setActiveCategory('All')}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
                   activeCategory === 'All'
-                    ? 'bg-[#0c121d] text-[#e6c67e]'
-                    : 'bg-[#fafaf8] border border-[#e4dfd5] text-[#334155] hover:border-[#0c121d]'
+                    ? 'bg-[#091326] text-[#e6c67e]'
+                    : 'bg-[#f8fafc] border border-[#e4dfd5] text-[#334155] hover:border-[#1d4ed8]'
                 }`}
               >
                 All <span className="ml-1 font-mono">{tasks.length}</span>
               </button>
               {CATEGORIES.map((cat) => {
                 const count = tasks.filter((t) => t.category === cat).length;
+                const active = activeCategory === cat;
+                const color = STREAM_ACCENT[cat];
                 return (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => setActiveCategory(cat)}
-                    className={`px-3.5 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
-                      activeCategory === cat
-                        ? 'bg-[#0c121d] text-[#e6c67e]'
-                        : 'bg-[#fafaf8] border border-[#e4dfd5] text-[#334155] hover:border-[#0c121d]'
+                    className={`px-3.5 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-colors inline-flex items-center gap-1.5 ${
+                      active
+                        ? 'bg-[#091326] text-[#e6c67e]'
+                        : 'bg-[#f8fafc] border border-[#e4dfd5] text-[#334155] hover:border-[#1d4ed8]'
                     }`}
                   >
-                    {cat} <span className="ml-1 font-mono">{count}</span>
+                    <span
+                      aria-hidden="true"
+                      className="w-2 h-2 rounded-full shrink-0"
+                      style={{ backgroundColor: color }}
+                    />
+                    <span>{cat}</span>
+                    <span className="font-mono opacity-80">{count}</span>
                   </button>
                 );
               })}
@@ -245,8 +265,8 @@ export function CalendarPlanPage() {
                   onClick={() => setStatusFilter(st)}
                   className={`px-3 py-1 rounded-md text-[11px] font-semibold cursor-pointer transition-colors ${
                     statusFilter === st
-                      ? 'bg-[#8a5d14] text-white'
-                      : 'bg-[#fafaf8] border border-[#e4dfd5] text-[#526075] hover:text-[#0f172a]'
+                      ? 'bg-[#1d4ed8] text-white'
+                      : 'bg-[#f8fafc] border border-[#e4dfd5] text-[#526075] hover:text-[#0f172a]'
                   }`}
                 >
                   {st}
@@ -272,7 +292,7 @@ export function CalendarPlanPage() {
                 setStatusFilter('All');
                 setQuery('');
               }}
-              className="text-xs font-semibold text-[#8a5d14] underline cursor-pointer"
+              className="text-xs font-semibold text-[#1d4ed8] underline cursor-pointer"
             >
               Reset filters
             </button>
@@ -283,11 +303,19 @@ export function CalendarPlanPage() {
               const avg = Math.round(
                 items.reduce((sum, item) => sum + item.progress, 0) / items.length
               );
+              const streamColor = STREAM_ACCENT[cat as CalendarTask['category']] ?? '#1d4ed8';
               return (
                 <div key={cat} className="space-y-4">
                   <div className="flex items-baseline justify-between gap-4 border-b border-[#e4dfd5] pb-2">
-                    <h2 className="font-display text-2xl font-medium text-[#0f172a]">{cat}</h2>
-                    <span className="text-xs font-mono text-[#526075]">
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        aria-hidden="true"
+                        className="w-3 h-3 rounded-sm"
+                        style={{ backgroundColor: streamColor }}
+                      />
+                      <h2 className="font-display text-2xl font-medium text-[#0f172a]">{cat}</h2>
+                    </div>
+                    <span className="text-xs font-mono font-semibold" style={{ color: streamColor }}>
                       {items.length} tasks · {avg}%
                     </span>
                   </div>
@@ -297,11 +325,12 @@ export function CalendarPlanPage() {
                       <InteractiveCard
                         key={task.id}
                         as="article"
-                        className="rounded-xl p-5 flex flex-col justify-between gap-4"
+                        className="rounded-xl overflow-hidden flex flex-col justify-between gap-4"
                       >
-                        <div>
+                        <div className="h-1.5 w-full" style={{ backgroundColor: streamColor }} aria-hidden="true" />
+                        <div className="px-5">
                           <div className="flex items-center justify-between gap-2 text-xs">
-                            <span className="font-mono font-semibold text-[#8a5d14]">
+                            <span className="font-mono font-semibold" style={{ color: streamColor }}>
                               {task.number}
                             </span>
                             <span
@@ -309,7 +338,7 @@ export function CalendarPlanPage() {
                                 task.status === 'Completed'
                                   ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                                   : task.status === 'In progress'
-                                  ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                  ? 'bg-indigo-50 text-indigo-800 border-indigo-200'
                                   : 'bg-[#f5f3ee] text-[#334155] border-[#e4dfd5]'
                               }`}
                             >
@@ -324,11 +353,14 @@ export function CalendarPlanPage() {
                           </p>
                         </div>
 
-                        <div className="space-y-3 pt-2 border-t border-[#e4dfd5] text-[11px]">
-                          <div className="h-1.5 rounded-full bg-[#e4dfd5] overflow-hidden">
+                        <div className="px-5 pb-5 space-y-3 pt-2 border-t border-[#e4dfd5] text-[11px]">
+                          <div className="h-2 rounded-full bg-[#e2e8f0] overflow-hidden">
                             <div
-                              className="h-full rounded-full bg-[#0c121d] transition-all duration-300"
-                              style={{ width: `${task.progress}%` }}
+                              className="h-full rounded-full transition-all duration-300"
+                              style={{
+                                width: `${task.progress}%`,
+                                background: `linear-gradient(90deg, ${streamColor}, #0d9488)`,
+                              }}
                             />
                           </div>
                           <div className="grid grid-cols-3 gap-2">
@@ -355,7 +387,7 @@ export function CalendarPlanPage() {
                           <button
                             type="button"
                             onClick={() => setInspectTask({ ...task })}
-                            className="w-full py-2 rounded-lg border border-[#d6cfc2] hover:border-[#0c121d] hover:bg-[#fafaf8] text-xs font-semibold text-[#0f172a] cursor-pointer transition-colors"
+                            className="w-full py-2 rounded-lg border border-[#d6cfc2] hover:border-[#1d4ed8] hover:bg-[#eff6ff] hover:text-[#1d4ed8] text-xs font-semibold text-[#0f172a] cursor-pointer transition-colors"
                           >
                             Inspect &amp; Update
                           </button>
@@ -375,108 +407,111 @@ export function CalendarPlanPage() {
           role="dialog"
           aria-modal="true"
           aria-label={`Inspect ${inspectTask.title}`}
-          className="fixed inset-0 z-50 bg-[#0c121d]/80 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-[#091326]/80 backdrop-blur-sm flex items-center justify-center p-4"
         >
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl border border-[#e4dfd5]">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#8a5d14]">
-                  {inspectTask.category} · Task {inspectTask.number}
-                </p>
-                <h3 className="font-display text-2xl font-medium text-[#0f172a] mt-1">
-                  {inspectTask.title}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setInspectTask(null)}
-                aria-label="Close task inspector"
-                className="w-8 h-8 rounded-lg border border-[#e4dfd5] hover:border-[#0c121d] flex items-center justify-center cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <p className="text-sm text-[#334155] leading-relaxed">{inspectTask.description}</p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <label className="block">
-                <span className="font-semibold text-[#0f172a] block mb-1">Status</span>
-                <select
-                  value={inspectTask.status}
-                  onChange={(e) =>
-                    setInspectTask({
-                      ...inspectTask,
-                      status: e.target.value as CalendarTask['status'],
-                      progress: e.target.value === 'Completed' ? 100 : inspectTask.progress,
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8]"
+          <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-[#e4dfd5]">
+            <div className="h-1.5 w-full bg-gradient-to-r from-[#1d4ed8] via-[#6d28d9] to-[#0d9488]" />
+            <div className="p-6 space-y-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1d4ed8]">
+                    {inspectTask.category} · Task {inspectTask.number}
+                  </p>
+                  <h3 className="font-display text-2xl font-medium text-[#0f172a] mt-1">
+                    {inspectTask.title}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setInspectTask(null)}
+                  aria-label="Close task inspector"
+                  className="w-8 h-8 rounded-lg border border-[#e4dfd5] hover:border-[#1d4ed8] flex items-center justify-center cursor-pointer"
                 >
-                  <option value="Not started">Not started</option>
-                  <option value="In progress">In progress</option>
-                  <option value="Completed">Completed</option>
-                </select>
-              </label>
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-              <label className="block">
-                <span className="font-semibold text-[#0f172a] block mb-1">
-                  Progress ({inspectTask.progress}%)
-                </span>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  step={5}
-                  value={inspectTask.progress}
-                  onChange={(e) =>
-                    setInspectTask({ ...inspectTask, progress: Number(e.target.value) })
-                  }
-                  className="w-full accent-[#0c121d] mt-2"
-                />
-              </label>
+              <p className="text-sm text-[#334155] leading-relaxed">{inspectTask.description}</p>
 
-              <label className="block">
-                <span className="font-semibold text-[#0f172a] block mb-1">Target date</span>
-                <input
-                  type="date"
-                  value={inspectTask.targetDate}
-                  onChange={(e) =>
-                    setInspectTask({ ...inspectTask, targetDate: e.target.value })
-                  }
-                  className="w-full px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8]"
-                />
-              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <label className="block">
+                  <span className="font-semibold text-[#0f172a] block mb-1">Status</span>
+                  <select
+                    value={inspectTask.status}
+                    onChange={(e) =>
+                      setInspectTask({
+                        ...inspectTask,
+                        status: e.target.value as CalendarTask['status'],
+                        progress: e.target.value === 'Completed' ? 100 : inspectTask.progress,
+                      })
+                    }
+                    className="w-full px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#f8fafc] focus:outline-none focus:border-[#1d4ed8]"
+                  >
+                    <option value="Not started">Not started</option>
+                    <option value="In progress">In progress</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </label>
 
-              <label className="block">
-                <span className="font-semibold text-[#0f172a] block mb-1">Assigned to</span>
-                <input
-                  type="text"
-                  value={inspectTask.assignedTo}
-                  onChange={(e) =>
-                    setInspectTask({ ...inspectTask, assignedTo: e.target.value })
-                  }
-                  className="w-full px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8]"
-                />
-              </label>
-            </div>
+                <label className="block">
+                  <span className="font-semibold text-[#0f172a] block mb-1">
+                    Progress ({inspectTask.progress}%)
+                  </span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={inspectTask.progress}
+                    onChange={(e) =>
+                      setInspectTask({ ...inspectTask, progress: Number(e.target.value) })
+                    }
+                    className="w-full accent-[#1d4ed8] mt-2"
+                  />
+                </label>
 
-            <div className="flex justify-end gap-3 pt-2 border-t border-[#e4dfd5]">
-              <button
-                type="button"
-                onClick={() => setInspectTask(null)}
-                className="px-4 py-2 text-xs font-medium text-[#526075] hover:text-[#0f172a] cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={saving}
-                onClick={saveTaskUpdate}
-                className="btn-gold px-6 py-2 rounded-lg text-xs font-semibold cursor-pointer"
-              >
-                {saving ? 'Saving…' : 'Save updates'}
-              </button>
+                <label className="block">
+                  <span className="font-semibold text-[#0f172a] block mb-1">Target date</span>
+                  <input
+                    type="date"
+                    value={inspectTask.targetDate}
+                    onChange={(e) =>
+                      setInspectTask({ ...inspectTask, targetDate: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#f8fafc] focus:outline-none focus:border-[#1d4ed8]"
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="font-semibold text-[#0f172a] block mb-1">Assigned to</span>
+                  <input
+                    type="text"
+                    value={inspectTask.assignedTo}
+                    onChange={(e) =>
+                      setInspectTask({ ...inspectTask, assignedTo: e.target.value })
+                    }
+                    className="w-full px-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#f8fafc] focus:outline-none focus:border-[#1d4ed8]"
+                  />
+                </label>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2 border-t border-[#e4dfd5]">
+                <button
+                  type="button"
+                  onClick={() => setInspectTask(null)}
+                  className="px-4 py-2 text-xs font-medium text-[#526075] hover:text-[#0f172a] cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={saveTaskUpdate}
+                  className="btn-gold px-6 py-2 rounded-lg text-xs font-semibold cursor-pointer"
+                >
+                  {saving ? 'Saving…' : 'Save updates'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -486,3 +521,4 @@ export function CalendarPlanPage() {
     </div>
   );
 }
+

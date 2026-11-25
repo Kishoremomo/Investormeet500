@@ -4,6 +4,7 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import {
   computeRegistrationStats,
+  createNotificationEntry,
   filterRegistrations,
   validateApplicationInput,
   validateCategoryRegistrationInput,
@@ -11,6 +12,7 @@ import {
   type CalendarTask,
   type InquiryRecord,
   type InvestmentTrack,
+  type NotificationLogEntry,
   type ParticipantType,
   type PaymentStatus,
   type RegistrationRecord,
@@ -27,6 +29,7 @@ interface StoreSchema {
   targets: RegistrationTargets;
   calendarTasks: CalendarTask[];
   inquiries: InquiryRecord[];
+  notifications: NotificationLogEntry[];
 }
 
 const DEFAULT_TARGETS: RegistrationTargets = {
@@ -246,7 +249,7 @@ const SEED_CALENDAR_TASKS: CalendarTask[] = [
   { id: 'T10', number: '04', category: 'Team & Planning', title: 'Venue Selection & Contract', description: 'Confirm Chennai convention hotel venue, 3 halls and catering contract.', status: 'In progress', progress: 70, targetDate: '2026-12-01', assignedTo: 'Venue Ops' },
   { id: 'T11', number: '05', category: 'Team & Planning', title: 'Hall Layout A vs Layout B Sign-off', description: 'Lock exhibition booth count (20 vs 30) and VIP/Business lounge footprint.', status: 'In progress', progress: 55, targetDate: '2026-12-18', assignedTo: 'Floor Planning' },
   { id: 'T12', number: '06', category: 'Team & Planning', title: 'Crowd Management & Badge Access', description: 'Prepare QR check-in desks, hall marshals and security protocol for 500 delegates.', status: 'Not started', progress: 10, targetDate: '2027-02-10', assignedTo: 'Security & Ops' },
-  { id: 'T13', number: '07', category: 'Team & Planning', title: 'Hospitality & Outstation Travel', description: 'Coordinate airport transfers and hotel blocks for speakers and international delegates.', status: 'Not started', progress: 10, targetDate: '2027-02-05', assignedTo: 'Hospitality Desk' },
+  { id: 'T13', number: '07', category: 'Team & Planning', title: 'Hospitality & Outstation Travel', description: 'Coordinate airport transfers and hotel blocks for chief guests and international delegates.', status: 'Not started', progress: 10, targetDate: '2027-02-05', assignedTo: 'Hospitality Desk' },
   { id: 'T14', number: '08', category: 'Team & Planning', title: 'Reporting & Call-Report System', description: 'Configure guarantee-level call reports and closing outcome summaries.', status: 'In progress', progress: 75, targetDate: '2027-01-15', assignedTo: 'Systems Lead' },
   { id: 'T15', number: '09', category: 'Team & Planning', title: 'Full Dress Rehearsal & Hall Walkthrough', description: 'Complete AV, stage cue and pitch timer testing 48 hours before event.', status: 'Not started', progress: 0, targetDate: '2027-02-18', assignedTo: 'Stage Production' },
 
@@ -272,7 +275,7 @@ const SEED_CALENDAR_TASKS: CalendarTask[] = [
   { id: 'T30', number: '02', category: 'Marketing & Media', title: 'Tamil Nadu Association Heads Outreach', description: 'Coordinate delegations with TANSTIA, CODISSIA, AIEMA, CREDAI, SICCI and TEA.', status: 'In progress', progress: 55, targetDate: '2026-12-20', assignedTo: 'Outreach Team' },
   { id: 'T31', number: '03', category: 'Marketing & Media', title: 'Top 50 Financial Brands Outreach', description: 'Distribute sponsor decks to NBFCs, banks, angels and VC funds in Tamil Nadu.', status: 'In progress', progress: 50, targetDate: '2026-12-28', assignedTo: 'Corporate Outreach' },
   { id: 'T32', number: '04', category: 'Marketing & Media', title: 'Corporate Brand Outreach (JCB, Kobelco, L&T)', description: 'Engage industrial and corporate partners listed in the event plan.', status: 'In progress', progress: 40, targetDate: '2027-01-05', assignedTo: 'Corporate Outreach' },
-  { id: 'T33', number: '05', category: 'Marketing & Media', title: 'Instagram Announcement & Reels Calendar', description: 'Produce approved countdown reels, track explainers and speaker teasers.', status: 'Not started', progress: 20, targetDate: '2026-12-15', assignedTo: 'Social Media Team' },
+  { id: 'T33', number: '05', category: 'Marketing & Media', title: 'Instagram Announcement & Reels Calendar', description: 'Produce approved countdown reels, track explainers and chief guest teasers.', status: 'Not started', progress: 20, targetDate: '2026-12-15', assignedTo: 'Social Media Team' },
   { id: 'T34', number: '06', category: 'Marketing & Media', title: 'YouTube Explainer & Highlight Plan', description: 'Script founder readiness explainers and post-event highlight production.', status: 'Not started', progress: 15, targetDate: '2027-01-08', assignedTo: 'Social Media Team' },
   { id: 'T35', number: '07', category: 'Marketing & Media', title: 'Press Note & Media Kit Drafts', description: 'Prepare regional business press releases and Title Sponsor mentions.', status: 'Not started', progress: 10, targetDate: '2027-01-25', assignedTo: 'PR Desk' },
   { id: 'T36', number: '08', category: 'Marketing & Media', title: 'Registration Deadline Reminder Campaign', description: 'Run targeted founder outreach ahead of the 1 February 2027 deadline.', status: 'Not started', progress: 0, targetDate: '2027-01-20', assignedTo: 'Social Media Team' },
@@ -293,6 +296,74 @@ const SEED_INQUIRIES: InquiryRecord[] = [
   },
 ];
 
+const SEED_NOTIFICATIONS: NotificationLogEntry[] = [
+  createNotificationEntry({
+    id: 'NTF-2027-001',
+    eventType: 'Registration Submitted',
+    referenceId: 'IM500-2027-0101',
+    applicantName: 'Arvindhan Krishnamurthy',
+    companyOrSubject: 'Kaveri Precision Robotics Pvt Ltd',
+    trackOrCategory: 'Startups · ₹250 Lakhs',
+    summary: 'Verified startup application logged and routed to sevenidatamanager@gmail.com.',
+    createdAt: '2026-10-28T09:15:00.000Z',
+  }),
+  createNotificationEntry({
+    id: 'NTF-2027-002',
+    eventType: 'Consultation / Inquiry',
+    referenceId: 'INQ-2027-001',
+    applicantName: 'Raghavendra Menon',
+    companyOrSubject: 'Consultation',
+    trackOrCategory: 'First Level Business Guidance',
+    summary: 'First-level consultation request logged for sevenidatamanager@gmail.com.',
+    createdAt: '2026-11-11T10:15:00.000Z',
+  }),
+];
+
+async function recordAndDispatchNotification(
+  store: StoreSchema,
+  params: {
+    eventType: NotificationLogEntry['eventType'];
+    referenceId: string;
+    applicantName: string;
+    companyOrSubject: string;
+    trackOrCategory: string;
+    summary: string;
+    createdAt: string;
+  }
+): Promise<NotificationLogEntry> {
+  let dispatchedViaWebhook = false;
+  const webhookUrl = process.env.NOTIFICATION_WEBHOOK_URL;
+  if (webhookUrl) {
+    try {
+      const resp = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: 'sevenidatamanager@gmail.com',
+          ...params,
+        }),
+      });
+      dispatchedViaWebhook = resp.ok;
+    } catch {
+      dispatchedViaWebhook = false;
+    }
+  }
+
+  const maxNotifNum = store.notifications.reduce((max, item) => {
+    const match = /(\d+)$/.exec(item.id);
+    const num = match ? Number(match[1]) : 0;
+    return num > max ? num : max;
+  }, 0);
+
+  const entry = createNotificationEntry({
+    id: `NTF-2027-${String(maxNotifNum + 1).padStart(3, '0')}`,
+    ...params,
+    dispatchedViaWebhook,
+  });
+  store.notifications.unshift(entry);
+  return entry;
+}
+
 function ensureStore(): StoreSchema {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -303,6 +374,7 @@ function ensureStore(): StoreSchema {
       targets: DEFAULT_TARGETS,
       calendarTasks: SEED_CALENDAR_TASKS,
       inquiries: SEED_INQUIRIES,
+      notifications: SEED_NOTIFICATIONS,
     };
     fs.writeFileSync(STORE_PATH, JSON.stringify(initial, null, 2), 'utf8');
     return initial;
@@ -315,6 +387,7 @@ function ensureStore(): StoreSchema {
       targets: parsed.targets || DEFAULT_TARGETS,
       calendarTasks: Array.isArray(parsed.calendarTasks) ? parsed.calendarTasks : SEED_CALENDAR_TASKS,
       inquiries: Array.isArray(parsed.inquiries) ? parsed.inquiries : SEED_INQUIRIES,
+      notifications: Array.isArray(parsed.notifications) ? parsed.notifications : SEED_NOTIFICATIONS,
     };
   } catch {
     const fallback: StoreSchema = {
@@ -322,6 +395,7 @@ function ensureStore(): StoreSchema {
       targets: DEFAULT_TARGETS,
       calendarTasks: SEED_CALENDAR_TASKS,
       inquiries: SEED_INQUIRIES,
+      notifications: SEED_NOTIFICATIONS,
     };
     fs.writeFileSync(STORE_PATH, JSON.stringify(fallback, null, 2), 'utf8');
     return fallback;
@@ -386,12 +460,24 @@ async function startServer() {
     });
   });
 
+  // Notification outbox endpoint targeting sevenidatamanager@gmail.com
+  app.get('/api/notifications', (_req, res) => {
+    res.json({
+      recipient: 'sevenidatamanager@gmail.com',
+      notifications: store.notifications,
+    });
+  });
+
   // Create registration (supports both /apply and /registration category forms)
-  app.post('/api/registrations', (req, res) => {
+  app.post('/api/registrations', async (req, res) => {
     const body = req.body || {};
     const now = new Date().toISOString();
-    const nextNum = 101 + store.registrations.length + Math.floor(Math.random() * 10);
-    const id = `IM500-2027-${String(nextNum).padStart(4, '0')}`;
+    const maxRegNum = store.registrations.reduce((max, item) => {
+      const match = /(\d+)$/.exec(item.id);
+      const num = match ? Number(match[1]) : 0;
+      return num > max ? num : max;
+    }, 100);
+    const id = `IM500-2027-${String(maxRegNum + 1).padStart(4, '0')}`;
 
     if (body.mode === 'category') {
       const check = validateCategoryRegistrationInput(body);
@@ -424,8 +510,17 @@ async function startServer() {
         updatedAt: now,
       };
       store.registrations.unshift(record);
+      const notification = await recordAndDispatchNotification(store, {
+        eventType: 'Category Registration',
+        referenceId: record.id,
+        applicantName: record.full_name,
+        companyOrSubject: record.company,
+        trackOrCategory: `${record.track} (${record.participantType})`,
+        summary: `Category registration (${body.categorySlug}) for ₹${record.funding_lakhs}L routed to sevenidatamanager@gmail.com.`,
+        createdAt: now,
+      });
       saveStore(store);
-      res.status(201).json({ registration: record });
+      res.status(201).json({ registration: record, notification });
       return;
     }
 
@@ -458,8 +553,17 @@ async function startServer() {
     };
 
     store.registrations.unshift(record);
+    const notification = await recordAndDispatchNotification(store, {
+      eventType: 'Registration Submitted',
+      referenceId: record.id,
+      applicantName: record.full_name,
+      companyOrSubject: record.company,
+      trackOrCategory: `${record.track} · ₹${record.funding_lakhs} Lakhs`,
+      summary: `New summit application ${record.id} submitted for review and logged for sevenidatamanager@gmail.com.`,
+      createdAt: now,
+    });
     saveStore(store);
-    res.status(201).json({ registration: record });
+    res.status(201).json({ registration: record, notification });
   });
 
   // Update registration status, reviewer, payment, pitch hall
@@ -568,24 +672,34 @@ async function startServer() {
     res.json({ inquiries: store.inquiries });
   });
 
-  app.post('/api/inquiries', (req, res) => {
+  app.post('/api/inquiries', async (req, res) => {
     const check = validateContactInput(req.body || {});
     if (!check.valid) {
       res.status(400).json({ error: 'Validation failed', errors: check.errors });
       return;
     }
+    const now = new Date().toISOString();
     const record: InquiryRecord = {
       id: `INQ-2027-${String(store.inquiries.length + 1).padStart(3, '0')}`,
       name: String(req.body.name).trim(),
       email: String(req.body.email).trim(),
       subject: String(req.body.subject).trim(),
       message: String(req.body.message).trim(),
-      createdAt: new Date().toISOString(),
+      createdAt: now,
       status: 'New',
     };
     store.inquiries.unshift(record);
+    const notification = await recordAndDispatchNotification(store, {
+      eventType: 'Consultation / Inquiry',
+      referenceId: record.id,
+      applicantName: record.name,
+      companyOrSubject: record.subject,
+      trackOrCategory: record.email,
+      summary: `Inquiry "${record.subject}" from ${record.name} logged for sevenidatamanager@gmail.com.`,
+      createdAt: now,
+    });
     saveStore(store);
-    res.status(201).json({ inquiry: record });
+    res.status(201).json({ inquiry: record, notification });
   });
 
   app.patch('/api/inquiries/:id', (req, res) => {

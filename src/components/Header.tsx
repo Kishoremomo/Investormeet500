@@ -3,6 +3,7 @@ import {
   ArrowRight,
   Briefcase,
   Building2,
+  ChevronDown,
   Globe,
   Landmark,
   Menu,
@@ -15,7 +16,7 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
-  MAIN_NAV_LINKS,
+  HEADER_DROPDOWNS,
   MENU_DIRECTORY_COLUMNS,
   QUICK_LINKS,
   REGISTER_AS_CHIPS,
@@ -51,23 +52,40 @@ function ChipIcon({ icon }: { icon: RegisterAsChip['icon'] }) {
 export function Header() {
   const { pathname } = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const hoverCloseTimer = useRef<number | null>(null);
   const reduced = useReducedMotion();
 
   useEffect(() => {
     setMenuOpen(false);
+    setOpenDropdownId(null);
   }, [pathname]);
 
   useEffect(() => {
     const onGlobalKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
+        setOpenDropdownId(null);
         setMenuOpen((v) => !v);
+      }
+      if (e.key === 'Escape') {
+        setOpenDropdownId(null);
+      }
+    };
+    const onDocClick = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpenDropdownId(null);
       }
     };
     window.addEventListener('keydown', onGlobalKey);
-    return () => window.removeEventListener('keydown', onGlobalKey);
+    document.addEventListener('mousedown', onDocClick);
+    return () => {
+      window.removeEventListener('keydown', onGlobalKey);
+      document.removeEventListener('mousedown', onDocClick);
+    };
   }, []);
 
   useEffect(() => {
@@ -82,6 +100,21 @@ export function Header() {
       clearTimeout(t);
     };
   }, [menuOpen]);
+
+  const handleOpenDropdown = (id: string) => {
+    if (hoverCloseTimer.current) {
+      window.clearTimeout(hoverCloseTimer.current);
+      hoverCloseTimer.current = null;
+    }
+    setOpenDropdownId(id);
+  };
+
+  const handleScheduleCloseDropdown = () => {
+    if (hoverCloseTimer.current) window.clearTimeout(hoverCloseTimer.current);
+    hoverCloseTimer.current = window.setTimeout(() => {
+      setOpenDropdownId(null);
+    }, 150);
+  };
 
   const allMenuItems = useMemo(() => MENU_DIRECTORY_COLUMNS.flat(), []);
 
@@ -113,9 +146,9 @@ export function Header() {
         Skip to content
       </a>
 
-      {/* Three-Zone Sleek Single-Row Top Bar (64px) */}
+      {/* Three-Zone Sticky Header Bar with Dropdown Navigation */}
       <header className="sticky top-0 z-40 bg-[#0c121d]/95 backdrop-blur-md border-b border-white/10 text-[#f8f7f3]">
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-[1360px] mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
           <Link
             href="/"
             aria-label="Investor Meet 500 home"
@@ -124,36 +157,148 @@ export function Header() {
             <BrandMark />
           </Link>
 
-          <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-7">
-            {MAIN_NAV_LINKS.map((item) => {
-              const isActive =
-                item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+          <nav
+            ref={navRef}
+            aria-label="Main navigation"
+            className="hidden xl:flex items-center gap-5"
+          >
+            <Link
+              href="/"
+              className={`relative text-[13px] font-medium whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors ${
+                pathname === '/'
+                  ? 'text-[#e6c67e] border-[#c49a45]'
+                  : 'text-[#cbd5e1] border-transparent hover:text-white hover:border-white/30'
+              }`}
+            >
+              Home
+            </Link>
+
+            {HEADER_DROPDOWNS.map((group) => {
+              const isOpen = openDropdownId === group.id;
+              const hasActiveChild = group.items.some((item) =>
+                pathname.startsWith(item.href.split('#')[0])
+              );
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`relative text-[13px] font-medium whitespace-nowrap shrink-0 py-1 border-b transition-colors ${
-                    isActive
-                      ? 'text-[#e6c67e] border-[#c49a45]'
-                      : 'text-[#cbd5e1] border-transparent hover:text-white hover:border-white/30'
-                  }`}
+                <div
+                  key={group.id}
+                  className="relative"
+                  onMouseEnter={() => handleOpenDropdown(group.id)}
+                  onMouseLeave={handleScheduleCloseDropdown}
                 >
-                  {item.label}
-                </Link>
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-haspopup="menu"
+                    onClick={() => setOpenDropdownId(isOpen ? null : group.id)}
+                    className={`inline-flex items-center gap-1 text-[13px] font-medium whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors cursor-pointer ${
+                      hasActiveChild || isOpen
+                        ? 'text-[#e6c67e] border-[#c49a45]'
+                        : 'text-[#cbd5e1] border-transparent hover:text-white hover:border-white/30'
+                    }`}
+                  >
+                    <span>{group.label}</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-150 ${
+                        isOpen ? 'rotate-180 text-[#e6c67e]' : 'opacity-75'
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  {isOpen && (
+                    <div
+                      role="menu"
+                      aria-label={`${group.label} menu`}
+                      onMouseEnter={() => handleOpenDropdown(group.id)}
+                      onMouseLeave={handleScheduleCloseDropdown}
+                      className="absolute left-0 top-full pt-2.5 w-80 z-50"
+                    >
+                      <div className="rounded-xl border border-white/15 bg-[#0f172a] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] p-2 divide-y divide-white/8">
+                        {group.items.map((item) => {
+                          const itemActive = pathname === item.href;
+                          return (
+                            <Link
+                              key={item.href + item.label}
+                              href={item.href}
+                              role="menuitem"
+                              onClick={() => setOpenDropdownId(null)}
+                              className={`block px-3.5 py-2.5 rounded-lg transition-colors ${
+                                itemActive
+                                  ? 'bg-[#172554]/80 text-[#e6c67e]'
+                                  : 'text-[#f8f7f3] hover:bg-white/5 hover:text-[#e6c67e]'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-[13px] font-medium leading-tight">
+                                  {item.label}
+                                </span>
+                                <ArrowRight
+                                  className="w-3 h-3 opacity-45 shrink-0"
+                                  aria-hidden="true"
+                                />
+                              </div>
+                              {item.desc && (
+                                <span className="mt-0.5 block text-[11px] text-[#94a3b8]">
+                                  {item.desc}
+                                </span>
+                              )}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
+
+            <Link
+              href="/sponsors"
+              className={`relative text-[13px] font-medium whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors ${
+                pathname.startsWith('/sponsors')
+                  ? 'text-[#e6c67e] border-[#c49a45]'
+                  : 'text-[#cbd5e1] border-transparent hover:text-white hover:border-white/30'
+              }`}
+            >
+              Sponsors
+            </Link>
+
+            <Link
+              href="/payments"
+              className={`relative text-[13px] font-medium whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors ${
+                pathname.startsWith('/payments')
+                  ? 'text-[#e6c67e] border-[#c49a45]'
+                  : 'text-[#cbd5e1] border-transparent hover:text-white hover:border-white/30'
+              }`}
+            >
+              Payments
+            </Link>
+
+            <Link
+              href="/contact"
+              className={`relative text-[13px] font-medium whitespace-nowrap shrink-0 py-1 border-b-2 transition-colors ${
+                pathname.startsWith('/contact')
+                  ? 'text-[#e6c67e] border-[#c49a45]'
+                  : 'text-[#cbd5e1] border-transparent hover:text-white hover:border-white/30'
+              }`}
+            >
+              Contact
+            </Link>
           </nav>
 
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <button
               type="button"
-              onClick={() => setMenuOpen(true)}
-              className="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/15 bg-[#131c2b] hover:border-white/30 text-xs text-[#94a3b8] hover:text-white transition-colors cursor-pointer"
-              aria-label="Open directory and site search"
+              onClick={() => {
+                setOpenDropdownId(null);
+                setMenuOpen(true);
+              }}
+              className="w-9 h-9 sm:w-auto sm:h-auto inline-flex items-center justify-center gap-2 sm:px-3.5 sm:py-2 rounded-lg border border-white/20 bg-[#131c2b] hover:border-[#c49a45] text-xs text-[#e2e8f0] hover:text-white transition-colors cursor-pointer shrink-0"
+              aria-label="Search site, tracks, banks and pages"
             >
-              <Search className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Directory</span>
-              <kbd className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-[#cbd5e1]">
+              <Search className="w-4 h-4 text-[#e6c67e]" aria-hidden="true" />
+              <span className="hidden sm:inline font-medium">Search</span>
+              <kbd className="hidden md:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-[#cbd5e1]">
                 ⌘K
               </kbd>
             </button>
@@ -161,19 +306,23 @@ export function Header() {
             <MagneticAction strength={3}>
               <Link
                 href="/apply"
-                className="btn-gold inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-[13px] font-semibold whitespace-nowrap shrink-0"
+                className="btn-gold inline-flex items-center gap-1 px-2.5 sm:px-5 py-2 rounded-lg text-[11px] sm:text-[13px] font-semibold whitespace-nowrap shrink-0"
               >
-                <span>Apply Now</span>
+                <span className="sm:hidden">Apply</span>
+                <span className="hidden sm:inline">Apply Now</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             </MagneticAction>
 
             <button
               type="button"
-              onClick={() => setMenuOpen((v) => !v)}
+              onClick={() => {
+                setOpenDropdownId(null);
+                setMenuOpen((v) => !v);
+              }}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
-              className="w-10 h-10 rounded-lg border border-white/15 bg-[#131c2b] hover:border-[#c49a45] text-[#e6c67e] inline-flex items-center justify-center transition-colors shrink-0 cursor-pointer"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-white/15 bg-[#131c2b] hover:border-[#c49a45] text-[#e6c67e] inline-flex items-center justify-center transition-colors shrink-0 cursor-pointer"
             >
               {menuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -191,13 +340,13 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={reduced ? undefined : { opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 top-16 z-50 bg-[#0c121d]/98 backdrop-blur-xl text-[#f8f7f3] overflow-y-auto border-t border-white/10"
+            className="fixed inset-0 top-16 sm:top-20 z-50 bg-[#0c121d]/98 backdrop-blur-xl text-[#f8f7f3] overflow-y-auto border-t border-white/10"
           >
             <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
               {/* Quick Navigation Strip */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pb-5 border-b border-white/10">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pb-5 border-b border-white/10">
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-[#e6c67e]">
-                  QUICK ACCESS ·
+                  DIRECT DESKS ·
                 </span>
                 {QUICK_LINKS.map((item) => {
                   const active = pathname === item.href;
@@ -206,8 +355,10 @@ export function Header() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setMenuOpen(false)}
-                      className={`text-xs font-medium transition-colors whitespace-nowrap ${
-                        active ? 'text-[#e6c67e] font-semibold' : 'text-[#cbd5e1] hover:text-white'
+                      className={`text-xs font-medium px-2.5 py-1 rounded border transition-colors whitespace-nowrap ${
+                        active
+                          ? 'bg-[#c49a45] text-[#0c121d] border-[#c49a45] font-semibold'
+                          : 'border-white/10 bg-[#131c2b] text-[#e2e8f0] hover:border-[#c49a45] hover:text-white'
                       }`}
                     >
                       {item.label}
@@ -217,16 +368,16 @@ export function Header() {
               </div>
 
               {/* Search Input */}
-              <div className="max-w-xl">
+              <div className="max-w-2xl">
                 <label
                   htmlFor="drawer-site-search"
                   className="block font-mono text-[11px] uppercase tracking-wider text-[#94a3b8] mb-2"
                 >
-                  Search 29 platform pages &amp; directories
+                  Search all website pages, tracks, Chief Guests, Banks (120) &amp; Desks
                 </label>
                 <div className="relative">
                   <Search
-                    className="w-4 h-4 text-[#94a3b8] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                    className="w-4 h-4 text-[#e6c67e] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
                     aria-hidden="true"
                   />
                   <input
@@ -235,8 +386,8 @@ export function Header() {
                     type="search"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Try Banks, Payments, Startup, Calendar..."
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-[#131c2b] border border-white/15 text-sm text-white placeholder:text-[#64748b] focus:border-[#c49a45]"
+                    placeholder="Try Chief Guests, 90 Days Policy, Validation Team, Pitch Area, Banks, Payments..."
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-[#131c2b] border border-white/20 text-sm text-white placeholder:text-[#64748b] focus:border-[#c49a45]"
                   />
                 </div>
               </div>
@@ -244,9 +395,9 @@ export function Header() {
               {/* Register As Role Grid */}
               <div className="space-y-3 pb-6 border-b border-white/10">
                 <span className="block font-mono text-[11px] font-semibold tracking-[0.14em] uppercase text-[#94a3b8]">
-                  REGISTER AS CATEGORY
+                  REGISTER AS CATEGORY · AVAILABLE SLOTS ONLY
                 </span>
-                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
                   {REGISTER_AS_CHIPS.map((chip) => (
                     <Link
                       key={chip.label}

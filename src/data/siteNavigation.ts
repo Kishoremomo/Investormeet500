@@ -16,11 +16,65 @@ export const MAIN_NAV_LINKS: NavItem[] = [
 
 export const QUICK_LINKS: NavItem[] = [
   { label: 'Payments', href: '/payments' },
-  { label: 'Validation Team', href: '/event-program#validation' },
-  { label: 'Pitch Area', href: '/event-program#pitch' },
-  { label: 'AI Experts', href: '/speakers#ai-experts' },
-  { label: 'CFO Points', href: '/speakers#cfo' },
-  { label: 'Investor Team Points', href: '/investors#investor-team' },
+  { label: 'Validation Team', href: '/validation-team' },
+  { label: 'Pitch Area', href: '/pitch-area' },
+  { label: 'AI Experts', href: '/ai-experts' },
+  { label: 'CFO Points', href: '/cfo-points' },
+  { label: 'Investor Team Points', href: '/investor-team' },
+  { label: '90 Days Policy', href: '/registration-policy' },
+];
+
+export interface HeaderDropdownItem {
+  label: string;
+  href: string;
+  desc?: string;
+}
+
+export interface HeaderDropdownGroup {
+  id: string;
+  label: string;
+  items: HeaderDropdownItem[];
+}
+
+export const HEADER_DROPDOWNS: HeaderDropdownGroup[] = [
+  {
+    id: 'summit',
+    label: 'Summit',
+    items: [
+      { label: 'About Investor Meet 500', href: '/about', desc: 'Objectives, halls & mandate' },
+      { label: 'Event Schedule (8 AM – 6 PM)', href: '/schedule', desc: 'Morning pitches & afternoon wrap' },
+      { label: 'Venue & Hall Maps', href: '/venue', desc: 'Halls 1–3, Layout A/B & M1–M6' },
+      { label: 'Chief Guests & VIPs', href: '/speakers', desc: 'Top 30 seats & Mr. Srinivasan Raja' },
+      { label: 'Committees & Teams (5 × 5)', href: '/team', desc: 'Validation & floor operations' },
+      { label: '90 Days Policy & Dates', href: '/registration-policy', desc: '01-02-2027 cutoff framework' },
+    ],
+  },
+  {
+    id: 'tracks',
+    label: 'Tracks & Desks',
+    items: [
+      { label: '5 Investment Tracks', href: '/tracks', desc: '₹50L to ₹500Cr pathways' },
+      { label: 'Startup Stream (100)', href: '/startup', desc: 'Validation & equity readiness' },
+      { label: 'Central & State Govt Guidance', href: '/government', desc: 'Invest India, MSME, StartupTN & TIIC' },
+      { label: 'First Level Business Guidance', href: '/business-guidance', desc: '10-step readiness clinic' },
+      { label: 'Pitch Area Allocation', href: '/pitch-area', desc: 'Hall assignment & timing' },
+      { label: 'AI Experts & CFO Points', href: '/ai-experts', desc: 'Diligence & 5-year finance discipline' },
+      { label: 'Investor Team Points', href: '/investor-team', desc: 'Ticket-size & mandate matching' },
+    ],
+  },
+  {
+    id: 'directories',
+    label: 'Directories',
+    items: [
+      { label: '120 Banks in India', href: '/banks', desc: 'RBI nationalised, private & foreign' },
+      { label: '500+ Corporate Index', href: '/corporate', desc: 'NSE/BSE & Tamil Nadu leaders' },
+      { label: '100 Entrepreneurs Directory', href: '/entrepreneurs', desc: 'Industrial & tech pioneers' },
+      { label: 'Women Entrepreneurs', href: '/women-entrepreneurs', desc: 'Verified founders & leaders' },
+      { label: 'Top 50 Financial Brands', href: '/financial-brands', desc: 'NBFCs, VCs & angel syndicates' },
+      { label: '15 Industry Associations', href: '/associations', desc: 'TANSTIA, CODISSIA, SICCI & CII' },
+      { label: 'International & FDI', href: '/international', desc: 'Cross-border JVs & delegations' },
+    ],
+  },
 ];
 
 export interface RegisterAsChip {
@@ -43,44 +97,44 @@ export const REGISTER_AS_CHIPS: RegisterAsChip[] = [
 
 export const MENU_DIRECTORY_COLUMNS: NavItem[][] = [
   [
-    { label: 'Home', href: '/', keywords: 'landing hero countdown tracks overview' },
+    { label: 'Home', href: '/', keywords: 'landing hero countdown tracks overview consultation' },
     { label: 'About', href: '/about', keywords: 'platform pathways committees operations' },
     { label: 'Investors', href: '/investors', keywords: 'investor team banks risk profiling' },
     { label: 'Event Schedule', href: '/schedule', keywords: '8 am 6 pm halls timetable' },
-    { label: 'Corporate', href: '/corporate', keywords: '25 brands 500 companies outreach' },
+    { label: 'Corporate', href: '/corporate', keywords: '25 brands 500 companies tamil nadu outreach' },
     { label: 'Associations', href: '/associations', keywords: 'tanstia codissia aiema credai ficci cii' },
-    { label: 'Payments', href: '/payments', keywords: '10000 50000 registration options fees' },
-    { label: 'Banks in India', href: '/banks', keywords: 'rbi 120 sbi private foreign rural banks' },
+    { label: 'Payments', href: '/payments', keywords: '10000 50000 5 points registration options fees' },
+    { label: 'Banks in India', href: '/banks', keywords: 'rbi 120 sbi private foreign rural banks logos' },
     { label: 'Top 50 Financial Brands', href: '/financial-brands', keywords: 'shriram sundaram angel venture tamil nadu' },
     { label: 'Terms & Conditions', href: '/terms', keywords: 'draft application risk fees policy' },
-    { label: 'Pitch Area', href: '/event-program#pitch', keywords: 'pitch deck allocation halls' },
-    { label: 'Investor Team Points', href: '/investors#investor-team', keywords: 'matching budget allocation' },
+    { label: 'Pitch Area', href: '/pitch-area', keywords: 'pitch deck allocation halls' },
+    { label: 'Investor Team Points', href: '/investor-team', keywords: 'matching budget allocation' },
   ],
   [
     { label: 'Calendar Plan', href: '/calendar-plan', keywords: '39 tasks timeline milestones' },
-    { label: 'Investment Tracks', href: '/tracks', keywords: 'startups business loan expansion bank mixed' },
-    { label: 'Sponsors & Partners', href: '/sponsors', keywords: 'title powered by co sponsor deliverables' },
+    { label: 'Investment Tracks', href: '/tracks', keywords: 'startups business loan expansion bank mixed meaning' },
+    { label: 'Sponsors & Partners', href: '/sponsors', keywords: 'title powered by co sponsor 10 deliverables' },
     { label: 'Venue & Event Map', href: '/venue', keywords: 'layout a layout b booths hall map chennai' },
-    { label: 'Team', href: '/team', keywords: 'registration committee social media operational' },
-    { label: '90-Day Policy', href: '/registration-policy', keywords: '20 reasons 3 months advance registration' },
+    { label: 'Team', href: '/team', keywords: 'registration committee social media operational 5 members' },
+    { label: '90 Days Policy', href: '/registration-policy', keywords: '20 reasons 3 months advance registration' },
     { label: 'Registration', href: '/registration', keywords: 'participant category startup investor corporate' },
     { label: 'Event Program', href: '/event-program', keywords: 'online operations crowd management reporting' },
-    { label: 'Apply', href: '/apply', keywords: 'submit application 50 lakhs 500 crore' },
+    { label: 'Apply', href: '/apply', keywords: 'submit application 50 lakhs 500 crore available slots only' },
     { label: 'Privacy Policy', href: '/privacy', keywords: 'data handling retention draft' },
-    { label: 'AI Experts', href: '/speakers#ai-experts', keywords: 'ai tools investment market future' },
+    { label: 'AI Experts', href: '/ai-experts', keywords: 'ai tools investment market future' },
   ],
   [
-    { label: 'Registration Dashboard', href: '/admin/registrations', keywords: 'admin kpi approve reject reviewer csv' },
+    { label: 'Registration Dashboard', href: '/admin/registrations', keywords: 'admin kpi approve reject reviewer csv sevenidata' },
     { label: 'Entrepreneurs', href: '/entrepreneurs', keywords: '100 business leaders directory' },
-    { label: 'Chief Guests', href: '/speakers', keywords: 'bank managers cfos finance minister speakers' },
+    { label: 'Chief Guests', href: '/speakers', keywords: 'bank managers cfos srinivasan raja a2b top 30 vip' },
     { label: 'International', href: '/international', keywords: 'fdi joint ventures cross-border global' },
-    { label: 'Government & Guidance', href: '/government', keywords: 'startuptn tiic invest india itpo msme' },
+    { label: 'Government & Guidance', href: '/government', keywords: 'startuptn tiic invest india itpo msme state central' },
     { label: 'First Level Business Guidance', href: '/business-guidance', keywords: '10 steps checklist consultation' },
     { label: 'Startup', href: '/startup', keywords: '100 startups validation status pitch' },
     { label: 'Women Entrepreneurs', href: '/women-entrepreneurs', keywords: 'leadership mallika srinivasan indra nooyi' },
-    { label: 'Contact', href: '/contact', keywords: 'rajganesh consultation case studies phone email' },
-    { label: 'Validation Team', href: '/event-program#validation', keywords: 'company background project risk' },
-    { label: 'CFO Points', href: '/speakers#cfo', keywords: 'financial management 5 years progress' },
+    { label: 'Contact & Consultation', href: '/contact', keywords: 'rajganesh consultation case studies phone email' },
+    { label: 'Validation Team', href: '/validation-team', keywords: 'company background project risk' },
+    { label: 'CFO Points', href: '/cfo-points', keywords: 'financial management 5 years progress' },
   ],
 ];
 
@@ -92,11 +146,11 @@ export const FOOTER_COLUMNS: { title: string; links: NavItem[] }[] = [
       { label: 'Investment Tracks', href: '/tracks' },
       { label: 'Sponsors & Partners', href: '/sponsors' },
       { label: 'Venue & Event Map', href: '/venue' },
-      { label: 'Team', href: '/team' },
-      { label: '90-Day Policy', href: '/registration-policy' },
+      { label: 'Team (5 × 5)', href: '/team' },
+      { label: '90 Days Policy', href: '/registration-policy' },
       { label: 'Registration', href: '/registration' },
       { label: 'Event Program', href: '/event-program' },
-      { label: 'Apply', href: '/apply' },
+      { label: 'Apply Now', href: '/apply' },
       { label: 'Privacy Policy', href: '/privacy' },
     ],
   },
@@ -105,39 +159,46 @@ export const FOOTER_COLUMNS: { title: string; links: NavItem[] }[] = [
     links: [
       { label: 'Registration Dashboard', href: '/admin/registrations' },
       { label: 'Entrepreneurs', href: '/entrepreneurs' },
-      { label: 'Chief Guests', href: '/speakers' },
+      { label: 'Chief Guests (Top 30)', href: '/speakers' },
       { label: 'International', href: '/international' },
       { label: 'Government & Guidance', href: '/government' },
       { label: 'First Level Business Guidance', href: '/business-guidance' },
       { label: 'Startup', href: '/startup' },
       { label: 'Women Entrepreneurs', href: '/women-entrepreneurs' },
-      { label: 'Contact', href: '/contact' },
+      { label: 'Contact & Consultation', href: '/contact' },
     ],
   },
   {
-    title: 'Organisation & Participation',
+    title: 'Key Desks & Directories',
     links: [
       { label: 'About', href: '/about' },
-      { label: 'Investors', href: '/investors' },
-      { label: 'Event Schedule', href: '/schedule' },
-      { label: 'Corporate', href: '/corporate' },
+      { label: 'Investors & Team Points', href: '/investors' },
+      { label: 'Validation Team', href: '/validation-team' },
+      { label: 'Pitch Area', href: '/pitch-area' },
+      { label: 'AI Experts & CFO Points', href: '/ai-experts' },
+      { label: 'Corporate (500 Directory)', href: '/corporate' },
       { label: 'Associations', href: '/associations' },
-      { label: 'Payments', href: '/payments' },
-      { label: 'Banks in India', href: '/banks' },
+      { label: 'Payments (9 Options)', href: '/payments' },
+      { label: 'Banks in India (120)', href: '/banks' },
       { label: 'Top 50 Financial Brands', href: '/financial-brands' },
-      { label: 'Terms & Conditions', href: '/terms' },
     ],
   },
 ];
 
 export const ORGANISER_CONTACT = {
   eventDate: '20 February 2027',
+  eventDateCode: '20-02-2027',
   city: 'Chennai, Tamil Nadu',
   deadline: '1 February 2027',
+  deadlineCode: '01-02-2027',
+  strategy: 'Available slots only',
+  completedBaseline: 100,
+  pendingBaseline: 400,
   contactPerson: 'Mr. Rajganesh',
   phone: '9962253522',
   telHref: 'tel:+919962253522',
   email: 'rajganeshq@gmail.com',
+  notificationEmail: 'sevenidatamanager@gmail.com',
   address:
     'Plot No. 78, 79 & 80, Second Floor, Jayam Nagar, Erikkarai Road, Kundrathur, Kollacheri, Chennai, Tamil Nadu 600069',
 };

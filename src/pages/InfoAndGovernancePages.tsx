@@ -1,12 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   ArrowRight,
+  Award,
+  Building2,
   Calendar,
   Check,
   CheckCircle2,
   Clock,
   Cpu,
   ExternalLink,
+  FileText,
   Globe,
   Info,
   Landmark,
@@ -14,6 +17,9 @@ import {
   MapPin,
   Phone,
   Search,
+  ShieldCheck,
+  Sparkles,
+  TrendingUp,
   Users,
 } from 'lucide-react';
 import {
@@ -39,6 +45,9 @@ import {
 } from '../data/portraits';
 import { ORGANISER_CONTACT } from '../data/siteNavigation';
 import {
+  ORGANISER_NOTIFICATION_EMAIL,
+  REGISTRATION_CUTOFF_DATE_CODE,
+  REGISTRATION_STRATEGY,
   filterDiscoveryOpportunities,
   formatLakhsToDisplay,
   validateContactInput,
@@ -49,6 +58,7 @@ import { Link, useQueryParam } from '../lib/router';
 import { PageHero } from '../components/PageHero';
 import { CtaBanner } from '../components/CtaBanner';
 import { AvatarPortrait } from '../components/AvatarPortrait';
+import { ImageCard } from '../components/ImageCard';
 import { ParticipantDossierModal, ReviewerProfileModal } from '../components/ProfileModal';
 import {
   ExpandablePanel,
@@ -68,8 +78,8 @@ function highlightToRegistrationRecord(p: ParticipantProfileHighlight): Registra
     id: p.id,
     full_name: p.fullName,
     company: p.company,
-    email: 'desk@investormeet500.in',
-    phone: '+91 80560 08962',
+    email: ORGANISER_CONTACT.email,
+    phone: ORGANISER_CONTACT.phone,
     industry: p.track,
     track: p.track as InvestmentTrack,
     participantType:
@@ -131,7 +141,7 @@ export function AboutPage() {
   const currentStage = ABOUT_OPERATION_STAGES[activeStageIdx];
 
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#f8fafc] text-[#0f172a]">
       <PageHero
         kicker="ABOUT INVESTOR MEET 500"
         title="One Platform. Five Capital Pathways."
@@ -155,9 +165,10 @@ export function AboutPage() {
       <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-16">
         {/* 01 & 02 foundational overview */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <InteractiveCard className="rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
-            <div>
-              <span className="font-mono text-xs font-bold text-[#8a5d14]">01 · ARCHITECTURE</span>
+          <InteractiveCard className="rounded-2xl overflow-hidden flex flex-col justify-between">
+            <div className="h-1.5 w-full bg-[#1d4ed8]" aria-hidden="true" />
+            <div className="p-6 sm:p-8 flex-1">
+              <span className="font-mono text-xs font-bold text-[#1d4ed8]">01 · ARCHITECTURE</span>
               <h2 className="mt-2 font-display text-3xl font-medium text-[#0f172a]">
                 One platform. Five pathways.
               </h2>
@@ -168,10 +179,10 @@ export function AboutPage() {
                 structured pipeline rather than an uncurated trade show.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#e4dfd5]">
+            <div className="mx-6 sm:mx-8 mb-6 sm:mb-8 pt-4 border-t border-[#e4dfd5]">
               <Link
                 href="/tracks"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#8a5d14] hover:text-[#0c121d] transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#1d4ed8] hover:text-[#091326] transition-colors"
               >
                 <span>Explore all 5 tracks</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -179,9 +190,10 @@ export function AboutPage() {
             </div>
           </InteractiveCard>
 
-          <InteractiveCard className="rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
-            <div>
-              <span className="font-mono text-xs font-bold text-[#8a5d14]">02 · GOVERNANCE</span>
+          <InteractiveCard className="rounded-2xl overflow-hidden flex flex-col justify-between">
+            <div className="h-1.5 w-full bg-[#0d9488]" aria-hidden="true" />
+            <div className="p-6 sm:p-8 flex-1">
+              <span className="font-mono text-xs font-bold text-[#0d9488]">02 · GOVERNANCE</span>
               <h2 className="mt-2 font-display text-3xl font-medium text-[#0f172a]">
                 Preparation before participation
               </h2>
@@ -192,52 +204,59 @@ export function AboutPage() {
                 Hall 3 meeting windows.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#e4dfd5]">
+            <div className="mx-6 sm:mx-8 mb-6 sm:mb-8 pt-4 border-t border-[#e4dfd5]">
               <Link
                 href="/registration-policy"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#8a5d14] hover:text-[#0c121d] transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0d9488] hover:text-[#091326] transition-colors"
               >
-                <span>Read 90-Day Policy</span>
+                <span>Read 90 Days Policy</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
             </div>
           </InteractiveCard>
         </div>
 
-        {/* Committees — photo-free typographic InteractiveCards */}
+        {/* Committees with Individual Committee Scene Photos */}
         <div id="committees" className="scroll-mt-24">
-          <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
+          <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#4338ca] mb-2">
             GOVERNANCE &amp; VALIDATION
           </p>
           <h2 className="font-display text-3xl sm:text-4xl font-medium text-[#0f172a] mb-6">
             Five Planning Committees
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {COMMITTEES.map((c, idx) => (
-              <InteractiveCard key={c.title} className="rounded-xl p-6 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#e4dfd5]">
-                    <span className="font-mono text-xs font-bold text-[#8a5d14]">
-                      COMMITTEE 0{idx + 1}
-                    </span>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#526075]">
-                      Active Desk
-                    </span>
-                  </div>
-                  <h3 className="mt-4 font-display text-2xl font-medium text-[#0f172a]">
-                    {c.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-[#334155] leading-relaxed">{c.description}</p>
-                </div>
-              </InteractiveCard>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {COMMITTEES.map((c, idx) => {
+              const colors = ['#1d4ed8', '#0d9488', '#6d28d9', '#4338ca', '#c49a45'];
+              const accent = colors[idx % colors.length];
+              return (
+                <ImageCard
+                  key={c.title}
+                  image={c.image}
+                  imageAlt={c.imageAlt}
+                  accentColor={accent}
+                  overlayLabel={`COMMITTEE 0${idx + 1} · ACTIVE DESK`}
+                  title={c.title}
+                  description={c.description}
+                  footer={
+                    <Link
+                      href="/validation-team"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
+                      style={{ color: accent }}
+                    >
+                      <span>Inspect Validation Scope</span>
+                      <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                    </Link>
+                  }
+                />
+              );
+            })}
           </div>
         </div>
 
         {/* Interactive 4 Operations Stages Explorer */}
         <div id="operations" className="scroll-mt-24 space-y-6">
           <div>
-            <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
+            <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#1d4ed8] mb-2">
               EXECUTION ARCHITECTURE
             </p>
             <h2 className="font-display text-3xl sm:text-4xl font-medium text-[#0f172a]">
@@ -248,19 +267,22 @@ export function AboutPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {ABOUT_OPERATION_STAGES.map((op, idx) => {
               const active = idx === activeStageIdx;
+              const colors = ['#1d4ed8', '#0d9488', '#6d28d9', '#c49a45'];
+              const accent = colors[idx % colors.length];
               return (
                 <button
                   key={op.no}
                   type="button"
                   onClick={() => setActiveStageIdx(idx)}
-                  className={`text-left rounded-xl border p-5 transition-all cursor-pointer ${
+                  className={`text-left rounded-xl border p-5 transition-all cursor-pointer relative overflow-hidden ${
                     active
-                      ? 'bg-[#0c121d] text-white border-[#0c121d] shadow-md'
-                      : 'bg-white text-[#0f172a] border-[#e4dfd5] hover:border-[#8a5d14]'
+                      ? 'bg-gradient-to-br from-[#091326] to-[#172554] text-white border-[#091326] shadow-md'
+                      : 'bg-white text-[#0f172a] border-[#e4dfd5] hover:border-[#1d4ed8]'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className={`font-mono text-xs font-bold ${active ? 'text-[#e6c67e]' : 'text-[#8a5d14]'}`}>
+                  <span className="h-1 inset-x-0 top-0 absolute" style={{ backgroundColor: accent }} aria-hidden="true" />
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    <span className="font-mono text-xs font-bold" style={{ color: active ? '#e6c67e' : accent }}>
                       {op.no}
                     </span>
                     <span className={`font-mono text-[10px] uppercase ${active ? 'text-[#94a3b8]' : 'text-[#526075]'}`}>
@@ -275,10 +297,10 @@ export function AboutPage() {
             })}
           </div>
 
-          <InteractiveCard dark tilt={false} className="rounded-2xl p-6 sm:p-8">
+          <InteractiveCard dark tilt={false} className="rounded-2xl p-6 sm:p-8 !bg-gradient-to-r from-[#091326] to-[#172554]">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="max-w-2xl">
-                <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#e6c67e]">
+                <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#5eead4]">
                   STAGE {currentStage.no} · {currentStage.sla}
                 </span>
                 <h3 className="mt-1.5 font-display text-2xl sm:text-3xl font-medium text-white">
@@ -303,10 +325,10 @@ export function AboutPage() {
           id="women-entrepreneurs"
           dark
           tilt={false}
-          className="scroll-mt-24 rounded-2xl p-6 sm:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+          className="scroll-mt-24 rounded-2xl p-6 sm:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 !bg-gradient-to-r from-[#091326] via-[#132247] to-[#1e1b4b]"
         >
           <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-[#e6c67e]">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-[#5eead4]">
               WOMEN ENTREPRENEURS INITIATIVE
             </p>
             <h2 className="font-display text-3xl font-medium text-white mt-2">
@@ -441,7 +463,7 @@ export function EventProgramPage() {
         {/* Interactive Expandable Operational Blocks */}
         <div id="validation" className="scroll-mt-24 space-y-4">
           <div>
-            <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
+            <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#1d4ed8] mb-2">
               OPERATIONAL PROTOCOL
             </p>
             <h2 className="font-display text-3xl sm:text-4xl font-medium text-[#0f172a]">
@@ -468,7 +490,7 @@ export function EventProgramPage() {
         <ScrollReveal id="timeline" className="scroll-mt-24 space-y-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
+              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#0d9488] mb-2">
                 EVENT PLANNING &amp; TIMELINE
               </p>
               <h2 className="font-display text-3xl sm:text-4xl font-medium text-[#0f172a]">
@@ -483,20 +505,24 @@ export function EventProgramPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {milestones.map((m, idx) => {
               const active = idx === selectedMilestoneIdx;
+              const colors = ['#1d4ed8', '#0d9488', '#c49a45', '#6d28d9', '#4338ca', '#0284c7'];
+              const accent = colors[idx % colors.length];
               return (
                 <InteractiveCard
                   key={m.no}
                   as="button"
                   dark={active}
                   onClick={() => setSelectedMilestoneIdx(idx)}
-                  className="rounded-xl p-6 flex flex-col justify-between"
+                  className={`rounded-xl overflow-hidden flex flex-col justify-between ${
+                    active ? '!bg-gradient-to-br from-[#091326] to-[#172554]' : ''
+                  }`}
                 >
-                  <div>
+                  <div className="h-1.5 w-full" style={{ backgroundColor: accent }} aria-hidden="true" />
+                  <div className="p-6 text-left">
                     <div className="flex items-center justify-between gap-2">
                       <span
-                        className={`font-mono text-xs font-bold ${
-                          active ? 'text-[#e6c67e]' : 'text-[#8a5d14]'
-                        }`}
+                        className="font-mono text-xs font-bold"
+                        style={{ color: active ? '#e6c67e' : accent }}
                       >
                         {m.no}
                       </span>
@@ -541,11 +567,11 @@ export function SpeakersPage() {
 
   const unconfirmedSlots = useMemo(
     () =>
-      Array.from({ length: 12 }, (_, i) => ({
-        slot: `GUEST PROFILE ${String(i + 1).padStart(2, '0')}`,
+      Array.from({ length: 30 }, (_, i) => ({
+        slot: `CHIEF GUEST ${String(i + 1).padStart(2, '0')}`,
         role: CHIEF_GUEST_ROLES[i % CHIEF_GUEST_ROLES.length].role,
         focus: CHIEF_GUEST_ROLES[i % CHIEF_GUEST_ROLES.length].focus,
-        status: 'Awaiting Confirmation',
+        status: i === 0 ? 'Spotlight Nomination · A2B' : 'Awaiting Confirmation',
       })),
     []
   );
@@ -556,21 +582,23 @@ export function SpeakersPage() {
   }, [unconfirmedSlots, roleFilter]);
 
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#fff9fa] text-[#0f172a]">
       <PageHero
+        theme="burgundy"
         kicker="CHIEF GUESTS, AI EXPERTS & CFO SESSIONS"
         title="Chief Guests & Advisory Panels."
-        subtitle="Up to 30 invited Chief Guest profiles across banking, finance, investment risk, government policy, and AI leadership alongside our active Validation & Financial Advisory Panel."
+        subtitle="30 invited Chief Guest profiles across banking, finance, investment risk, government policy, and AI leadership — anchored by our Featured Chief Guest nomination and Advisory Panel."
         image={MEDIA_ASSETS.aiExpertsStage}
         imageAlt="Indian AI keynote executive presenting on the plenary summit stage"
         videoSrc={VIDEO_ASSETS.summitStage.src}
         videoPoster={VIDEO_ASSETS.summitStage.poster}
         stats={[
-          { value: 'Up to 30', label: 'Invited Seats' },
+          { value: '30 Seats', label: 'Chief Guest Profiles' },
           { value: '4', label: 'Active Reviewers' },
-          { value: '6', label: 'Advisory Disciplines' },
+          { value: '6', label: 'Guest Disciplines' },
         ]}
         anchors={[
+          { label: 'Featured Chief Guest (A2B)', href: '#featured-chief-guest' },
           { label: 'Validation Panel', href: '#advisory-panel' },
           { label: 'Chief Guest Roles', href: '#roles' },
           { label: 'AI & CFO Briefings', href: '#ai-experts' },
@@ -578,11 +606,63 @@ export function SpeakersPage() {
       />
 
       <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-14">
-        {/* Validation & Financial Advisory Panel — keeps verified 1-to-1 portraits */}
+        {/* Featured Chief Guest Spotlight — A2B Mr. Srinivasan Raja */}
+        <ScrollReveal id="featured-chief-guest" className="scroll-mt-24">
+          <InteractiveCard
+            dark
+            tilt={false}
+            className="rounded-2xl overflow-hidden !bg-gradient-to-br from-[#3b0712] via-[#4c0519] to-[#881337] border border-[#fda4af]/25"
+          >
+            <div className="h-1.5 w-full bg-gradient-to-r from-[#e6c67e] via-[#fb7185] to-[#c49a45]" />
+            <div className="p-6 sm:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <AvatarPortrait
+                  name="Mr. Srinivasan Raja"
+                  src={null}
+                  size="xl"
+                  theme="dark"
+                />
+                <div className="space-y-2 max-w-2xl">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#fde68a]">
+                      <Award className="w-4 h-4" aria-hidden="true" />
+                      <span>FEATURED CHIEF GUEST NOMINATION · SLOT 01 · PLENARY HALL 1</span>
+                    </span>
+                  </div>
+                  <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white leading-tight">
+                    Mr. Srinivasan Raja — A2B (Adyar Ananda Bhavan)
+                  </h2>
+                  <p className="text-sm sm:text-base font-medium text-[#ffe4e6]">
+                    Managing Director, Adyar Ananda Bhavan Sweets &amp; Snacks · Chennai, Tamil Nadu
+                  </p>
+                  <p className="text-sm text-[#fecdd3] leading-relaxed">
+                    Representing iconic South Indian hospitality, large-scale food manufacturing, and
+                    multi-state franchise expansion under the Chief Guest keynote track on scaling
+                    regional consumer enterprises.
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-white/15 bg-[#29050d]/85 p-5 shrink-0 space-y-2 lg:w-72">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-[#fde68a] block">
+                  CHIEF GUEST BRIEFING SCOPE
+                </span>
+                <p className="text-xs text-[#ffe4e6] leading-relaxed">
+                  Success guidance, supply-chain scaling, franchise governance &amp; 5-year expansion roadmap for South Indian entrepreneurs.
+                </p>
+                <div className="pt-2 border-t border-white/10 font-mono text-[11px] text-[#fda4af]">
+                  Hall 1 · Plenary Stage (20-02-2027)
+                </div>
+              </div>
+            </div>
+          </InteractiveCard>
+        </ScrollReveal>
+
+        {/* Validation & Financial Advisory Panel */}
         <ScrollReveal id="advisory-panel" className="scroll-mt-24">
           <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
             <div>
-              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
+              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#881337] mb-2">
                 VALIDATION &amp; FINANCIAL ADVISORY PANEL
               </p>
               <h2 className="font-display text-3xl sm:text-4xl font-medium text-[#0f172a]">
@@ -595,53 +675,58 @@ export function SpeakersPage() {
           </div>
 
           <StaggerGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {COMMITTEE_REVIEWER_PROFILES.map((rev) => (
-              <StaggerCard key={rev.name}>
-                <InteractiveCard
-                  as="button"
-                  onClick={() => setSelectedReviewer(rev)}
-                  className="w-full h-full rounded-2xl p-6 flex flex-col justify-between group"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-4">
-                      <AvatarPortrait name={rev.name} src={rev.portraitUrl} size="lg" />
-                      <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#8a5d14]">
-                        {rev.hallFocus.split('·')[0].trim()}
-                      </span>
+            {COMMITTEE_REVIEWER_PROFILES.map((rev, idx) => {
+              const colors = ['#881337', '#0d9488', '#6d28d9', '#c49a45'];
+              const accent = colors[idx % colors.length];
+              return (
+                <StaggerCard key={rev.name}>
+                  <InteractiveCard
+                    as="button"
+                    onClick={() => setSelectedReviewer(rev)}
+                    className="w-full h-full rounded-2xl overflow-hidden flex flex-col justify-between group text-left"
+                  >
+                    <div className="h-1.5 w-full" style={{ backgroundColor: accent }} aria-hidden="true" />
+                    <div className="p-6 flex-1 w-full">
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <AvatarPortrait name={rev.name} src={rev.portraitUrl} size="lg" />
+                        <span className="font-mono text-[11px] font-semibold uppercase tracking-wider" style={{ color: accent }}>
+                          {rev.hallFocus.split('·')[0].trim()}
+                        </span>
+                      </div>
+                      <h3 className="font-display text-2xl font-medium text-[#0f172a] group-hover:text-[#881337] transition-colors">
+                        {rev.name}
+                      </h3>
+                      <p className="mt-1 text-xs font-semibold" style={{ color: accent }}>{rev.role}</p>
+                      <p className="mt-2.5 text-xs text-[#334155] leading-relaxed line-clamp-3">
+                        &ldquo;{rev.perspective}&rdquo;
+                      </p>
                     </div>
-                    <h3 className="font-display text-2xl font-medium text-[#0f172a] group-hover:text-[#8a5d14] transition-colors">
-                      {rev.name}
-                    </h3>
-                    <p className="mt-1 text-xs font-semibold text-[#8a5d14]">{rev.role}</p>
-                    <p className="mt-2.5 text-xs text-[#334155] leading-relaxed line-clamp-3">
-                      &ldquo;{rev.perspective}&rdquo;
-                    </p>
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-[#e4dfd5] flex items-center justify-between text-xs font-semibold text-[#8a5d14] w-full">
-                    <span>{rev.committee}</span>
-                    <ArrowRight
-                      className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </InteractiveCard>
-              </StaggerCard>
-            ))}
+                    <div className="mx-6 mb-5 pt-3 border-t border-[#e4dfd5] flex items-center justify-between text-xs font-semibold text-[#881337] w-[calc(100%-3rem)]">
+                      <span>{rev.committee}</span>
+                      <ArrowRight
+                        className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </InteractiveCard>
+                </StaggerCard>
+              );
+            })}
           </StaggerGrid>
         </ScrollReveal>
 
         {/* Chief Guest Roles */}
         <ScrollReveal id="roles" className="scroll-mt-24">
-          <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
-            INVITED CATEGORIES (UP TO 30 PROFILES)
+          <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#881337] mb-2">
+            INVITED CATEGORIES (30 CHIEF GUEST PROFILES)
           </p>
           <h2 className="font-display text-3xl sm:text-4xl font-medium text-[#0f172a] mb-6">
             Six Chief Guest Roles &amp; Focus Areas
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {CHIEF_GUEST_ROLES.map((item, idx) => (
-              <InteractiveCard key={item.role} className="rounded-xl p-6">
-                <span className="font-mono text-xs font-bold text-[#8a5d14]">ROLE 0{idx + 1}</span>
+              <InteractiveCard key={item.role} className="rounded-xl p-6 border-t-2 border-t-[#881337]">
+                <span className="font-mono text-xs font-bold text-[#881337]">ROLE 0{idx + 1}</span>
                 <h3 className="mt-2 font-display text-2xl font-medium text-[#0f172a]">{item.role}</h3>
                 <p className="mt-2 text-sm text-[#334155]">{item.focus}</p>
               </InteractiveCard>
@@ -676,22 +761,40 @@ export function SpeakersPage() {
               diligence, sector forecasting, capital allocation, and operational efficiency for Indian
               MSMEs and high-growth startups.
             </p>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#e6c67e] pt-2 border-t border-white/15">
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span>Automated financial &amp; risk modeling</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span>AI-sector investment thesis briefing</span>
-              </li>
-            </ul>
+            <div className="pt-3 border-t border-white/15 flex flex-wrap items-center justify-between gap-3">
+              <ul className="space-y-1.5 text-xs text-[#e6c67e]">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  <span>Automated financial &amp; risk modeling</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  <span>AI-sector investment thesis briefing</span>
+                </li>
+              </ul>
+              <Link
+                href="/ai-experts"
+                className="text-xs font-semibold text-[#e6c67e] hover:underline inline-flex items-center gap-1"
+              >
+                <span>Open AI Experts Desk</span>
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            </div>
           </InteractiveCard>
 
           <div id="cfo" className="lg:col-span-6 space-y-3 scroll-mt-24">
-            <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14]">
-              CFO POINTS &amp; ADVISORY
-            </p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#881337]">
+                CFO POINTS &amp; ADVISORY
+              </p>
+              <Link
+                href="/cfo-points"
+                className="text-xs font-semibold text-[#881337] hover:underline inline-flex items-center gap-1"
+              >
+                <span>Full CFO Points Desk</span>
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            </div>
             <ExpandablePanel
               kicker="SESSION 01"
               title="Working Capital & Cash Controls"
@@ -711,15 +814,15 @@ export function SpeakersPage() {
           </div>
         </div>
 
-        {/* Transparent unconfirmed roster placeholders with interactive role filter */}
+        {/* All 30 Chief Guest Roster Slots */}
         <div className="space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h2 className="font-display text-2xl font-medium text-[#0f172a]">
-                Speaker Roster Status (Transparent Placeholder Directory)
+              <h2 className="font-display text-2xl sm:text-3xl font-medium text-[#0f172a]">
+                Chief Guest Roster Status (30 Profiled Slots)
               </h2>
-              <p className="text-xs text-[#526075] mt-1">
-                No unconfirmed VIP names are fabricated; confirmed profiles publish upon written acceptance.
+              <p className="text-xs sm:text-sm text-[#526075] mt-1">
+                Zero unconfirmed VIP names are fabricated; confirmed Chief Guest identities publish immediately upon written consent.
               </p>
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -728,11 +831,11 @@ export function SpeakersPage() {
                 onClick={() => setRoleFilter('All')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
                   roleFilter === 'All'
-                    ? 'bg-[#0c121d] text-[#e6c67e]'
+                    ? 'bg-[#3b0712] text-[#fde68a]'
                     : 'bg-white border border-[#e4dfd5] text-[#334155]'
                 }`}
               >
-                All
+                All (30)
               </button>
               {CHIEF_GUEST_ROLES.map((r) => (
                 <button
@@ -741,7 +844,7 @@ export function SpeakersPage() {
                   onClick={() => setRoleFilter(r.role)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
                     roleFilter === r.role
-                      ? 'bg-[#0c121d] text-[#e6c67e]'
+                      ? 'bg-[#3b0712] text-[#fde68a]'
                       : 'bg-white border border-[#e4dfd5] text-[#334155]'
                   }`}
                 >
@@ -751,13 +854,22 @@ export function SpeakersPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {visibleSlots.map((s) => (
-              <div key={s.slot} className="bg-white rounded-xl border border-[#e4dfd5] p-4">
-                <div className="font-mono text-[11px] font-bold text-[#8a5d14]">{s.slot}</div>
-                <div className="mt-1 font-display text-lg font-medium text-[#0f172a]">{s.role}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {visibleSlots.map((s, idx) => (
+              <div
+                key={s.slot}
+                className={`rounded-xl border p-4 ${
+                  idx === 0 && roleFilter === 'All'
+                    ? 'bg-[#fff1f2] border-[#fda4af]'
+                    : 'bg-white border-[#e4dfd5]'
+                }`}
+              >
+                <div className="font-mono text-[11px] font-bold text-[#881337]">{s.slot}</div>
+                <div className="mt-1 font-display text-lg font-medium text-[#0f172a]">
+                  {idx === 0 && roleFilter === 'All' ? 'Mr. Srinivasan Raja (A2B)' : s.role}
+                </div>
                 <p className="mt-1 text-xs text-[#526075]">{s.focus}</p>
-                <span className="mt-2 inline-block font-mono text-[11px] font-medium text-[#526075]">
+                <span className="mt-2 inline-block font-mono text-[11px] font-semibold text-[#881337]">
                   {s.status}
                 </span>
               </div>
@@ -859,7 +971,7 @@ export function InvestorsPage() {
         <ScrollReveal id="pipeline" className="scroll-mt-24 space-y-6">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
+              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#1d4ed8] mb-2">
                 CURATED DEAL DISCOVERY
               </p>
               <h2 className="font-display text-3xl sm:text-4xl font-medium text-[#0f172a]">
@@ -881,7 +993,7 @@ export function InvestorsPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search company, sector, city..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-[#d6cfc2] bg-white text-sm text-[#0f172a] focus:outline-none focus:border-[#0c121d]"
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-[#d6cfc2] bg-white text-sm text-[#0f172a] focus:outline-none focus:border-[#1d4ed8]"
               />
             </div>
           </div>
@@ -899,8 +1011,8 @@ export function InvestorsPage() {
                     onClick={() => setTrackFilter(t)}
                     className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       active
-                        ? 'bg-[#0c121d] text-[#e6c67e]'
-                        : 'bg-white text-[#334155] border border-[#e4dfd5] hover:border-[#0c121d]'
+                        ? 'bg-[#091326] text-[#e6c67e]'
+                        : 'bg-white text-[#334155] border border-[#e4dfd5] hover:border-[#1d4ed8]'
                     }`}
                   >
                     {t}
@@ -917,7 +1029,7 @@ export function InvestorsPage() {
                   onClick={() => setTicketFilter(tf.id)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
                     ticketFilter === tf.id
-                      ? 'bg-[#8a5d14] text-white'
+                      ? 'bg-[#1d4ed8] text-white'
                       : 'bg-white border border-[#e4dfd5] text-[#526075] hover:text-[#0f172a]'
                   }`}
                 >
@@ -935,7 +1047,7 @@ export function InvestorsPage() {
                   className="bg-white rounded-2xl border border-[#e4dfd5] p-6 animate-pulse space-y-4"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-[#e4dfd5]" />
+                    <div className="w-20 h-20 rounded-2xl bg-[#e4dfd5]" />
                     <div className="space-y-2 flex-1">
                       <div className="h-4 bg-[#e4dfd5] rounded w-2/3" />
                       <div className="h-3 bg-[#f0ede5] rounded w-1/2" />
@@ -957,7 +1069,7 @@ export function InvestorsPage() {
                   setTicketFilter('all');
                   setQuery('');
                 }}
-                className="text-xs font-semibold text-[#8a5d14] underline cursor-pointer"
+                className="text-xs font-semibold text-[#1d4ed8] underline cursor-pointer"
               >
                 Reset deal filters
               </button>
@@ -966,19 +1078,28 @@ export function InvestorsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredPipeline.map((rec) => {
                 const portrait = resolvePortraitUrl(rec.full_name, rec.id);
+                const trackAccent =
+                  rec.track === 'Startups'
+                    ? '#1d4ed8'
+                    : rec.track === 'Business Expansion'
+                    ? '#6d28d9'
+                    : rec.track === 'Bank Loans' || rec.track === 'Business Loan'
+                    ? '#0d9488'
+                    : '#c49a45';
                 return (
                   <InteractiveCard
                     key={rec.id}
                     as="button"
                     onClick={() => setActiveDossier(rec)}
-                    className="rounded-2xl p-6 flex flex-col justify-between group"
+                    className="rounded-2xl overflow-hidden flex flex-col justify-between group text-left"
                   >
-                    <div>
+                    <div className="h-1.5 w-full" style={{ backgroundColor: trackAccent }} aria-hidden="true" />
+                    <div className="p-6 flex-1 w-full">
                       <div className="flex items-start justify-between gap-2.5 mb-4">
-                        <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex items-center gap-3.5 min-w-0">
                           <AvatarPortrait name={rec.full_name} src={portrait} size="md" />
                           <div className="min-w-0">
-                            <h3 className="font-display text-xl font-medium text-[#0f172a] leading-snug truncate group-hover:text-[#8a5d14] transition-colors">
+                            <h3 className="font-display text-xl font-medium text-[#0f172a] leading-snug truncate group-hover:text-[#1d4ed8] transition-colors">
                               {rec.company}
                             </h3>
                             <p className="text-xs font-medium text-[#526075] truncate">
@@ -986,7 +1107,15 @@ export function InvestorsPage() {
                             </p>
                           </div>
                         </div>
-                        <span className="font-mono text-[10px] font-semibold px-2.5 py-0.5 rounded bg-[#fafaf8] text-[#8a5d14] border border-[#e4dfd5] shrink-0 whitespace-nowrap">
+                        <span
+                          className={`font-mono text-[10px] font-semibold px-2 py-0.5 rounded border shrink-0 whitespace-nowrap ${
+                            rec.validationStatus === 'Approved'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              : rec.validationStatus === 'Under review'
+                              ? 'bg-indigo-50 text-indigo-800 border-indigo-200'
+                              : 'bg-amber-50 text-amber-800 border-amber-200'
+                          }`}
+                        >
                           {rec.validationStatus}
                         </span>
                       </div>
@@ -996,16 +1125,16 @@ export function InvestorsPage() {
                       </p>
                     </div>
 
-                    <div className="mt-5 pt-3 border-t border-[#e4dfd5] flex items-center justify-between gap-2 w-full">
+                    <div className="mx-6 mb-5 pt-3 border-t border-[#e4dfd5] flex items-center justify-between gap-2 w-[calc(100%-3rem)]">
                       <div>
-                        <span className="block font-mono text-xs font-bold text-[#8a5d14] tabular-nums">
+                        <span className="block font-mono text-xs font-bold tabular-nums" style={{ color: trackAccent }}>
                           {formatLakhsToDisplay(rec.funding_lakhs)}
                         </span>
                         <span className="text-[11px] text-[#526075]">
                           {rec.track} · {rec.pitchHall}
                         </span>
                       </div>
-                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#0c121d] group-hover:text-[#8a5d14]">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#1d4ed8]">
                         <span>Dossier</span>
                         <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                       </span>
@@ -1017,56 +1146,66 @@ export function InvestorsPage() {
           )}
         </ScrollReveal>
 
+        {/* Banks & Investor Team Points — Enlarged Readable Typography */}
         <div id="banks" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <InteractiveCard className="rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
+          <InteractiveCard className="rounded-2xl p-7 sm:p-9 flex flex-col justify-between bg-white">
             <div>
-              <Landmark className="w-6 h-6 text-[#8a5d14] mb-3" aria-hidden="true" />
-              <h2 className="font-display text-3xl font-medium text-[#0f172a]">
+              <Landmark className="w-7 h-7 text-[#8a5d14] mb-3" aria-hidden="true" />
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a]">
                 Banks &amp; Institutional Lending
               </h2>
-              <p className="mt-3 text-sm text-[#334155] leading-relaxed">
+              <p className="mt-3 text-base text-[#334155] leading-relaxed">
                 Dedicated banking discussions cover corporate term loans, project finance, MSME
                 working capital and hybrid debt-equity syndication across India’s 120 RBI-scheduled
                 banks and Tamil Nadu’s top 50 financial institutions.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#e4dfd5] flex flex-wrap gap-4">
+            <div className="mt-6 pt-5 border-t border-[#e4dfd5] flex flex-wrap gap-5">
               <Link
                 href="/banks"
-                className="text-xs font-semibold text-[#8a5d14] hover:text-[#0c121d] inline-flex items-center gap-1 transition-colors"
+                className="text-sm font-semibold text-[#8a5d14] hover:text-[#0c121d] inline-flex items-center gap-1.5 transition-colors"
               >
                 <span>Browse 120 RBI Banks</span>
-                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
               <Link
                 href="/financial-brands"
-                className="text-xs font-semibold text-[#8a5d14] hover:text-[#0c121d] inline-flex items-center gap-1 transition-colors"
+                className="text-sm font-semibold text-[#8a5d14] hover:text-[#0c121d] inline-flex items-center gap-1.5 transition-colors"
               >
                 <span>Browse Top 50 Financial Brands</span>
-                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
             </div>
           </InteractiveCard>
 
-          <InteractiveCard id="investor-team" dark tilt={false} className="scroll-mt-24 rounded-2xl p-6 sm:p-8">
-            <Users className="w-6 h-6 text-[#e6c67e] mb-3" aria-hidden="true" />
-            <h2 className="font-display text-3xl font-medium text-white">
+          <InteractiveCard id="investor-team" dark tilt={false} className="scroll-mt-24 rounded-2xl p-7 sm:p-9">
+            <Users className="w-7 h-7 text-[#e6c67e] mb-3" aria-hidden="true" />
+            <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
               Investor Team Points &amp; Matching
             </h2>
-            <ul className="mt-4 space-y-2.5 text-sm text-[#cbd5e1]">
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#e6c67e] mt-0.5 shrink-0" aria-hidden="true" />
+            <ul className="mt-4 space-y-3 text-base text-[#cbd5e1]">
+              <li className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
                 <span>Sector-wise curation aligned to investor ticket size and stage mandate</span>
               </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#e6c67e] mt-0.5 shrink-0" aria-hidden="true" />
+              <li className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
                 <span>Pre-screened pitch summaries and financial risk notes ahead of 20 Feb 2027</span>
               </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#e6c67e] mt-0.5 shrink-0" aria-hidden="true" />
+              <li className="flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
                 <span>Confidential one-to-one meeting room scheduling across Halls 1–3</span>
               </li>
             </ul>
+            <div className="mt-6 pt-4 border-t border-white/15">
+              <Link
+                href="/investor-team"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#e6c67e] hover:underline"
+              >
+                <span>Inspect Full Investor Team Points Desk</span>
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
+            </div>
           </InteractiveCard>
         </div>
 
@@ -1078,20 +1217,22 @@ export function InvestorsPage() {
             },
             {
               title: 'Investor Interaction Protocol',
-              desc: 'Pre-booked 20–30 minute deal slots backed by committee validation dossiers.',
+              desc: 'Pre-booked 20–30 minute deal slots backed by committee validation dossiers across Hall 1, Hall 2 & Hall 3.',
             },
             {
               title: 'Investment Opportunities',
-              desc: 'Ticket sizes ranging from ₹50 Lakhs seed/working capital up to ₹500 Crore expansion mandates.',
+              desc: 'Ticket sizes ranging from ₹50 Lakhs seed/working capital up to ₹500 Crore institutional expansion mandates.',
             },
             {
               title: 'Risk & Independent Diligence',
               desc: 'Participating investors conduct independent legal, financial and statutory due diligence prior to deploying capital.',
             },
           ].map((card) => (
-            <InteractiveCard key={card.title} className="rounded-xl p-6">
-              <h3 className="font-display text-xl font-medium text-[#0f172a]">{card.title}</h3>
-              <p className="mt-2 text-sm text-[#334155] leading-relaxed">{card.desc}</p>
+            <InteractiveCard key={card.title} className="rounded-xl p-6 sm:p-7">
+              <h3 className="font-display text-2xl font-semibold text-[#0f172a] leading-snug">
+                {card.title}
+              </h3>
+              <p className="mt-3 text-base text-[#334155] leading-relaxed">{card.desc}</p>
             </InteractiveCard>
           ))}
         </div>
@@ -1148,7 +1289,7 @@ export function StartupPage() {
         <ScrollReveal className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#e4dfd5] pb-5">
             <div>
-              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
+              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#1d4ed8] mb-2">
                 SEVEN-STAGE PATHWAY · SELF-CHECK
               </p>
               <h2 className="font-display text-3xl sm:text-4xl font-medium text-[#0f172a]">
@@ -1158,13 +1299,13 @@ export function StartupPage() {
             <div className="w-full sm:w-64 space-y-1.5">
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="text-[#526075]">Readiness Check</span>
-                <span className="font-semibold text-[#8a5d14] tabular-nums">
+                <span className="font-semibold text-[#1d4ed8] tabular-nums">
                   {completedCount} / {stages.length} prepared
                 </span>
               </div>
-              <div className="h-2 rounded-full bg-[#e4dfd5] overflow-hidden">
+              <div className="h-2 rounded-full bg-[#e2e8f0] overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-[#0c121d] transition-all duration-300"
+                  className="h-full rounded-full bg-gradient-to-r from-[#1d4ed8] via-[#4338ca] to-[#0d9488] transition-all duration-300"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -1182,20 +1323,27 @@ export function StartupPage() {
                   onClick={() =>
                     setReadyStages((prev) => ({ ...prev, [s.no]: !prev[s.no] }))
                   }
-                  className="rounded-xl p-6 flex flex-col justify-between"
+                  className={`rounded-xl overflow-hidden flex flex-col justify-between text-left ${
+                    checked ? '!bg-gradient-to-br from-[#091326] to-[#172554]' : ''
+                  }`}
                 >
-                  <div>
+                  <div
+                    className="h-1.5 w-full"
+                    style={{ backgroundColor: checked ? '#0d9488' : '#1d4ed8' }}
+                    aria-hidden="true"
+                  />
+                  <div className="p-6 flex-1 w-full">
                     <div className="flex items-center justify-between gap-2">
                       <span
                         className={`font-mono text-xs font-bold ${
-                          checked ? 'text-[#e6c67e]' : 'text-[#8a5d14]'
+                          checked ? 'text-[#e6c67e]' : 'text-[#1d4ed8]'
                         }`}
                       >
                         STAGE {s.no}
                       </span>
                       <span
                         className={`inline-flex items-center gap-1 font-mono text-[11px] font-semibold ${
-                          checked ? 'text-emerald-400' : 'text-[#526075]'
+                          checked ? 'text-[#5eead4]' : 'text-[#526075]'
                         }`}
                       >
                         <Check className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1223,51 +1371,74 @@ export function StartupPage() {
           </div>
         </ScrollReveal>
 
-        {/* Screened Founder & Startup Spotlights — preserves verified 1-to-1 portraits */}
+        {/* Screened Founder & Startup Spotlights */}
         <ScrollReveal>
           <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
             <div>
-              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
+              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#6d28d9] mb-2">
                 REPRESENTATIVE VENTURE SPOTLIGHTS
               </p>
               <h2 className="font-display text-3xl font-medium text-[#0f172a]">
                 Screened Founders &amp; Enterprise Mandates
               </h2>
             </div>
-            <span className="text-xs font-medium text-[#526075]">
-              Select any founder card to inspect dossier summary
-            </span>
+            <Link
+              href="/entrepreneurs"
+              className="text-xs font-semibold text-[#1d4ed8] hover:underline inline-flex items-center gap-1"
+            >
+              <span>Browse All Entrepreneurs ({founderSpotlights.length} Cohort + 100 Leaders)</span>
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {founderSpotlights.map((f) => (
-              <InteractiveCard
-                key={f.id}
-                as="button"
-                onClick={() => setSelectedStartup(highlightToRegistrationRecord(f))}
-                className="rounded-2xl p-6 flex flex-col justify-between group"
-              >
-                <div>
-                  <div className="flex items-center gap-3.5 mb-4">
-                    <AvatarPortrait name={f.fullName} src={f.portraitUrl} size="md" />
-                    <div className="min-w-0">
-                      <h3 className="font-display text-xl font-medium text-[#0f172a] truncate group-hover:text-[#8a5d14] transition-colors">
-                        {f.fullName}
-                      </h3>
-                      <p className="text-xs font-medium text-[#526075] truncate">
-                        {f.roleTitle} · {f.company}
-                      </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {founderSpotlights.map((f) => {
+              const trackColor =
+                f.track === 'Startups'
+                  ? '#1d4ed8'
+                  : f.track === 'Business Expansion'
+                  ? '#6d28d9'
+                  : f.track === 'Bank Loans' || f.track === 'Business Loan'
+                  ? '#0d9488'
+                  : '#c49a45';
+              return (
+                <InteractiveCard
+                  key={f.id}
+                  as="button"
+                  onClick={() => setSelectedStartup(highlightToRegistrationRecord(f))}
+                  className="rounded-2xl overflow-hidden flex flex-col justify-between group text-left"
+                >
+                  <div className="h-1.5 w-full" style={{ backgroundColor: trackColor }} aria-hidden="true" />
+                  <div className="p-6 flex-1 w-full">
+                    <div className="flex items-center gap-4 mb-4">
+                      <AvatarPortrait name={f.fullName} src={f.portraitUrl} size="md" />
+                      <div className="min-w-0">
+                        <span
+                          className="font-mono text-[10px] font-semibold uppercase tracking-wider block"
+                          style={{ color: trackColor }}
+                        >
+                          {f.track}
+                        </span>
+                        <h3 className="font-display text-xl font-medium text-[#0f172a] truncate group-hover:text-[#1d4ed8] transition-colors">
+                          {f.fullName}
+                        </h3>
+                        <p className="text-xs font-medium text-[#526075] truncate">
+                          {f.roleTitle} · {f.company}
+                        </p>
+                      </div>
                     </div>
+                    <p className="text-xs text-[#334155] leading-relaxed italic">
+                      &ldquo;{f.quote}&rdquo;
+                    </p>
                   </div>
-                  <p className="text-xs text-[#334155] leading-relaxed italic">
-                    &ldquo;{f.quote}&rdquo;
-                  </p>
-                </div>
-                <div className="mt-4 pt-3 border-t border-[#e4dfd5] flex items-center justify-between text-xs w-full">
-                  <span className="font-mono font-semibold text-[#8a5d14]">{f.mandate}</span>
-                  <span className="text-[#526075]">{f.location}</span>
-                </div>
-              </InteractiveCard>
-            ))}
+                  <div className="mx-6 mb-5 pt-3 border-t border-[#e4dfd5] flex items-center justify-between text-xs w-[calc(100%-3rem)]">
+                    <span className="font-mono font-semibold" style={{ color: trackColor }}>
+                      {f.mandate}
+                    </span>
+                    <span className="text-[#526075]">{f.location}</span>
+                  </div>
+                </InteractiveCard>
+              );
+            })}
           </div>
         </ScrollReveal>
       </section>
@@ -1295,25 +1466,99 @@ export function GovernmentPage() {
   );
 
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#f6f7ff] text-[#0f172a]">
       <PageHero
-        kicker="GOVERNMENT & ECOSYSTEM RESOURCES"
-        title="Central & Tamil Nadu Government Portals."
-        subtitle="Verified official links to national and Tamil Nadu state investment promotion agencies, startup missions and MSME financing bodies referenced in the event plan."
+        theme="indigo"
+        kicker="GOVERNMENT & ECOSYSTEM RESOURCES · SIDE-BY-SIDE PORTALS"
+        title="Central India Govt & Tamil Nadu State Portals."
+        subtitle="Parallel official links to national and Tamil Nadu state investment promotion agencies, startup missions and MSME financing bodies referenced in the summit blueprint."
+        image={MEDIA_ASSETS.chennaiSummitHall}
+        imageAlt="Plenary convention hall for policy and institutional sessions"
         stats={[
-          { value: '5', label: 'Central Agencies' },
-          { value: '5', label: 'TN State Portals' },
-          { value: 'Verified', label: 'Official Links' },
+          { value: '5', label: 'Central Govt' },
+          { value: '5', label: 'TN State Govt' },
+          { value: 'Side-by-Side', label: 'Portal Access' },
         ]}
       />
 
       <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-10">
+        {/* Side-by-Side Impressive Portal Summary Strip (#18 & #16 disclosure) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="rounded-2xl bg-gradient-to-br from-[#0c1428] via-[#132247] to-[#1e3a8a] text-white p-6 sm:p-7 border border-[#3b82f6]/30 shadow-md">
+            <div className="flex items-center justify-between gap-2 pb-4 border-b border-white/15">
+              <div className="flex items-center gap-2.5">
+                <Landmark className="w-5 h-5 text-[#93c5fd]" aria-hidden="true" />
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#93c5fd]">
+                  CENTRAL INDIA GOVERNMENT
+                </span>
+              </div>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#cbd5e1]">
+                5 National Agencies
+              </span>
+            </div>
+            <h2 className="mt-4 font-display text-2xl sm:text-3xl font-semibold text-white">
+              National Policy, Startup India &amp; MSME Desks
+            </h2>
+            <p className="mt-2 text-sm text-[#dbeafe] leading-relaxed">
+              Direct references to Invest India, ITPO, Startup India, Ministry of Finance, and Ministry of MSME credit schemes.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {CENTRAL_GOVT_RESOURCES.map((c) => (
+                <a
+                  key={c.name}
+                  href={c.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition-colors"
+                >
+                  <span>{c.name.replace(', Government of India', '')}</span>
+                  <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-gradient-to-br from-[#042f2e] via-[#064e3b] to-[#0f766e] text-white p-6 sm:p-7 border border-[#2dd4bf]/30 shadow-md">
+            <div className="flex items-center justify-between gap-2 pb-4 border-b border-white/15">
+              <div className="flex items-center gap-2.5">
+                <Building2 className="w-5 h-5 text-[#6ee7b7]" aria-hidden="true" />
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#6ee7b7]">
+                  TAMIL NADU STATE GOVERNMENT
+                </span>
+              </div>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#ccfbf1]">
+                5 State Bodies
+              </span>
+            </div>
+            <h2 className="mt-4 font-display text-2xl sm:text-3xl font-semibold text-white">
+              Guidance TN, StartupTN, TIDCO &amp; TIIC
+            </h2>
+            <p className="mt-2 text-sm text-[#d1fae5] leading-relaxed">
+              Parallel Tamil Nadu state facilitation agencies for single-window clearance, industrial land, and MSME subsidies.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {STATE_GOVT_RESOURCES.map((s) => (
+                <a
+                  key={s.name}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition-colors"
+                >
+                  <span>{s.name}</span>
+                  <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Filter + Search Bar */}
         <div className="bg-white rounded-2xl border border-[#e4dfd5] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             {(
               [
-                { id: 'All', label: 'All Portals (10)' },
+                { id: 'All', label: 'Side-by-Side All Portals (10)' },
                 { id: 'Central', label: 'Central Government (5)' },
                 { id: 'State', label: 'Tamil Nadu State (5)' },
               ] as const
@@ -1324,8 +1569,8 @@ export function GovernmentPage() {
                 onClick={() => setScope(btn.id)}
                 className={`px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
                   scope === btn.id
-                    ? 'bg-[#0c121d] text-[#e6c67e]'
-                    : 'bg-[#fafaf8] border border-[#e4dfd5] text-[#334155] hover:border-[#0c121d]'
+                    ? 'bg-[#1e1b4b] text-[#fcd34d]'
+                    : 'bg-[#f8fafc] border border-[#e4dfd5] text-[#334155] hover:border-[#4338ca]'
                 }`}
               >
                 {btn.label}
@@ -1341,80 +1586,98 @@ export function GovernmentPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search agency or scheme..."
-              className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8] text-xs focus:outline-none focus:border-[#0c121d]"
+              className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#f8fafc] text-xs focus:outline-none focus:border-[#4338ca]"
             />
           </div>
         </div>
 
-        {central.length > 0 && (
-          <div>
-            <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
-              CENTRAL GOVERNMENT
-            </p>
-            <h2 className="font-display text-3xl font-medium text-[#0f172a] mb-5">
-              National Investment &amp; MSME Agencies
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {central.map((res) => (
-                <a
-                  key={res.name}
-                  href={res.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block group"
-                >
-                  <InteractiveCard className="h-full rounded-xl p-6 flex flex-col justify-between">
-                    <div>
-                      <h3 className="font-display text-2xl font-medium text-[#0f172a] group-hover:text-[#8a5d14] transition-colors">
-                        {res.name}
-                      </h3>
-                      <p className="mt-2 text-sm text-[#334155] leading-relaxed">{res.description}</p>
-                    </div>
-                    <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a5d14]">
-                      <span>Visit Official Portal</span>
-                      <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                    </span>
-                  </InteractiveCard>
-                </a>
-              ))}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {central.length > 0 && (
+            <div className="space-y-4">
+              <div className="border-b border-[#bfdbfe] pb-3">
+                <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#1d4ed8]">
+                  CENTRAL INDIA GOVERNMENT
+                </p>
+                <h2 className="font-display text-2xl sm:text-3xl font-medium text-[#0f172a] mt-1">
+                  National Investment &amp; MSME Agencies
+                </h2>
+              </div>
+              <div className="space-y-4">
+                {central.map((res, idx) => (
+                  <a
+                    key={res.name}
+                    href={res.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block group"
+                  >
+                    <InteractiveCard className="rounded-xl overflow-hidden flex flex-col justify-between bg-white">
+                      <div className="h-1.5 w-full bg-[#1d4ed8]" aria-hidden="true" />
+                      <div className="p-5 sm:p-6 flex items-start gap-4">
+                        <span className="w-10 h-10 rounded-lg bg-[#eff6ff] border border-[#bfdbfe] text-[#1d4ed8] flex items-center justify-center font-mono text-xs font-bold shrink-0">
+                          GOI {String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-display text-xl sm:text-2xl font-medium text-[#0f172a] group-hover:text-[#1d4ed8] transition-colors">
+                            {res.name}
+                          </h3>
+                          <p className="mt-1.5 text-sm text-[#334155] leading-relaxed">{res.description}</p>
+                          <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-[#1d4ed8]">
+                            <span>Visit Official Central Portal</span>
+                            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                          </span>
+                        </div>
+                      </div>
+                    </InteractiveCard>
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {state.length > 0 && (
-          <div>
-            <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#8a5d14] mb-2">
-              TAMIL NADU STATE GOVERNMENT
-            </p>
-            <h2 className="font-display text-3xl font-medium text-[#0f172a] mb-5">
-              Tamil Nadu Industrial &amp; Startup Bodies
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {state.map((res) => (
-                <a
-                  key={res.name}
-                  href={res.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block group"
-                >
-                  <InteractiveCard className="h-full rounded-xl p-6 flex flex-col justify-between">
-                    <div>
-                      <h3 className="font-display text-2xl font-medium text-[#0f172a] group-hover:text-[#8a5d14] transition-colors">
-                        {res.name}
-                      </h3>
-                      <p className="mt-2 text-sm text-[#334155] leading-relaxed">{res.description}</p>
-                    </div>
-                    <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a5d14]">
-                      <span>Visit Official Portal</span>
-                      <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                    </span>
-                  </InteractiveCard>
-                </a>
-              ))}
+          {state.length > 0 && (
+            <div className="space-y-4">
+              <div className="border-b border-[#99f6e4] pb-3">
+                <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#0f766e]">
+                  TAMIL NADU STATE GOVERNMENT
+                </p>
+                <h2 className="font-display text-2xl sm:text-3xl font-medium text-[#0f172a] mt-1">
+                  Tamil Nadu Industrial &amp; Startup Bodies
+                </h2>
+              </div>
+              <div className="space-y-4">
+                {state.map((res, idx) => (
+                  <a
+                    key={res.name}
+                    href={res.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block group"
+                  >
+                    <InteractiveCard className="rounded-xl overflow-hidden flex flex-col justify-between bg-white">
+                      <div className="h-1.5 w-full bg-[#0d9488]" aria-hidden="true" />
+                      <div className="p-5 sm:p-6 flex items-start gap-4">
+                        <span className="w-10 h-10 rounded-lg bg-[#f0fdfa] border border-[#99f6e4] text-[#0f766e] flex items-center justify-center font-mono text-xs font-bold shrink-0">
+                          TN {String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-display text-xl sm:text-2xl font-medium text-[#0f172a] group-hover:text-[#0d9488] transition-colors">
+                            {res.name}
+                          </h3>
+                          <p className="mt-1.5 text-sm text-[#334155] leading-relaxed">{res.description}</p>
+                          <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0d9488]">
+                            <span>Visit Official Tamil Nadu Portal</span>
+                            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                          </span>
+                        </div>
+                      </div>
+                    </InteractiveCard>
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {central.length === 0 && state.length === 0 && (
           <div className="bg-white rounded-2xl border border-[#e4dfd5] p-10 text-center">
@@ -1433,7 +1696,7 @@ const CONTACT_SUBJECT_PRESETS = [
   'Track Fit Guidance',
   'Sponsorship Tier',
   'Association Delegation',
-  'Speaker / Chief Guest',
+  'Chief Guest Inquiry',
 ];
 
 export function ContactPage() {
@@ -1446,6 +1709,7 @@ export function ContactPage() {
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
   const [submittedId, setSubmittedId] = useState<string | null>(null);
+  const [submittedNotificationId, setSubmittedNotificationId] = useState<string | null>(null);
 
   useEffect(() => {
     if (subjectParam) {
@@ -1474,6 +1738,7 @@ export function ContactPage() {
         return;
       }
       setSubmittedId(data.inquiry?.id || 'INQ-SUBMITTED');
+      setSubmittedNotificationId(data.notification?.id || null);
       setName('');
       setEmail('');
       setMessage('');
@@ -1489,7 +1754,9 @@ export function ContactPage() {
       <PageHero
         kicker="CONTACT & CONSULTATION"
         title="Organiser Desk & Business Consultation."
-        subtitle="Connect with the Investor Meet 500 organising team in Chennai for participant inquiries, sponsorship decks, association delegations, and first-level consultation."
+        subtitle="Connect with Mr. Rajganesh & the Investor Meet 500 organising team in Chennai for participant inquiries, sponsorship decks, and consultation ahead of 20-02-2027."
+        image={MEDIA_ASSETS.aboutReception}
+        imageAlt="Organisers and business founders conversing inside Chennai summit reception atrium"
       />
 
       <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-14">
@@ -1503,8 +1770,8 @@ export function ContactPage() {
               <div className="flex items-center gap-4">
                 <AvatarPortrait
                   name={ORGANISER_CONTACT.contactPerson}
-                  src={null}
-                  size="md"
+                  src={resolvePortraitUrl(ORGANISER_CONTACT.contactPerson)}
+                  size="lg"
                   theme="dark"
                 />
                 <div>
@@ -1534,6 +1801,10 @@ export function ContactPage() {
                   <MapPin className="w-4 h-4 text-[#e6c67e] mt-0.5 shrink-0" aria-hidden="true" />
                   <span className="leading-relaxed">{ORGANISER_CONTACT.address}</span>
                 </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-white/10 text-xs text-[#94a3b8]">
+                Automated alert dispatch target:{' '}
+                <strong className="font-mono text-[#e6c67e]">{ORGANISER_NOTIFICATION_EMAIL}</strong>
               </div>
             </InteractiveCard>
 
@@ -1566,7 +1837,8 @@ export function ContactPage() {
               Send an Enquiry or Consultation Request
             </h2>
             <p className="mt-1 text-sm text-[#526075]">
-              All messages are saved to the organiser inbox for follow-up.
+              All messages are saved to the organiser inbox and logged for alert routing to{' '}
+              <span className="font-mono text-xs text-[#091326]">{ORGANISER_NOTIFICATION_EMAIL}</span>.
             </p>
 
             {/* Quick-Fill Subject Presets */}
@@ -1597,7 +1869,9 @@ export function ContactPage() {
                   <strong className="font-semibold">Enquiry Received ({submittedId})</strong>
                   <p className="mt-0.5 text-emerald-800">
                     Your consultation message has been logged with the Investor Meet 500 organiser
-                    desk.
+                    desk and queued to{' '}
+                    <span className="font-mono font-semibold">{ORGANISER_NOTIFICATION_EMAIL}</span>
+                    {submittedNotificationId ? ` (${submittedNotificationId})` : ''}.
                   </p>
                 </div>
               </div>
@@ -1709,29 +1983,30 @@ export function ContactPage() {
           <h2 className="font-display text-3xl font-medium text-[#0f172a] mb-5">
             Case Studies &amp; Reference Summits
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {CASE_STUDY_REFERENCES.map((cs) => (
-              <a
-                key={cs.name}
-                href={cs.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block group"
-              >
-                <InteractiveCard className="h-full rounded-xl p-5 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-display text-xl font-medium text-[#0f172a] group-hover:text-[#8a5d14] transition-colors">
-                      {cs.name}
-                    </h3>
-                    <p className="mt-1 text-xs text-[#526075]">{cs.subtitle}</p>
-                  </div>
-                  <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#8a5d14]">
-                    <span>Reference link</span>
-                    <ExternalLink className="w-3 h-3" aria-hidden="true" />
-                  </span>
-                </InteractiveCard>
-              </a>
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {CASE_STUDY_REFERENCES.map((cs, idx) => {
+              const colors = ['#1d4ed8', '#0d9488', '#c49a45', '#6d28d9'];
+              const accent = colors[idx % colors.length];
+              return (
+                <ImageCard
+                  key={cs.name}
+                  image={cs.image}
+                  imageAlt={cs.imageAlt}
+                  accentColor={accent}
+                  kicker={cs.category}
+                  title={cs.name}
+                  subtitle={cs.subtitle}
+                  href={cs.url}
+                  external
+                  footer={
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: accent }}>
+                      <span>Visit Reference Summit</span>
+                      <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                    </span>
+                  }
+                />
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1743,48 +2018,108 @@ export function TeamPage() {
   const [selectedReviewer, setSelectedReviewer] = useState<CommitteeReviewerProfile | null>(null);
 
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#f5fafb] text-[#0f172a]">
       <PageHero
-        kicker="EVENT TEAMS"
+        theme="teal"
+        kicker="EVENT TEAMS · 5 WORKSTREAMS × 5 MEMBERS"
         title="Five Operational Teams Supporting the Summit."
-        subtitle="Specialised functional desks governing participant onboarding, committee validation, media messaging, bank loan coordination and on-ground floor operations."
+        subtitle="Specialised five-member functional desks governing participant onboarding, committee validation, media messaging, bank loan coordination and on-ground floor operations."
+        image={MEDIA_ASSETS.dealLoungeChennai}
+        imageAlt="Operational coordination leads and advisors engaging with founders in Chennai"
         stats={[
           { value: '5 Desks', label: 'Operations' },
-          { value: '25+', label: 'Mandate Controls' },
+          { value: '25 Seats', label: '5 Members Per Team' },
+          { value: '20-02-2027', label: 'Chennai Summit' },
         ]}
       />
 
-      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-14">
+      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {EVENT_TEAMS.map((team, idx) => {
             const pairedReviewer =
               COMMITTEE_REVIEWER_PROFILES[idx % COMMITTEE_REVIEWER_PROFILES.length];
+            const colors = ['#0284c7', '#0d9488', '#6d28d9', '#1d4ed8', '#c49a45'];
+            const accent = colors[idx % colors.length];
             return (
               <InteractiveCard
                 key={team.no}
-                className="rounded-2xl p-6 sm:p-7 flex flex-col justify-between"
+                className="rounded-2xl overflow-hidden flex flex-col justify-between bg-white"
               >
-                <div>
-                  <span className="font-mono text-xs font-bold text-[#8a5d14]">TEAM {team.no}</span>
-                  <h2 className="mt-2 font-display text-2xl font-medium text-[#0f172a]">
-                    {team.title}
-                  </h2>
-                  <p className="mt-2 text-sm text-[#526075]">{team.summary}</p>
-                  <ul className="mt-4 pt-4 border-t border-[#e4dfd5] space-y-2">
+                <div className="h-1.5 w-full" style={{ backgroundColor: accent }} aria-hidden="true" />
+                <div className="p-6 sm:p-7 flex-1 space-y-5">
+                  <div>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-xs font-bold" style={{ color: accent }}>
+                        TEAM {team.no}
+                      </span>
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#526075]">
+                        5 Responsibilities · 5 Members
+                      </span>
+                    </div>
+                    <h2 className="mt-2 font-display text-2xl font-semibold text-[#0f172a]">
+                      {team.title}
+                    </h2>
+                    <p className="mt-1.5 text-sm text-[#526075]">{team.summary}</p>
+                  </div>
+
+                  {/* 5 Operational Mandate Points */}
+                  <ul className="pt-4 border-t border-[#e4dfd5] space-y-2">
                     {team.responsibilities.map((r) => (
-                      <li key={r} className="flex items-start gap-2 text-sm text-[#334155]">
-                        <Check className="w-4 h-4 text-[#8a5d14] mt-0.5 shrink-0" aria-hidden="true" />
+                      <li key={r} className="flex items-start gap-2 text-xs sm:text-sm text-[#334155]">
+                        <Check className="w-4 h-4 mt-0.5 shrink-0 text-[#0d9488]" aria-hidden="true" />
                         <span>{r}</span>
                       </li>
                     ))}
                   </ul>
+
+                  {/* 5 Team Member Roster Slots */}
+                  <div className="pt-4 border-t border-[#e4dfd5] space-y-2.5">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0f172a] block">
+                      FIVE-MEMBER DESK ROSTER
+                    </span>
+                    <div className="space-y-2">
+                      {team.members.map((m) => {
+                        const memberPortrait = resolvePortraitUrl(m.name);
+                        return (
+                          <div
+                            key={m.slot + m.name}
+                            className="rounded-lg border border-[#e4dfd5] bg-[#fafaf8] px-3 py-2 flex items-center justify-between gap-2.5"
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <AvatarPortrait
+                                name={m.name}
+                                src={memberPortrait}
+                                size="xs"
+                                className="w-8 h-8 text-[10px]"
+                              />
+                              <div className="min-w-0">
+                                <div className="text-xs font-semibold text-[#0f172a] truncate">
+                                  {m.slot}. {m.name}
+                                </div>
+                                <div className="text-[11px] text-[#526075] truncate">{m.role}</div>
+                              </div>
+                            </div>
+                            <span
+                              className={`font-mono text-[10px] font-semibold shrink-0 ${
+                                m.status === 'Confirmed Lead'
+                                  ? 'text-teal-800'
+                                  : 'text-amber-800'
+                              }`}
+                            >
+                              {m.status === 'Confirmed Lead' ? 'Lead' : 'TBC'}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
 
                 {pairedReviewer && (
                   <button
                     type="button"
                     onClick={() => setSelectedReviewer(pairedReviewer)}
-                    className="mt-5 pt-3 border-t border-[#e4dfd5] flex items-center justify-between gap-3 w-full text-left group cursor-pointer"
+                    className="mx-6 sm:mx-7 mb-6 pt-3 border-t border-[#e4dfd5] flex items-center justify-between gap-3 w-[calc(100%-3rem)] sm:w-[calc(100%-3.5rem)] text-left group cursor-pointer"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <AvatarPortrait
@@ -1793,15 +2128,15 @@ export function TeamPage() {
                         size="xs"
                       />
                       <div className="min-w-0">
-                        <span className="block text-xs font-semibold text-[#0f172a] truncate group-hover:text-[#8a5d14]">
-                          {pairedReviewer.name}
+                        <span className="block text-xs font-semibold text-[#0f172a] truncate group-hover:text-[#0284c7]">
+                          Advisory Liaison: {pairedReviewer.name}
                         </span>
                         <span className="block text-[11px] text-[#526075] truncate">
                           {pairedReviewer.committee}
                         </span>
                       </div>
                     </div>
-                    <span className="text-[11px] font-semibold text-[#8a5d14] shrink-0">Profile</span>
+                    <span className="text-[11px] font-semibold text-[#0284c7] shrink-0">Profile</span>
                   </button>
                 )}
               </InteractiveCard>
@@ -1815,6 +2150,8 @@ export function TeamPage() {
     </div>
   );
 }
+
+const PHASE_ACCENTS = ['#1d4ed8', '#0d9488', '#6d28d9', '#c49a45'];
 
 export function RegistrationPolicyPage() {
   const [groupFilter, setGroupFilter] = useState<string>('All');
@@ -1833,28 +2170,76 @@ export function RegistrationPolicyPage() {
   }, [groupFilter, query]);
 
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#f8fafc] text-[#0f172a]">
       <PageHero
-        kicker="90-DAY REGISTRATION POLICY"
-        title="20 Reasons for Advance Registration."
-        subtitle="Why Investor Meet 500 emphasises a 90-day preparation window across registration verification, investor matchmaking, venue allocation and due diligence."
-        ctaLabel="Apply Before 1 February 2027"
+        theme="indigo"
+        kicker="90 DAYS POLICY · ADVANCE PREPARATION STANDARD"
+        title="20 Reasons for the 90 Days Policy."
+        subtitle="Why Investor Meet 500 establishes a structured 90-day preparation window across registration verification, investor matchmaking, venue allocation and due diligence."
+        image={MEDIA_ASSETS.cfoAuditBriefing}
+        imageAlt="Senior advisors preparing validation reports and governance schedules"
+        ctaLabel="Apply Before 01-02-2027"
         ctaHref="/apply"
         stats={[
-          { value: '20', label: 'Policy Reasons' },
-          { value: '90 Days', label: 'Prep Window' },
+          { value: '20', label: 'Policy Pillars' },
+          { value: '4 Phases', label: 'Execution Flow' },
+          { value: '01-02-2027', label: 'Final Cutoff' },
         ]}
       />
 
       <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-10">
-        <div className="rounded-xl border border-[#c49a45]/40 bg-[#fbf6ea] p-5 flex items-start gap-3">
-          <Info className="w-5 h-5 text-[#8a5d14] mt-0.5 shrink-0" aria-hidden="true" />
-          <div className="text-sm text-[#3d2e10] leading-relaxed">
-            <strong className="font-semibold text-[#0c121d]">Deadline Alignment Note:</strong> The
-            event is scheduled for <strong>20 February 2027</strong> with final registration cutoff on{' '}
-            <strong>1 February 2027</strong>. Applicants are encouraged to submit at least 90 days
-            in advance wherever possible to allow full validation and matchmaking cycles.
+        {/* Deadline Alignment Banner */}
+        <div className="rounded-2xl border border-[#4338ca]/30 bg-white overflow-hidden shadow-xs">
+          <div className="h-1 w-full bg-[#4338ca]" aria-hidden="true" />
+          <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-[#4338ca] mt-0.5 shrink-0" aria-hidden="true" />
+              <div className="text-sm text-[#334155] leading-relaxed">
+                <strong className="font-semibold text-[#0f172a]">90 Days Policy &amp; Deadline Alignment:</strong>{' '}
+                The summit is scheduled for <strong>20-02-2027 (20 February 2027)</strong> with final registration cutoff on{' '}
+                <strong>{REGISTRATION_CUTOFF_DATE_CODE} (1 February 2027)</strong>. Early entry gives the Validation Committee time to build investor-matched pitch dossiers.
+              </div>
+            </div>
+            <span className="font-mono text-xs font-semibold px-3.5 py-2 rounded-lg bg-[#eef2ff] text-[#4338ca] shrink-0">
+              Strategy: {REGISTRATION_STRATEGY}
+            </span>
           </div>
+        </div>
+
+        {/* 4-Phase Interactive Visual Selector Bar */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {NINETY_DAY_POLICY_GROUPS.map((grp, idx) => {
+            const active = groupFilter === grp.group;
+            const accent = PHASE_ACCENTS[idx % PHASE_ACCENTS.length];
+            return (
+              <button
+                key={grp.group}
+                type="button"
+                onClick={() => setGroupFilter((prev) => (prev === grp.group ? 'All' : grp.group))}
+                className={`text-left rounded-2xl p-5 border transition-all cursor-pointer relative overflow-hidden ${
+                  active
+                    ? 'bg-gradient-to-br from-[#091326] to-[#1e1b4b] text-white border-[#091326] shadow-md'
+                    : 'bg-white border-[#e4dfd5] hover:border-[#4338ca] text-[#0f172a]'
+                }`}
+              >
+                <span className="h-1.5 inset-x-0 top-0 absolute" style={{ backgroundColor: accent }} aria-hidden="true" />
+                <div className="flex items-center justify-between gap-2 pt-1">
+                  <span
+                    className="font-mono text-[11px] font-bold uppercase tracking-wider"
+                    style={{ color: active ? '#fcd34d' : accent }}
+                  >
+                    PHASE 0{idx + 1} · {grp.group}
+                  </span>
+                  <span className={`font-mono text-[11px] ${active ? 'text-[#c7d2fe]' : 'text-[#526075]'}`}>
+                    {grp.items.length} pts
+                  </span>
+                </div>
+                <h2 className={`mt-2 font-display text-xl font-semibold ${active ? 'text-white' : 'text-[#0f172a]'}`}>
+                  {grp.title}
+                </h2>
+              </button>
+            );
+          })}
         </div>
 
         {/* Filter + Search Bar */}
@@ -1865,7 +2250,7 @@ export function RegistrationPolicyPage() {
               onClick={() => setGroupFilter('All')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
                 groupFilter === 'All'
-                  ? 'bg-[#0c121d] text-[#e6c67e]'
+                  ? 'bg-[#1e1b4b] text-[#fcd34d]'
                   : 'bg-[#fafaf8] border border-[#e4dfd5] text-[#334155]'
               }`}
             >
@@ -1878,11 +2263,11 @@ export function RegistrationPolicyPage() {
                 onClick={() => setGroupFilter(g.group)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
                   groupFilter === g.group
-                    ? 'bg-[#0c121d] text-[#e6c67e]'
+                    ? 'bg-[#1e1b4b] text-[#fcd34d]'
                     : 'bg-[#fafaf8] border border-[#e4dfd5] text-[#334155]'
                 }`}
               >
-                {g.group}
+                {g.title}
               </button>
             ))}
           </div>
@@ -1894,34 +2279,54 @@ export function RegistrationPolicyPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search verification, hall, risk..."
-              className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8] text-xs focus:outline-none focus:border-[#0c121d]"
+              className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8] text-xs focus:outline-none focus:border-[#4338ca]"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {filteredGroups.map((grp) => (
-            <div key={grp.group} className="bg-white rounded-2xl border border-[#e4dfd5] p-6 sm:p-8 space-y-4">
-              <div>
-                <p className="font-mono text-xs font-bold text-[#8a5d14]">{grp.group}</p>
-                <h2 className="mt-1 font-display text-3xl font-medium text-[#0f172a]">
-                  {grp.title}
-                </h2>
+        {/* Interactive 20-Point Visual Matrix */}
+        <div className="space-y-8">
+          {filteredGroups.map((grp, gIdx) => {
+            const accent = PHASE_ACCENTS[gIdx % PHASE_ACCENTS.length];
+            return (
+              <div key={grp.group} className="space-y-4">
+                <div className="flex items-center justify-between gap-3 border-b border-[#e4dfd5] pb-3">
+                  <div>
+                    <span className="font-mono text-xs font-bold" style={{ color: accent }}>
+                      {grp.group}
+                    </span>
+                    <h2 className="font-display text-2xl sm:text-3xl font-semibold text-[#0f172a]">
+                      {grp.title}
+                    </h2>
+                  </div>
+                  <span className="font-mono text-xs text-[#526075]">{grp.items.length} Policy Controls</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                  {grp.items.map((item) => (
+                    <InteractiveCard
+                      key={item.no}
+                      className="rounded-xl overflow-hidden flex flex-col justify-between bg-white"
+                    >
+                      <div className="h-1 w-full" style={{ backgroundColor: accent }} aria-hidden="true" />
+                      <div className="p-5 flex-1">
+                        <span
+                          className="font-mono text-xs font-bold block"
+                          style={{ color: accent }}
+                        >
+                          REASON {item.no}
+                        </span>
+                        <h3 className="mt-2 font-display text-lg font-semibold text-[#0f172a] leading-snug">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-xs text-[#334155] leading-relaxed">{item.desc}</p>
+                      </div>
+                    </InteractiveCard>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-2.5">
-                {grp.items.map((item) => (
-                  <ExpandablePanel
-                    key={item.no}
-                    kicker={`REASON ${item.no}`}
-                    title={item.title}
-                    defaultOpen
-                  >
-                    {item.desc}
-                  </ExpandablePanel>
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -1940,41 +2345,48 @@ export function BusinessGuidancePage() {
   const pct = Math.round((completed / FIRST_LEVEL_GUIDANCE_STEPS.length) * 100);
 
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#f6f7ff] text-[#0f172a]">
       <PageHero
-        kicker="FIRST LEVEL BUSINESS GUIDANCE"
+        theme="indigo"
+        kicker="FIRST LEVEL BUSINESS GUIDANCE · CONSULTATION DESK"
         title="Ten-Step Founder & Enterprise Readiness Guide."
-        subtitle="Structured orientation for early founders and growing businesses preparing documentation, sector alignment, and capital clarity before meeting investors."
-        ctaLabel="Request Consultation"
-        ctaHref="/contact?subject=First%20Level%20Business%20Guidance"
+        subtitle="Structured First Level Business Guidance helping early founders and growing MSMEs prepare documentation, sector alignment, and consultation clarity before meeting investors."
+        image={MEDIA_ASSETS.aboutReception}
+        imageAlt="Founders discussing business readiness inside Chennai summit lobby"
+        ctaLabel="Book Pre-Summit Consultation"
+        ctaHref="/contact?subject=First%20Level%20Business%20Guidance%20Consultation"
         stats={[
           { value: `${completed}/10`, label: 'Steps Ready' },
           { value: `${pct}%`, label: 'Progress' },
+          { value: '1-on-1', label: 'Consultation' },
         ]}
       />
 
       <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-8">
-        <div className="bg-white rounded-2xl border border-[#e4dfd5] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#8a5d14]">
-              INTERACTIVE PREPARATION TRACKER
-            </span>
-            <p className="text-sm text-[#334155] mt-0.5">
-              Click any step below to mark it complete before requesting an investor slot.
-            </p>
-          </div>
-          <div className="w-full sm:w-64 space-y-1.5 shrink-0">
-            <div className="flex justify-between text-xs font-mono">
-              <span className="text-[#526075]">Checklist</span>
-              <span className="font-semibold text-[#8a5d14]">
-                {completed} / {FIRST_LEVEL_GUIDANCE_STEPS.length} ({pct}%)
+        <div className="bg-white rounded-2xl border border-[#e4dfd5] overflow-hidden shadow-sm">
+          <div className="h-1 w-full bg-[#4338ca]" aria-hidden="true" />
+          <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#4338ca]">
+                FIRST LEVEL GUIDANCE · INTERACTIVE PREPARATION TRACKER
               </span>
+              <p className="text-sm text-[#334155] mt-0.5">
+                Click any step below to mark it complete before requesting an investor or consultation slot.
+              </p>
             </div>
-            <div className="h-2 rounded-full bg-[#e4dfd5] overflow-hidden">
-              <div
-                className="h-full rounded-full bg-[#0c121d] transition-all duration-300"
-                style={{ width: `${pct}%` }}
-              />
+            <div className="w-full sm:w-64 space-y-1.5 shrink-0">
+              <div className="flex justify-between text-xs font-mono">
+                <span className="text-[#526075]">Checklist</span>
+                <span className="font-semibold text-[#4338ca]">
+                  {completed} / {FIRST_LEVEL_GUIDANCE_STEPS.length} ({pct}%)
+                </span>
+              </div>
+              <div className="h-2 rounded-full bg-[#e2e8f0] overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-[#4338ca] via-[#6d28d9] to-[#0d9488] transition-all duration-300"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -1990,13 +2402,15 @@ export function BusinessGuidancePage() {
                 onClick={() =>
                   setCheckedSteps((prev) => ({ ...prev, [step.no]: !prev[step.no] }))
                 }
-                className="rounded-xl p-6 flex items-start gap-4"
+                className={`rounded-xl p-6 flex items-start gap-4 text-left ${
+                  done ? '!bg-gradient-to-r from-[#1e1b4b] to-[#312e81]' : 'bg-white'
+                }`}
               >
                 <div
                   className={`w-11 h-11 rounded-lg font-mono text-sm font-bold flex items-center justify-center shrink-0 ${
                     done
-                      ? 'bg-[#c49a45] text-[#0c121d]'
-                      : 'bg-[#0c121d] text-[#e6c67e]'
+                      ? 'bg-[#0d9488] text-white'
+                      : 'bg-[#eef2ff] text-[#4338ca] border border-[#c7d2fe]'
                   }`}
                 >
                   {done ? <Check className="w-5 h-5" aria-hidden="true" /> : step.no}
@@ -2005,7 +2419,7 @@ export function BusinessGuidancePage() {
                   <div className="flex items-center justify-between gap-2">
                     <span
                       className={`font-mono text-[10px] font-semibold uppercase tracking-wider ${
-                        done ? 'text-[#e6c67e]' : 'text-[#8a5d14]'
+                        done ? 'text-[#fcd34d]' : 'text-[#4338ca]'
                       }`}
                     >
                       STEP {step.no} · {done ? 'Completed' : 'Pending'}
@@ -2020,7 +2434,7 @@ export function BusinessGuidancePage() {
                   </h2>
                   <p
                     className={`mt-1.5 text-sm leading-relaxed ${
-                      done ? 'text-[#cbd5e1]' : 'text-[#334155]'
+                      done ? 'text-[#e0e7ff]' : 'text-[#334155]'
                     }`}
                   >
                     {step.desc}
@@ -2030,6 +2444,41 @@ export function BusinessGuidancePage() {
             );
           })}
         </div>
+
+        {/* Standout Consultation Desk Box */}
+        <InteractiveCard
+          dark
+          tilt={false}
+          className="rounded-2xl p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6 !bg-gradient-to-r from-[#1e1b4b] via-[#312e81] to-[#1d4ed8]"
+        >
+          <div className="max-w-2xl space-y-2">
+            <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#fcd34d]">
+              PRE-SUMMIT BUSINESS CONSULTATION DESK
+            </span>
+            <h2 className="font-display text-2xl sm:text-3xl font-semibold text-white">
+              Need 1-on-1 First Level Business Guidance Before Submitting?
+            </h2>
+            <p className="text-sm text-[#e0e7ff] leading-relaxed">
+              Connect directly with {ORGANISER_CONTACT.contactPerson} ({ORGANISER_CONTACT.phone}) to verify track suitability, document readiness, and funding structure ahead of {REGISTRATION_CUTOFF_DATE_CODE}.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3 shrink-0">
+            <Link
+              href="/contact?subject=Consultation"
+              className="btn-gold inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold whitespace-nowrap"
+            >
+              <span>Request Consultation</span>
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+            <a
+              href={ORGANISER_CONTACT.telHref}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-white/25 hover:border-[#fcd34d] text-sm font-semibold text-white whitespace-nowrap transition-colors"
+            >
+              <Phone className="w-4 h-4 text-[#fcd34d]" aria-hidden="true" />
+              <span>{ORGANISER_CONTACT.phone}</span>
+            </a>
+          </div>
+        </InteractiveCard>
       </section>
 
       <CtaBanner />
@@ -2052,9 +2501,10 @@ export function InternationalPage() {
   }, [groupFilter, query]);
 
   return (
-    <div className="bg-[#fafaf8] text-[#0f172a]">
+    <div className="bg-[#f0fdfa] text-[#0f172a]">
       <PageHero
-        kicker="INTERNATIONAL OPPORTUNITIES"
+        theme="teal"
+        kicker="INTERNATIONAL OPPORTUNITIES · 40 FDI & CROSS-BORDER VERTICALS"
         title="Cross-Border Capital, FDI & Global Delegations."
         subtitle="Forty structured opportunity verticals spanning foreign direct investment, international joint ventures, domestic industrial growth, and target investor groups."
         image={MEDIA_ASSETS.globalFdiCorridor}
@@ -2064,19 +2514,20 @@ export function InternationalPage() {
         stats={[
           { value: '40', label: 'Verticals' },
           { value: '4 Groups', label: 'Global Scope' },
+          { value: 'Hall 3', label: 'FDI Corridor' },
         ]}
       />
 
       <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-8">
-        <div className="bg-white rounded-2xl border border-[#e4dfd5] p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div className="bg-white rounded-2xl border border-[#ccfbf1] p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setGroupFilter('All')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
                 groupFilter === 'All'
-                  ? 'bg-[#0c121d] text-[#e6c67e]'
-                  : 'bg-[#fafaf8] border border-[#e4dfd5] text-[#334155]'
+                  ? 'bg-[#082f49] text-[#67e8f9]'
+                  : 'bg-[#f8fafc] border border-[#e4dfd5] text-[#334155]'
               }`}
             >
               All 40 Verticals
@@ -2088,8 +2539,8 @@ export function InternationalPage() {
                 onClick={() => setGroupFilter(g.group)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer ${
                   groupFilter === g.group
-                    ? 'bg-[#0c121d] text-[#e6c67e]'
-                    : 'bg-[#fafaf8] border border-[#e4dfd5] text-[#334155]'
+                    ? 'bg-[#082f49] text-[#67e8f9]'
+                    : 'bg-[#f8fafc] border border-[#e4dfd5] text-[#334155]'
                 }`}
               >
                 {g.title.replace(' Opportunities', '').replace(' Programs', '')}
@@ -2105,36 +2556,65 @@ export function InternationalPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search FDI, manufacturing, AI..."
-              className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#fafaf8] text-xs focus:outline-none focus:border-[#0c121d]"
+              className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#d6cfc2] bg-[#f8fafc] text-xs focus:outline-none focus:border-[#0284c7]"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredGroups.map((grp) => (
-            <InteractiveCard key={grp.group} className="rounded-2xl p-6 sm:p-8">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#8a5d14]">
-                <Globe className="w-4 h-4" aria-hidden="true" />
-                <span>{grp.group}</span>
-              </div>
-              <h2 className="mt-2 font-display text-3xl font-medium text-[#0f172a] mb-5">
-                {grp.title}
-              </h2>
-              <ul className="space-y-2.5">
-                {grp.items.map((item, idx) => (
-                  <li
-                    key={item}
-                    className="flex items-center gap-3 text-sm text-[#0f172a] py-1.5 border-b border-[#e4dfd5] last:border-b-0"
-                  >
-                    <span className="font-mono text-xs font-bold text-[#8a5d14]">
-                      {String(idx + 1).padStart(2, '0')}
-                    </span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </InteractiveCard>
-          ))}
+          {filteredGroups.map((grp, grpIdx) => {
+            const groupVisuals = [
+              {
+                image: MEDIA_ASSETS.fdiBoardroomChennai,
+                alt: 'Indian and global executives reviewing cross-border FDI investment documents in Chennai',
+                accent: '#0284c7',
+              },
+              {
+                image: MEDIA_ASSETS.tnIndustrialPark,
+                alt: 'Modern Tamil Nadu clean-tech precision manufacturing park',
+                accent: '#0d9488',
+              },
+              {
+                image: MEDIA_ASSETS.dealLoungeChennai,
+                alt: 'Curated investor-entrepreneur networking lounge in Chennai',
+                accent: '#1d4ed8',
+              },
+              {
+                image: MEDIA_ASSETS.globalFdiCorridor,
+                alt: 'Senior Indian business leaders seated at high-rise conference roundtable',
+                accent: '#c49a45',
+              },
+            ];
+            const vis = groupVisuals[grpIdx % groupVisuals.length];
+            return (
+              <ImageCard
+                key={grp.group}
+                image={vis.image}
+                imageAlt={vis.alt}
+                accentColor={vis.accent}
+                overlayLabel={`${grp.group} · ${grp.items.length} VERTICALS`}
+                title={grp.title}
+                className="border-[#ccfbf1]"
+              >
+                <ul className="space-y-2 border-t border-[#e4dfd5] pt-3">
+                  {grp.items.map((item, idx) => (
+                    <li
+                      key={item}
+                      className="flex items-center gap-3 text-sm text-[#0f172a] py-1.5 border-b border-[#f0ede5] last:border-b-0"
+                    >
+                      <span
+                        className="font-mono text-xs font-bold"
+                        style={{ color: vis.accent }}
+                      >
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </ImageCard>
+            );
+          })}
         </div>
       </section>
 
@@ -2162,6 +2642,8 @@ export function SchedulePage() {
         kicker="EVENT SCHEDULE · 20 FEBRUARY 2027"
         title="Full-Day Summit Timetable (8:00 AM – 6:00 PM)."
         subtitle="Structured hourly cadence across Hall 1, Hall 2, and Hall 3 balancing investor pitches, one-to-one sessions, and closing deal-room updates."
+        image={MEDIA_ASSETS.chennaiSummitHall}
+        imageAlt="Main plenary convention auditorium prepared for 20 February 2027 sessions"
         ctaLabel="View Venue Floor Plans"
         ctaHref="/venue"
         stats={[
@@ -2365,6 +2847,368 @@ export function TermsPage() {
           </ExpandablePanel>
         ))}
       </section>
+    </div>
+  );
+}
+
+/* ---------- Dedicated Standalone Focused Desks (Menu & Quick Links) ---------- */
+
+export function ValidationTeamPage() {
+  const [selectedReviewer, setSelectedReviewer] = useState<CommitteeReviewerProfile | null>(null);
+
+  const pillars = [
+    {
+      no: '01',
+      title: 'Incorporation, ROC & Statutory Verification',
+      desc: 'Confirm active MCA/ROC standing, MSME registration, GST compliance and clean founder background before approving pitch hall admission.',
+    },
+    {
+      no: '02',
+      title: 'Financial Projection & Risk Scrutiny',
+      desc: 'Validate unit economics, 5-year capital deployment tables, debt-service coverage ratios and risk mitigants ahead of 01-02-2027.',
+    },
+    {
+      no: '03',
+      title: 'Status Workflow & Track Routing',
+      desc: 'Move validated dossiers through Pending -> Under review -> Approved into Hall 1, Hall 2 or Hall 3 meeting slots.',
+    },
+    {
+      no: '04',
+      title: 'Guarantee-Level Call Report Oversight',
+      desc: 'Document honest due-diligence requests made by participating funds and bankers on summit day (2–6 PM).',
+    },
+  ];
+
+  return (
+    <div className="bg-[#f8fafc] text-[#0f172a]">
+      <PageHero
+        theme="indigo"
+        kicker="VALIDATION TEAM · COMMITTEE SCRUTINY"
+        title="Participant Validation & Risk Verification Desk."
+        subtitle="Governing the background verification, financial readiness audit, and risk screening protocol for every startup, MSME, and corporate participant."
+        image={MEDIA_ASSETS.aboutReception}
+        imageAlt="Validation committee members reviewing participant applications"
+        ctaLabel="Submit Application for Review"
+        ctaHref="/apply"
+        stats={[
+          { value: '4 Leads', label: 'Review Panel' },
+          { value: '500', label: 'Reviewed Seats' },
+          { value: REGISTRATION_CUTOFF_DATE_CODE, label: 'Validation Lock' },
+        ]}
+      />
+
+      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {pillars.map((p) => (
+            <InteractiveCard key={p.no} className="rounded-2xl p-6 bg-white border-t-4 border-t-[#4338ca]">
+              <span className="font-mono text-xs font-bold text-[#4338ca]">STEP {p.no}</span>
+              <h2 className="mt-2 font-display text-2xl font-semibold text-[#0f172a] leading-snug">
+                {p.title}
+              </h2>
+              <p className="mt-2 text-sm text-[#334155] leading-relaxed">{p.desc}</p>
+            </InteractiveCard>
+          ))}
+        </div>
+
+        <div>
+          <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#4338ca] mb-2">
+            ACTIVE VALIDATION REVIEWERS
+          </p>
+          <h2 className="font-display text-3xl font-semibold text-[#0f172a] mb-6">
+            Authorised Screening Leads Across Halls 1–3
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {COMMITTEE_REVIEWER_PROFILES.map((rev) => (
+              <InteractiveCard
+                key={rev.name}
+                as="button"
+                onClick={() => setSelectedReviewer(rev)}
+                className="rounded-2xl p-6 text-left bg-white flex flex-col justify-between group"
+              >
+                <div>
+                  <AvatarPortrait name={rev.name} src={rev.portraitUrl} size="md" />
+                  <h3 className="mt-4 font-display text-xl font-semibold text-[#0f172a] group-hover:text-[#4338ca]">
+                    {rev.name}
+                  </h3>
+                  <p className="text-xs font-semibold text-[#4338ca] mt-0.5">{rev.role}</p>
+                  <p className="mt-2 text-xs text-[#334155] leading-relaxed">{rev.perspective}</p>
+                </div>
+                <span className="mt-4 pt-3 border-t border-[#e4dfd5] text-xs font-semibold text-[#4338ca] inline-flex items-center gap-1">
+                  Inspect Credentials <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </span>
+              </InteractiveCard>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <ReviewerProfileModal reviewer={selectedReviewer} onClose={() => setSelectedReviewer(null)} />
+      <CtaBanner />
+    </div>
+  );
+}
+
+export function PitchAreaPage() {
+  const halls = [
+    {
+      hall: 'Hall 1 · Plenary & Venture Equity Zone',
+      capacity: '200 Participants + Main Keynote Stage',
+      focus: 'Startups Track, Angel Networks, VC Funds & AI Investment Keynotes',
+      slots: '8:00 AM – 2:00 PM Live Pitches · 2:00 – 6:00 PM Call Reports',
+      image: MEDIA_ASSETS.chennaiSummitHall,
+      imageAlt: 'Main plenary auditorium stage and seating in Chennai convention hall',
+      accent: '#1d4ed8',
+    },
+    {
+      hall: 'Hall 2 · Banking & Business Loan Desks',
+      capacity: '150 Participants + Scheduled Credit Booths',
+      focus: 'Business Loan & Bank Loans across SBI, Nationalised & Private Banks',
+      slots: 'Pre-booked 20–30 Min Underwriting Slots · CMA & Project Appraisal',
+      image: MEDIA_ASSETS.msmeCreditBoardroom,
+      imageAlt: 'Structured credit underwriting and banking appraisal discussion table',
+      accent: '#0d9488',
+    },
+    {
+      hall: 'Hall 3 · Business Expansion & FDI Deal Rooms',
+      capacity: '150 Participants + Private Matchmaking Suites',
+      focus: 'Business Expansion, Mixed Loans, Joint Ventures & International Delegations',
+      slots: 'Confidential 1-on-1 Boardroom Discussions & Corporate Tie-Ups',
+      image: MEDIA_ASSETS.fdiBoardroomChennai,
+      imageAlt: 'Senior corporate leaders and global delegates inside private Chennai deal room',
+      accent: '#c49a45',
+    },
+  ];
+
+  return (
+    <div className="bg-[#fafaf8] text-[#0f172a]">
+      <PageHero
+        theme="platinum"
+        kicker="PITCH AREA · THREE-HALL FLOOR ARCHITECTURE"
+        title="Hall 1, Hall 2 & Hall 3 Pitch Operations."
+        subtitle="Structured physical allocation for curated morning investor pitches (8 AM – 2 PM), scheduled banking discussions, and afternoon guarantee-level closing updates (2 – 6 PM)."
+        image={MEDIA_ASSETS.chennaiSummitHall}
+        imageAlt="Chennai plenary pitch auditorium"
+        ctaLabel="Inspect Floor Blueprints"
+        ctaHref="/venue"
+        stats={[
+          { value: '3 Halls', label: 'Dedicated Zones' },
+          { value: '20–30 Min', label: 'Pitch Windows' },
+          { value: '20-02-2027', label: 'Chennai Date' },
+        ]}
+      />
+
+      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 space-y-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {halls.map((h, idx) => (
+            <ImageCard
+              key={h.hall}
+              image={h.image}
+              imageAlt={h.imageAlt}
+              accentColor={h.accent}
+              overlayLabel={`ZONE 0${idx + 1} · ${h.capacity}`}
+              title={h.hall}
+              description={h.focus}
+              footer={
+                <span className="font-mono text-xs text-[#091326]">{h.slots}</span>
+              }
+            />
+          ))}
+        </div>
+      </section>
+
+      <CtaBanner />
+    </div>
+  );
+}
+
+export function AiExpertsPage() {
+  return (
+    <div className="bg-[#f8fafc] text-[#0f172a]">
+      <PageHero
+        theme="obsidian"
+        kicker="AI EXPERTS · FUTURE OF INVESTMENT"
+        title="AI Tools, Predictive Risk & Investment Intelligence."
+        subtitle="How AI underwriting, sector telemetry, automated diligence tools, and deep-tech valuation are transforming investment decisions across India."
+        image={MEDIA_ASSETS.aiExpertsStage}
+        imageAlt="Indian AI keynote executive presenting on the plenary summit stage"
+        videoSrc={VIDEO_ASSETS.summitStage.src}
+        videoPoster={VIDEO_ASSETS.summitStage.poster}
+        ctaLabel="Explore Chief Guests & Panels"
+        ctaHref="/speakers"
+        stats={[
+          { value: 'Hall 1', label: 'Main Plenary' },
+          { value: 'AI Focus', label: 'Risk & Diligence' },
+        ]}
+      />
+
+      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          {
+            no: '01',
+            title: 'AI Due Diligence & Financial Stress Testing',
+            desc: 'Live walkthroughs showing how institutional investors stress-test startup unit economics, working capital burn, and margin sensitivity using AI models.',
+            image: MEDIA_ASSETS.aiExpertsStage,
+            imageAlt: 'AI investment keynote speaker on plenary auditorium stage',
+            accent: '#1d4ed8',
+          },
+          {
+            no: '02',
+            title: 'Tamil Nadu Deep-Tech & Industrial AI Startups',
+            desc: 'Evaluating defensible B2B SaaS, factory vision systems, vernacular voice AI, and biotech compute companies raising ₹50L – ₹100Cr+.',
+            image: MEDIA_ASSETS.tnIndustrialPark,
+            imageAlt: 'Modern Tamil Nadu clean-tech and industrial engineering campus',
+            accent: '#0d9488',
+          },
+          {
+            no: '03',
+            title: 'Automated MSME Credit Scoring & Cashflow Intel',
+            desc: 'Bridging GST telemetry, banking statements, and RBI-compliant alternative credit models inside the Business Loan & Bank Loans tracks.',
+            image: MEDIA_ASSETS.cfoAuditBriefing,
+            imageAlt: 'Senior finance leaders examining automated cashflow and risk analytics',
+            accent: '#6d28d9',
+          },
+        ].map((card) => (
+          <ImageCard
+            key={card.no}
+            image={card.image}
+            imageAlt={card.imageAlt}
+            accentColor={card.accent}
+            overlayLabel={`BRIEFING ${card.no} · HALL 1`}
+            title={card.title}
+            description={card.desc}
+            footer={
+              <Link
+                href="/speakers"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
+                style={{ color: card.accent }}
+              >
+                <span>Inspect Speaker Lineup</span>
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            }
+          />
+        ))}
+      </section>
+
+      <CtaBanner />
+    </div>
+  );
+}
+
+export function CfoPointsPage() {
+  return (
+    <div className="bg-[#fafaf8] text-[#0f172a]">
+      <PageHero
+        theme="burgundy"
+        kicker="CFO POINTS · GOVERNANCE & FIVE-YEAR ROADMAPS"
+        title="CFO Financial Discipline & Scale-Up Governance."
+        subtitle="Dedicated Chief Financial Officer sessions addressing working capital protection, candid lessons from business failures, and audit-ready five-year growth planning."
+        image={MEDIA_ASSETS.cfoAuditBriefing}
+        imageAlt="Chief Financial Officers examining balance sheets and five-year corporate roadmaps"
+        ctaLabel="Book Financial Readiness Consultation"
+        ctaHref="/contact?subject=CFO%20Advisory%20Consultation"
+        stats={[
+          { value: '3 Modules', label: 'CFO Briefings' },
+          { value: '5-Yr Plan', label: 'Audit Scope' },
+        ]}
+      />
+
+      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          {
+            no: '01',
+            icon: TrendingUp,
+            title: 'Working Capital & Cash Controls',
+            desc: 'Preventing asset-liability mismatches, premature capex lock-in, and unmonitored receivable cycles across early and mid-stage enterprises.',
+          },
+          {
+            no: '02',
+            icon: ShieldCheck,
+            title: 'Candid Business Failure Lessons',
+            desc: 'Honest post-mortems of over-leveraged expansion, governance lapses, and unit-economics blind spots so founders protect equity and solvency.',
+          },
+          {
+            no: '03',
+            icon: FileText,
+            title: 'Five-Year Audit-Ready Roadmaps',
+            desc: 'Structuring ROC/MCA filings, debt service ratios, CMA project reports, and institutional data rooms ready for bank or PE scrutiny.',
+          },
+        ].map((item) => (
+          <InteractiveCard key={item.no} className="rounded-2xl overflow-hidden bg-white">
+            <div className="h-1 w-full bg-[#881337]" aria-hidden="true" />
+            <div className="p-6 sm:p-7">
+              <item.icon className="w-6 h-6 text-[#881337] mb-3" aria-hidden="true" />
+              <span className="font-mono text-xs font-bold text-[#881337]">CFO POINT {item.no}</span>
+              <h2 className="mt-1.5 font-display text-2xl font-semibold text-[#0f172a]">{item.title}</h2>
+              <p className="mt-2.5 text-sm text-[#334155] leading-relaxed">{item.desc}</p>
+            </div>
+          </InteractiveCard>
+        ))}
+      </section>
+
+      <CtaBanner />
+    </div>
+  );
+}
+
+export function InvestorTeamPage() {
+  return (
+    <div className="bg-[#f8fafc] text-[#0f172a]">
+      <PageHero
+        theme="emerald"
+        kicker="INVESTOR TEAM POINTS · CURATION & MATCHMAKING"
+        title="Investor Team & Confidential Deal Matchmaking."
+        subtitle="Dedicated investor-side coordination desk aligning Angel Investors, Family Offices, VC Funds, HNIs, and Scheduled Banks with pre-validated dossiers."
+        image={MEDIA_ASSETS.dealLoungeChennai}
+        imageAlt="Institutional investors and startup founders engaged in private deal table conversations"
+        ctaLabel="Register as Investor Delegate"
+        ctaHref="/registration?category=investor"
+        stats={[
+          { value: '₹50L–₹500Cr', label: 'Ticket Alignment' },
+          { value: '1-on-1', label: 'Private Rooms' },
+        ]}
+      />
+
+      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {[
+          {
+            no: '01',
+            icon: Sparkles,
+            title: 'Mandate-Matched Shortlisting',
+            desc: 'Match every participating Angel, Family Office, or Fund solely with founders matching their exact sector and ticket size.',
+          },
+          {
+            no: '02',
+            icon: ShieldCheck,
+            title: 'Pre-Screened Investor Packs',
+            desc: 'Distribute committee-validated summaries and risk notes ahead of 20-02-2027 to eliminate unvetted pitches.',
+          },
+          {
+            no: '03',
+            icon: Building2,
+            title: 'Private Deal Room Scheduling',
+            desc: 'Pre-book confidential 20–30 minute one-to-one discussion tables across Halls 1, 2 & 3.',
+          },
+          {
+            no: '04',
+            icon: Clock,
+            title: 'Guarantee-Level Call Logging',
+            desc: 'Structured afternoon follow-up call reports capturing due diligence items and post-summit milestones.',
+          },
+        ].map((card) => (
+          <InteractiveCard key={card.no} className="rounded-2xl overflow-hidden bg-white">
+            <div className="h-1 w-full bg-[#0d9488]" aria-hidden="true" />
+            <div className="p-6">
+              <card.icon className="w-6 h-6 text-[#0d9488] mb-3" aria-hidden="true" />
+              <span className="font-mono text-xs font-bold text-[#0f766e]">POINT {card.no}</span>
+              <h2 className="mt-1.5 font-display text-xl font-semibold text-[#0f172a]">{card.title}</h2>
+              <p className="mt-2 text-sm text-[#334155] leading-relaxed">{card.desc}</p>
+            </div>
+          </InteractiveCard>
+        ))}
+      </section>
+
+      <CtaBanner />
     </div>
   );
 }
