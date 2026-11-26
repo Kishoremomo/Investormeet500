@@ -47,6 +47,7 @@ import {
   type ParticipantProfileHighlight,
 } from '../data/portraits';
 import type { RegistrationRecord } from '../lib/domain';
+import { fetchRegistrations } from '../lib/apiClient';
 import { Link } from '../lib/router';
 import { AvatarPortrait } from '../components/AvatarPortrait';
 import { InstitutionLogoMark } from '../components/BrandMark';
@@ -488,8 +489,7 @@ export function HomePage() {
   const reduced = useReducedMotion();
 
   useEffect(() => {
-    fetch('/api/registrations')
-      .then((r) => (r.ok ? r.json() : null))
+    fetchRegistrations()
       .then((d) => {
         if (d?.registrations) setLiveRegistrations(d.registrations);
       })
@@ -750,6 +750,8 @@ export function HomePage() {
                                 key={p.id}
                                 src={p.portraitUrl}
                                 alt={p.fullName}
+                                loading="lazy"
+                                decoding="async"
                                 className="w-8 h-8 rounded-full object-cover object-top ring-2 ring-[#091326]"
                               />
                             ))}
@@ -935,6 +937,8 @@ export function HomePage() {
                   <img
                     src={MEDIA_ASSETS.aboutReception}
                     alt="Indian startup founders, women business leaders, and institutional investors conversing inside the Chennai summit atrium"
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                     className="w-full h-[112%] -mt-[6%] object-cover object-center interactive-media"
                   />
@@ -988,6 +992,8 @@ export function HomePage() {
                       <img
                         src={activeCap.image}
                         alt={activeCap.imageAlt}
+                        loading="lazy"
+                        decoding="async"
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
                       />
@@ -1282,6 +1288,8 @@ export function HomePage() {
                         <img
                           src={track.image}
                           alt={track.imageAlt}
+                          loading="lazy"
+                          decoding="async"
                           referrerPolicy="no-referrer"
                           className="w-full h-full object-cover object-center hero-image-enhanced interactive-media"
                         />
@@ -1979,6 +1987,8 @@ export function HomePage() {
                 <img
                   src={MEDIA_ASSETS.aiExpertsStage}
                   alt="Indian AI & venture keynote expert addressing plenary summit audience in Chennai"
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="w-full h-[112%] -mt-[6%] object-cover object-center interactive-media"
                 />
@@ -2143,6 +2153,8 @@ export function HomePage() {
                         <img
                           src={committee.image}
                           alt={committee.imageAlt}
+                          loading="lazy"
+                          decoding="async"
                           referrerPolicy="no-referrer"
                           className="w-full h-full object-cover object-center hero-image-enhanced interactive-media"
                         />
@@ -2260,6 +2272,8 @@ export function HomePage() {
                   <img
                     src={MEDIA_ASSETS.womenLeadershipForum}
                     alt="Instagram countdown campaign spotlight for Investor Meet 500 Chennai"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#091326] via-transparent to-transparent" />
@@ -2300,6 +2314,8 @@ export function HomePage() {
                   <img
                     src={MEDIA_ASSETS.aiExpertsStage}
                     alt="YouTube explainer thumbnail featuring Chennai plenary stage and pitch halls"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#091326] via-transparent to-transparent" />
@@ -2343,6 +2359,8 @@ export function HomePage() {
                   <img
                     src={MEDIA_ASSETS.msmeCreditBoardroom}
                     alt="LinkedIn executive digest preview for banking managers, CFOs and corporate leaders"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#091326] via-transparent to-transparent" />

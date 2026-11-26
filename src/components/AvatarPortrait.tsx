@@ -44,6 +44,8 @@ export function AvatarPortrait({
         <img
           src={src}
           alt={name}
+          loading="lazy"
+          decoding="async"
           referrerPolicy="no-referrer"
           className={`w-full h-full object-cover ${objectPosCls} interactive-media`}
         />

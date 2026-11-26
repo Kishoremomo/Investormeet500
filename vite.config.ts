@@ -37,6 +37,35 @@ export default defineConfig(() => {
     optimizeDeps: {
       include: ['react', 'react-dom', 'motion/react'],
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('/react/') || id.includes('/react-dom/') || id.includes('scheduler')) {
+                return 'vendor-react';
+              }
+              if (id.includes('/motion/') || id.includes('framer-motion')) {
+                return 'vendor-motion';
+              }
+              if (id.includes('lucide-react')) {
+                return 'vendor-icons';
+              }
+            }
+            if (id.includes('/src/data/directories')) {
+              return 'data-directories';
+            }
+            if (id.includes('/src/data/logos')) {
+              return 'data-logos';
+            }
+            if (id.includes('/src/data/portraits')) {
+              return 'data-portraits';
+            }
+            return undefined;
+          },
+        },
+      },
+    },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify—file watching is disabled to prevent flickering during agent edits.

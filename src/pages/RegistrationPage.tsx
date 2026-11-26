@@ -10,6 +10,7 @@ import {
   type NotificationLogEntry,
   type RegistrationRecord,
 } from '../lib/domain';
+import { ApiClientError, createRegistration, fetchRegistrations } from '../lib/apiClient';
 import { MEDIA_ASSETS } from '../data/homeAndPrograms';
 import { Link, useQueryParam } from '../lib/router';
 import { CtaBanner } from '../components/CtaBanner';
@@ -63,8 +64,7 @@ export function RegistrationPage() {
   }, [catParam]);
 
   useEffect(() => {
-    fetch('/api/registrations')
-      .then((r) => r.json())
+    fetchRegistrations()
       .then((d) => {
         if (typeof d.allCount === 'number') setLiveCount(d.allCount);
       })
@@ -107,25 +107,20 @@ export function RegistrationPage() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch('/api/registrations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mode: 'category',
-          ...payload,
-          funding_lakhs: Number(payload.funding_lakhs),
-        }),
+      const data = await createRegistration({
+        mode: 'category',
+        ...payload,
+        funding_lakhs: Number(payload.funding_lakhs),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        if (data.errors) setErrors(data.errors);
-        setServerError(data.error || 'Could not submit registration.');
-        return;
-      }
       setSubmittedRecord(data.registration);
       setSubmittedNotification(data.notification ?? null);
-    } catch {
-      setServerError('Network error while saving registration.');
+    } catch (err) {
+      if (err instanceof ApiClientError) {
+        if (err.errors) setErrors(err.errors);
+        setServerError(err.message);
+      } else {
+        setServerError('Network error while saving registration.');
+      }
     } finally {
       setSubmitting(false);
     }

@@ -13,6 +13,7 @@ import {
   type NotificationLogEntry,
   type RegistrationRecord,
 } from '../lib/domain';
+import { ApiClientError, createRegistration } from '../lib/apiClient';
 import { MEDIA_ASSETS } from '../data/homeAndPrograms';
 import { Link, useQueryParam } from '../lib/router';
 import { CtaBanner } from '../components/CtaBanner';
@@ -86,24 +87,19 @@ export function ApplyPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/registrations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          funding_lakhs: Number(form.funding_lakhs),
-        }),
+      const data = await createRegistration({
+        ...form,
+        funding_lakhs: Number(form.funding_lakhs),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        if (data.errors) setErrors(data.errors);
-        setServerError(data.error || 'Unable to submit application.');
-        return;
-      }
       setSubmittedRecord(data.registration);
       setSubmittedNotification(data.notification ?? null);
-    } catch {
-      setServerError('Network error while submitting application. You can still download your JSON copy.');
+    } catch (err) {
+      if (err instanceof ApiClientError) {
+        if (err.errors) setErrors(err.errors);
+        setServerError(err.message);
+      } else {
+        setServerError('Network error while submitting application. You can still download your JSON copy.');
+      }
     } finally {
       setSubmitting(false);
     }

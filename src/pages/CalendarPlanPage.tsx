@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Search, X } from 'lucide-react';
 import type { CalendarTask } from '../lib/domain';
+import { fetchCalendarTasks, updateCalendarTask } from '../lib/apiClient';
 import { MEDIA_ASSETS } from '../data/homeAndPrograms';
 import { Link } from '../lib/router';
 import { CtaBanner } from '../components/CtaBanner';
@@ -44,8 +45,7 @@ export function CalendarPlanPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch('/api/calendar-tasks')
-      .then((r) => r.json())
+    fetchCalendarTasks()
       .then((d) => setTasks(d.tasks || []))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -94,16 +94,9 @@ export function CalendarPlanPage() {
     if (!inspectTask) return;
     setSaving(true);
     try {
-      const res = await fetch(`/api/calendar-tasks/${encodeURIComponent(inspectTask.id)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(inspectTask),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setTasks((prev) => prev.map((t) => (t.id === data.task.id ? data.task : t)));
-        setInspectTask(null);
-      }
+      const data = await updateCalendarTask(inspectTask.id, inspectTask);
+      setTasks((prev) => prev.map((t) => (t.id === data.task.id ? data.task : t)));
+      setInspectTask(null);
     } finally {
       setSaving(false);
     }

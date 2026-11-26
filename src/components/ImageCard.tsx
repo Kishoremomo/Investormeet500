@@ -83,6 +83,7 @@ export function ImageCard({
             <img
               src={image}
               alt={imageAlt}
+              loading="lazy"
               decoding="async"
               referrerPolicy="no-referrer"
               onError={() => setImgFailed(true)}

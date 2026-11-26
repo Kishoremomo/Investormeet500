@@ -199,6 +199,8 @@ export function HomeLeadershipAndOpsBand({
                   <img
                     src={MEDIA_ASSETS.womenLeadershipForum}
                     alt="Indian women founders and business executives collaborating at summit panel"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-[112%] -mt-[6%] object-cover object-center"
                   />
                   <div
@@ -337,6 +339,8 @@ export function HomeLeadershipAndOpsBand({
                   <img
                     src={MEDIA_ASSETS.aiExpertsStage}
                     alt="AI & venture plenary auditorium dialogue setup in Chennai"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-[112%] -mt-[6%] object-cover object-center interactive-media"
                   />
                   <div
@@ -878,6 +882,8 @@ export function HomeLeadershipAndOpsBand({
                           <img
                             src={committee.image}
                             alt={committee.imageAlt}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover object-center hero-image-enhanced interactive-media"
                           />
                           <div

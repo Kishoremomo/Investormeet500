@@ -55,6 +55,7 @@ import {
   type InvestmentTrack,
   type RegistrationRecord,
 } from '../lib/domain';
+import { ApiClientError, createInquiry, fetchRegistrations } from '../lib/apiClient';
 import { Link, useQueryParam } from '../lib/router';
 import { PageHero } from '../components/PageHero';
 import { CtaBanner } from '../components/CtaBanner';
@@ -669,6 +670,8 @@ export function SpeakersPage() {
                   <img
                     src="/media/logos/a2b_emblem.svg"
                     alt="Adyar Ananda Bhavan (A2B) emblem"
+                    loading="lazy"
+                    decoding="async"
                     className="w-14 h-9 rounded-md border border-[#fde68a]/60 bg-white p-0.5 object-contain shadow-md -mt-4 mx-auto relative z-10"
                   />
                 </div>
@@ -791,6 +794,8 @@ export function SpeakersPage() {
               <img
                 src={MEDIA_ASSETS.aiExpertsStage}
                 alt="Indian AI keynote executive addressing business founders in an obsidian summit auditorium"
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover object-top hero-image-enhanced interactive-media"
               />
@@ -932,6 +937,8 @@ export function SpeakersPage() {
                           <img
                             src="/media/logos/a2b_emblem.svg"
                             alt="A2B insignia"
+                            loading="lazy"
+                            decoding="async"
                             className="mt-1 ml-auto w-11 h-7 rounded border border-[#fda4af] bg-white p-0.5 object-contain"
                           />
                         )}
@@ -985,8 +992,7 @@ export function InvestorsPage() {
 
   useEffect(() => {
     let active = true;
-    fetch('/api/registrations')
-      .then((r) => r.json())
+    fetchRegistrations()
       .then((data) => {
         if (active && Array.isArray(data.registrations)) {
           setRegistrations(data.registrations);
@@ -1876,24 +1882,19 @@ export function ContactPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/inquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, subject, message }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        if (data.errors) setErrors(data.errors);
-        setServerError(data.error || 'Could not submit inquiry.');
-        return;
-      }
+      const data = await createInquiry({ name, email, subject, message });
       setSubmittedId(data.inquiry?.id || 'INQ-SUBMITTED');
       setSubmittedNotificationId(data.notification?.id || null);
       setName('');
       setEmail('');
       setMessage('');
-    } catch {
-      setServerError('Network error while submitting your enquiry.');
+    } catch (err) {
+      if (err instanceof ApiClientError) {
+        if (err.errors) setErrors(err.errors);
+        setServerError(err.message);
+      } else {
+        setServerError('Network error while submitting your enquiry.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -2834,6 +2835,8 @@ export function InternationalPage() {
                     <img
                       src={MEDIA_ASSETS.fdiBoardroomChennai}
                       alt="Indian and global executives reviewing cross-border FDI investment documents in Chennai"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#091326]/90 via-transparent to-transparent" />
@@ -2877,6 +2880,8 @@ export function InternationalPage() {
                       <img
                         src={MEDIA_ASSETS.tnIndustrialPark}
                         alt="Modern Tamil Nadu clean-tech precision manufacturing park"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#042f2e] via-[#042f2e]/30 to-transparent" />
@@ -2920,6 +2925,8 @@ export function InternationalPage() {
                     <img
                       src={MEDIA_ASSETS.dealLoungeChennai}
                       alt="Curated investor-entrepreneur networking lounge in Chennai"
+                      loading="lazy"
+                      decoding="async"
                       className="w-24 h-20 rounded-xl object-cover border border-white/25 shrink-0"
                     />
                     <div>
@@ -2966,6 +2973,8 @@ export function InternationalPage() {
                   <img
                     src={MEDIA_ASSETS.globalFdiCorridor}
                     alt="Senior Indian business leaders seated at high-rise conference roundtable"
+                    loading="lazy"
+                    decoding="async"
                     className="w-36 h-20 rounded-xl object-cover border border-[#e6c67e]/50 shrink-0"
                   />
                 </div>

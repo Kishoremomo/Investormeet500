@@ -160,6 +160,8 @@ export function InstitutionLogoMark({
         <img
           src={matched.src}
           alt={`${name} official logo`}
+          loading="lazy"
+          decoding="async"
           referrerPolicy="no-referrer"
           onError={() => setFailed(true)}
           className="w-full h-full object-contain"

@@ -366,6 +366,8 @@ export function VenueFloorPlans() {
                   <img
                     src={HALL_DIAGRAM_IMAGES.layoutA.src}
                     alt={HALL_DIAGRAM_IMAGES.layoutA.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.01]"
                   />
                   <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0c121d]/90 text-[#e6c67e] text-xs font-semibold shadow-md">
@@ -415,6 +417,8 @@ export function VenueFloorPlans() {
                   <img
                     src={HALL_DIAGRAM_IMAGES.layoutB.src}
                     alt={HALL_DIAGRAM_IMAGES.layoutB.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.01]"
                   />
                   <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0c121d]/90 text-[#e6c67e] text-xs font-semibold shadow-md">

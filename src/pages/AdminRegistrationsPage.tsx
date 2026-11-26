@@ -35,6 +35,13 @@ import {
   type RegistrationTargets,
   type ValidationStatus,
 } from '../lib/domain';
+import {
+  deleteRegistration as deleteRegistrationApi,
+  fetchNotifications,
+  fetchRegistrations,
+  updateRegistration as updateRegistrationApi,
+  updateTargets as updateTargetsApi,
+} from '../lib/apiClient';
 import { resolvePortraitUrl } from '../data/portraits';
 import { Link } from '../lib/router';
 import { AvatarPortrait } from '../components/AvatarPortrait';
@@ -84,27 +91,24 @@ export function AdminRegistrationsPage() {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
-      if (query.trim()) params.set('query', query.trim());
-      if (category !== 'All categories') params.set('category', category);
-      if (validationStatus !== 'All statuses') params.set('validationStatus', validationStatus);
-      if (paymentStatus !== 'All payments') params.set('paymentStatus', paymentStatus);
-      if (dateFrom) params.set('dateFrom', dateFrom);
-      if (dateTo) params.set('dateTo', dateTo);
-
-      const [res, notifRes] = await Promise.all([
-        fetch(`/api/registrations?${params.toString()}`),
-        fetch('/api/notifications'),
+      const [data, notifData] = await Promise.all([
+        fetchRegistrations({
+          query: query.trim() || undefined,
+          category,
+          validationStatus,
+          paymentStatus,
+          dateFrom: dateFrom || undefined,
+          dateTo: dateTo || undefined,
+        }),
+        fetchNotifications().catch(() => null),
       ]);
-      if (!res.ok) throw new Error('Failed to load registrations');
-      const data = await res.json();
+
       setRegistrations(data.registrations || []);
       setAllCount(typeof data.allCount === 'number' ? data.allCount : (data.registrations || []).length);
       setStats(data.stats || null);
       setTargets(data.targets || null);
 
-      if (notifRes.ok) {
-        const notifData = await notifRes.json();
+      if (notifData) {
         setNotifications(notifData.notifications || []);
       }
 
@@ -154,12 +158,7 @@ export function AdminRegistrationsPage() {
   ) => {
     if (!organiserUnlocked) return;
     try {
-      const res = await fetch(`/api/registrations/${encodeURIComponent(id)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(patch),
-      });
-      if (!res.ok) throw new Error('Update failed');
+      await updateRegistrationApi(id, patch);
       setActionMessage(`${id}: ${feedbackLabel}`);
       await loadData();
     } catch {
@@ -170,10 +169,7 @@ export function AdminRegistrationsPage() {
   const deleteRecord = async (id: string) => {
     if (!organiserUnlocked) return;
     try {
-      const res = await fetch(`/api/registrations/${encodeURIComponent(id)}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Delete failed');
+      await deleteRegistrationApi(id);
       setActionMessage(`Removed record ${id}`);
       await loadData();
     } catch {
@@ -185,12 +181,7 @@ export function AdminRegistrationsPage() {
     if (!targets || !organiserUnlocked) return;
     setSavingTargets(true);
     try {
-      const res = await fetch('/api/targets', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(targets),
-      });
-      if (!res.ok) throw new Error('Failed to save targets');
+      await updateTargetsApi(targets);
       setActionMessage('Participant target allocations updated.');
       await loadData();
     } catch {

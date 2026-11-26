@@ -619,6 +619,8 @@ export function HomeEcosystemBand({
                 <img
                   src={MEDIA_ASSETS.globalFdiCorridor}
                   alt="International investment forum and cross-border joint venture delegates in Chennai"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-[112%] -mt-[6%] object-cover object-center"
                 />
                 <div

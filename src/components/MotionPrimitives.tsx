@@ -516,16 +516,13 @@ export function PageTransition({
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={routeKey}
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      key={routeKey}
+      initial={{ opacity: 0.92, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.14, ease: EASE_OUT_EXPO }}
+    >
+      {children}
+    </motion.div>
   );
 }

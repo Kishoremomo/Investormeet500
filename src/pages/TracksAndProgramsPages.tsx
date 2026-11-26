@@ -227,6 +227,8 @@ export function TracksPage() {
                 <img
                   src={activeTrack.image}
                   alt={activeTrack.imageAlt}
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="absolute inset-0 w-full h-full object-cover object-center hero-image-enhanced interactive-media"
                 />

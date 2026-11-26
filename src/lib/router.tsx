@@ -88,12 +88,33 @@ export function useQueryParam(key: string): string | null {
   return new URLSearchParams(search).get(key);
 }
 
+type RoutePrefetcher = (pathname: string) => void;
+const prefetchRegistry = new Set<RoutePrefetcher>();
+
+export function registerRoutePrefetcher(fn: RoutePrefetcher): () => void {
+  prefetchRegistry.add(fn);
+  return () => {
+    prefetchRegistry.delete(fn);
+  };
+}
+
+function triggerPrefetch(href: string) {
+  if (!href || /^(https?:|mailto:|tel:)/i.test(href)) return;
+  try {
+    const url = new URL(href, window.location.origin);
+    const clean = url.pathname === '/' ? '/' : url.pathname.replace(/\/+$/, '');
+    prefetchRegistry.forEach((fn) => fn(clean));
+  } catch {
+    // Ignore malformed href during hover
+  }
+}
+
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: React.ReactNode;
 }
 
-export function Link({ href, onClick, children, ...rest }: LinkProps) {
+export function Link({ href, onClick, onMouseEnter, onFocus, children, ...rest }: LinkProps) {
   const { navigate } = useRouter();
   const isExternal = /^(https?:|mailto:|tel:)/i.test(href);
 
@@ -114,8 +135,18 @@ export function Link({ href, onClick, children, ...rest }: LinkProps) {
     navigate(href);
   };
 
+  const handleMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isExternal) triggerPrefetch(href);
+    if (onMouseEnter) onMouseEnter(e);
+  };
+
+  const handleFocus = (e: React.FocusEvent<HTMLAnchorElement>) => {
+    if (!isExternal) triggerPrefetch(href);
+    if (onFocus) onFocus(e);
+  };
+
   return (
-    <a href={href} onClick={handleClick} {...rest}>
+    <a href={href} onClick={handleClick} onMouseEnter={handleMouseEnter} onFocus={handleFocus} {...rest}>
       {children}
     </a>
   );
