@@ -1,3 +1,27 @@
+export type EntrepreneurRegion =
+  | 'All Regions'
+  | 'A. Chennai — Industrialists, Manufacturing & Major Business Groups'
+  | 'B. Chennai — Tech, Startups, Services & Media'
+  | 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub'
+  | 'D. Tiruppur, Erode & Salem — Textiles, Garments & Agri Business'
+  | 'E. Madurai, Sivakasi & Trichy — Regional Business Leaders'
+  | 'F. Other Tamil Nadu Business Founders & Leaders'
+  | 'Extended Directory — Additional National & Global Leaders (1–100)';
+
+export const ENTREPRENEUR_REGIONS: EntrepreneurRegion[] = [
+  'All Regions',
+  'A. Chennai — Industrialists, Manufacturing & Major Business Groups',
+  'B. Chennai — Tech, Startups, Services & Media',
+  'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub',
+  'D. Tiruppur, Erode & Salem — Textiles, Garments & Agri Business',
+  'E. Madurai, Sivakasi & Trichy — Regional Business Leaders',
+  'F. Other Tamil Nadu Business Founders & Leaders',
+  'Extended Directory — Additional National & Global Leaders (1–100)',
+];
+
+export const COIMBATORE_HUB_NOTE =
+  'Note on Coimbatore (Group C): As a powerhouse for textiles, industrial pumps, motors, compressors, foundries, healthcare institutions, and integrated agribusinesses, Coimbatore contributes leading manufacturing and mid-market enterprises targeted for Investor Meet 2026.';
+
 export interface EntrepreneurEntry {
   serial: string;
   name: string;
@@ -10,6 +34,7 @@ export interface EntrepreneurEntry {
     | 'Healthcare'
     | 'Food and Agriculture'
     | 'Other Business Leaders';
+  region?: Exclude<EntrepreneurRegion, 'All Regions'>;
 }
 
 export const ENTREPRENEUR_CATEGORIES = [
@@ -24,107 +49,164 @@ export const ENTREPRENEUR_CATEGORIES = [
 ] as const;
 
 export const ENTREPRENEURS_100: EntrepreneurEntry[] = [
-  { serial: 'NO. 001', name: 'Venu Srinivasan', company: 'TVS Motor', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 002', name: 'Sudarshan Venu', company: 'TVS Motor', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 003', name: 'R. Dinesh', company: 'TVS Supply Chain Solutions', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 004', name: 'Gopal Srinivasan', company: 'TVS Capital Funds', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 005', name: 'Mallika Srinivasan', company: 'TAFE', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 006', name: 'Lakshmi Venu', company: 'Sundaram-Clayton', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 007', name: 'M. M. Murugappan', company: 'Murugappa Group', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 008', name: 'M. A. M. Arunachalam', company: 'Tube Investments of India', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 009', name: 'Arun Murugappan', company: 'Murugappa Group', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 010', name: 'Vellayan Subbiah', company: 'Cholamandalam Investment & Finance', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 011', name: 'P. R. Venketrama Raja', company: 'Ramco Group', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 012', name: 'N. Srinivasan', company: 'India Cements', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 013', name: 'N. Sankar', company: 'Sanmar Group', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 014', name: 'Vijay Sankar', company: 'Sanmar Group', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 015', name: 'A. C. Muthiah', company: 'SPIC Group', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 016', name: 'Ashwin Muthiah', company: 'AM International / SPIC', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 017', name: 'R. G. Chandramogan', company: 'Hatsun Agro Product', category: 'Food and Agriculture' },
-  { serial: 'NO. 018', name: 'R. G. Arun', company: 'Hatsun Agro Product', category: 'Food and Agriculture' },
-  { serial: 'NO. 019', name: 'C. K. Ranganathan', company: 'CavinKare', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 020', name: 'T. T. Jagannathan', company: 'TTK Prestige', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 021', name: 'T. T. Raghunathan', company: 'TTK Group', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 022', name: 'Rahul Mammen Mappillai', company: 'MRF', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 023', name: 'Kalanithi Maran', company: 'Sun Group', category: 'Other Business Leaders' },
-  { serial: 'NO. 024', name: 'Kavery Kalanithi', company: 'Sun TV Network', category: 'Other Business Leaders' },
-  { serial: 'NO. 025', name: 'R. Thyagarajan', company: 'Shriram Group', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 026', name: 'Sridhar Vembu', company: 'Zoho Corporation', category: 'Technology and Startups' },
-  { serial: 'NO. 027', name: 'Radha Vembu', company: 'Zoho Corporation', category: 'Technology and Startups' },
-  { serial: 'NO. 028', name: 'Sekar Vembu', company: 'Vembu Technologies', category: 'Technology and Startups' },
-  { serial: 'NO. 029', name: 'Kumar Vembu', company: 'GoFrugal Technologies', category: 'Technology and Startups' },
-  { serial: 'NO. 030', name: 'Girish Mathrubootham', company: 'Freshworks', category: 'Technology and Startups' },
-  { serial: 'NO. 031', name: 'Shan Krishnasamy', company: 'Freshworks', category: 'Technology and Startups' },
-  { serial: 'NO. 032', name: 'Suresh Sambandam', company: 'Kissflow', category: 'Technology and Startups' },
-  { serial: 'NO. 033', name: 'Murugavel Janakiraman', company: 'Matrimony.com', category: 'Technology and Startups' },
-  { serial: 'NO. 034', name: 'Krish Subramanian', company: 'Chargebee', category: 'Technology and Startups' },
-  { serial: 'NO. 035', name: 'Rajaraman Santhanam', company: 'Chargebee', category: 'Technology and Startups' },
-  { serial: 'NO. 036', name: 'Saravana Kumar', company: 'Kovai.co', category: 'Technology and Startups' },
-  { serial: 'NO. 037', name: 'Arun Jain', company: 'Intellect Design Arena', category: 'Technology and Startups' },
-  { serial: 'NO. 038', name: 'B. K. Syngal', company: 'Telecom & Digital Infrastructure', category: 'Technology and Startups' },
-  { serial: 'NO. 039', name: 'Karthik Jayaraman', company: 'WayCool Foods', category: 'Food and Agriculture' },
-  { serial: 'NO. 040', name: 'Sanjay Dasari', company: 'WayCool Foods', category: 'Food and Agriculture' },
-  { serial: 'NO. 041', name: 'Gaurav Kumar', company: 'CredAvenue / Yubi', category: 'Technology and Startups' },
-  { serial: 'NO. 042', name: 'Satyam Kumar', company: 'Financial Technology Leader', category: 'Technology and Startups' },
-  { serial: 'NO. 043', name: 'M. R. Rangaswami', company: 'Indiaspora / Sand Hill Group', category: 'Technology and Startups' },
-  { serial: 'NO. 044', name: 'Amitabh Satyam', company: 'Smart Cities & Tech Advisory', category: 'Technology and Startups' },
-  { serial: 'NO. 045', name: 'Umesh Sachdev', company: 'Uniphore', category: 'Technology and Startups' },
-  { serial: 'NO. 046', name: 'Ravi Saraogi', company: 'Uniphore', category: 'Technology and Startups' },
-  { serial: 'NO. 047', name: 'Srinath Ravichandran', company: 'Agnikul Cosmos', category: 'Technology and Startups' },
-  { serial: 'NO. 048', name: 'Moin SPM', company: 'Agnikul Cosmos', category: 'Technology and Startups' },
-  { serial: 'NO. 049', name: 'Agnishwar Jayaprakash', company: 'Garuda Aerospace', category: 'Technology and Startups' },
-  { serial: 'NO. 050', name: 'V. S. S. Mani', company: 'Justdial', category: 'Technology and Startups' },
-  { serial: 'NO. 051', name: 'K. P. Ramasamy', company: 'KPR Mill', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 052', name: 'K. P. D. Sigamani', company: 'KPR Mill', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 053', name: 'P. Nataraj', company: 'KPR Mill', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 054', name: 'G. Soundararajan', company: 'CRI Pumps', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 055', name: 'B. Soundararajan', company: 'Suguna Foods', category: 'Food and Agriculture' },
-  { serial: 'NO. 056', name: 'M. Manickam', company: 'Sakthi Group', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 057', name: 'M. Srinivasan', company: 'Sakthi Auto Component', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 058', name: 'Vanitha Mohan', company: 'Pricol', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 059', name: 'Vikram Mohan', company: 'Pricol', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 060', name: 'Jairam Varadaraj', company: 'ELGi Equipments', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 061', name: 'Jayaram Varadaraj', company: 'ELGi Ultra / Precision Mfg', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 062', name: 'Ravi Sam', company: 'Lakshmi Machine Works', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 063', name: 'G. K. Sundaram', company: 'Lakshmi Mills', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 064', name: 'Rajshree Pathy', company: 'Rajshree Sugars & Chemicals', category: 'Food and Agriculture' },
-  { serial: 'NO. 065', name: 'Nalla G. Palaniswami', company: 'KMCH', category: 'Healthcare' },
-  { serial: 'NO. 066', name: 'G. Bakthavathsalam', company: 'KG Hospital', category: 'Healthcare' },
-  { serial: 'NO. 067', name: 'K. Easwaran', company: 'Easun Group', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 068', name: 'K. Shanmuga Sundaram', company: 'Manufacturing & Industrial Enterprise', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 069', name: 'K. G. Balakrishnan', company: 'KG Denim', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 070', name: 'S. K. M. Maeilanandhan', company: 'SKM Animal Feeds & Foods', category: 'Food and Agriculture' },
-  { serial: 'NO. 071', name: 'K. R. Nagarajan', company: 'Ramraj Cotton', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 072', name: 'A. Sakthivel', company: 'Poppys Knitwear', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 073', name: 'T. K. Chandiran', company: 'SCM Garments', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 074', name: 'K. M. Subramanian', company: 'KM Knitwear', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 075', name: 'P. S. Sundaram', company: 'Regional Textile & Export House', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 076', name: 'V. R. Muthu', company: 'Idhayam Group', category: 'Food and Agriculture' },
-  { serial: 'NO. 077', name: 'S. K. M. Siddha', company: 'SKM Siddha and Ayurvedha', category: 'Healthcare' },
-  { serial: 'NO. 078', name: 'C. K. Kumaravel', company: 'Naturals Salon & Spa', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 079', name: 'Veena Kumaravel', company: 'Naturals Salon & Spa', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 080', name: 'Arunachalam Muruganantham', company: 'Jayaashree Industries', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 081', name: 'A. D. Padmasingh Isaac', company: 'Aachi Group', category: 'Food and Agriculture' },
-  { serial: 'NO. 082', name: 'Prathap C. Reddy', company: 'Apollo Hospitals', category: 'Healthcare' },
-  { serial: 'NO. 083', name: 'Preetha Reddy', company: 'Apollo Hospitals', category: 'Healthcare' },
-  { serial: 'NO. 084', name: 'Suneeta Reddy', company: 'Apollo Hospitals', category: 'Healthcare' },
-  { serial: 'NO. 085', name: 'Shobana Kamineni', company: 'Apollo Hospitals', category: 'Healthcare' },
-  { serial: 'NO. 086', name: 'Sangita Reddy', company: 'Apollo Hospitals', category: 'Healthcare' },
-  { serial: 'NO. 087', name: 'P. R. Ramasubrahmaneya Rajha', company: 'Ramco Cements', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 088', name: 'Nalli Kuppuswami Chetti', company: 'Nalli Silk Sarees', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 089', name: 'K. M. Mammen Mappillai', company: 'MRF Founder Lineage', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 090', name: 'T. V. Sundram Iyengar', company: 'TVS Group Founder Lineage', category: 'Industrialists and Major Business Groups' },
-  { serial: 'NO. 091', name: 'Shiv Nadar', company: 'HCL Technologies', category: 'Technology and Startups' },
-  { serial: 'NO. 092', name: 'Roshni Nadar Malhotra', company: 'HCL Technologies', category: 'Technology and Startups' },
-  { serial: 'NO. 093', name: 'M. G. Muthu', company: 'MGM Group', category: 'Other Business Leaders' },
-  { serial: 'NO. 094', name: 'V. G. Santhosam', company: 'VGP Group', category: 'Other Business Leaders' },
-  { serial: 'NO. 095', name: 'H. Vijay Vasanth', company: 'Vasanth & Co', category: 'Textiles, Retail and Consumer Brands' },
-  { serial: 'NO. 096', name: 'P. C. Duraisamy', company: 'Sakthi Masala', category: 'Food and Agriculture' },
-  { serial: 'NO. 097', name: 'Shanthi Duraisamy', company: 'Sakthi Masala', category: 'Food and Agriculture' },
-  { serial: 'NO. 098', name: 'M. P. Purushothaman', company: 'Empee Group', category: 'Other Business Leaders' },
-  { serial: 'NO. 099', name: 'P. Subramanian', company: 'Shanthi Gears', category: 'Manufacturing and Engineering' },
-  { serial: 'NO. 100', name: 'Karumuttu T. Kannan', company: 'Thiagarajar Mills', category: 'Textiles, Retail and Consumer Brands' },
+  { serial: 'NO. 001', name: 'Venu Srinivasan', company: 'TVS Motor', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 002', name: 'Sudarshan Venu', company: 'TVS Motor', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 003', name: 'R. Dinesh', company: 'TVS Supply Chain Solutions', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 004', name: 'Gopal Srinivasan', company: 'TVS Capital Funds', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 005', name: 'Mallika Srinivasan', company: 'TAFE', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 006', name: 'Lakshmi Venu', company: 'Sundaram-Clayton', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 007', name: 'M. M. Murugappan', company: 'Murugappa Group', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 008', name: 'M. A. M. Arunachalam', company: 'Tube Investments of India', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 009', name: 'Arun Murugappan', company: 'Murugappa Group', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 010', name: 'Vellayan Subbiah', company: 'Cholamandalam Investment & Finance', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 011', name: 'P. R. Venketrama Raja', company: 'Ramco Group', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 012', name: 'N. Srinivasan', company: 'India Cements', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 013', name: 'N. Sankar', company: 'Sanmar Group', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 014', name: 'Vijay Sankar', company: 'Sanmar Group', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 015', name: 'A. C. Muthiah', company: 'SPIC Group', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 016', name: 'Ashwin Muthiah', company: 'AM International / SPIC', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 017', name: 'R. G. Chandramogan', company: 'Hatsun Agro Product', category: 'Food and Agriculture', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 018', name: 'R. G. Arun', company: 'Hatsun Agro Product', category: 'Food and Agriculture', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 019', name: 'C. K. Ranganathan', company: 'CavinKare', category: 'Textiles, Retail and Consumer Brands', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 020', name: 'T. T. Jagannathan', company: 'TTK Prestige', category: 'Textiles, Retail and Consumer Brands', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 021', name: 'T. T. Raghunathan', company: 'TTK Group', category: 'Textiles, Retail and Consumer Brands', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 022', name: 'Rahul Mammen Mappillai', company: 'MRF', category: 'Manufacturing and Engineering', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 023', name: 'Kalanithi Maran', company: 'Sun Group', category: 'Other Business Leaders', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 024', name: 'Kavery Kalanithi', company: 'Sun TV Network', category: 'Other Business Leaders', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 025', name: 'R. Thyagarajan', company: 'Shriram Group', category: 'Industrialists and Major Business Groups', region: 'A. Chennai — Industrialists, Manufacturing & Major Business Groups' },
+  { serial: 'NO. 026', name: 'Sridhar Vembu', company: 'Zoho Corporation', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 027', name: 'Radha Vembu', company: 'Zoho Corporation', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 028', name: 'Sekar Vembu', company: 'Vembu Technologies', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 029', name: 'Kumar Vembu', company: 'GoFrugal Technologies', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 030', name: 'Girish Mathrubootham', company: 'Freshworks', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 031', name: 'Shan Krishnasamy', company: 'Freshworks', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 032', name: 'Suresh Sambandam', company: 'Kissflow', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 033', name: 'Murugavel Janakiraman', company: 'Matrimony.com', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 034', name: 'Krish Subramanian', company: 'Chargebee', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 035', name: 'Rajaraman Santhanam', company: 'Chargebee', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 036', name: 'Saravana Kumar', company: 'Kovai.co', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 037', name: 'Arun Jain', company: 'Intellect Design Arena', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 038', name: 'B. K. Syngal', company: 'Telecom & Digital Infrastructure', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 039', name: 'Karthik Jayaraman', company: 'WayCool Foods', category: 'Food and Agriculture', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 040', name: 'Sanjay Dasari', company: 'WayCool Foods', category: 'Food and Agriculture', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 041', name: 'Gaurav Kumar', company: 'CredAvenue / Yubi', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 042', name: 'Satyam Kumar', company: 'Financial Technology Leader', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 043', name: 'M. R. Rangaswami', company: 'Indiaspora / Sand Hill Group', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 044', name: 'Amitabh Satyam', company: 'Smart Cities & Tech Advisory', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 045', name: 'Umesh Sachdev', company: 'Uniphore', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 046', name: 'Ravi Saraogi', company: 'Uniphore', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 047', name: 'Srinath Ravichandran', company: 'Agnikul Cosmos', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 048', name: 'Moin SPM', company: 'Agnikul Cosmos', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 049', name: 'Agnishwar Jayaprakash', company: 'Garuda Aerospace', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 050', name: 'V. S. S. Mani', company: 'Justdial', category: 'Technology and Startups', region: 'B. Chennai — Tech, Startups, Services & Media' },
+  { serial: 'NO. 051', name: 'K. P. Ramasamy', company: 'KPR Mill', category: 'Textiles, Retail and Consumer Brands', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 052', name: 'K. P. D. Sigamani', company: 'KPR Mill', category: 'Textiles, Retail and Consumer Brands', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 053', name: 'P. Nataraj', company: 'KPR Mill', category: 'Textiles, Retail and Consumer Brands', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 054', name: 'G. Soundararajan', company: 'CRI Pumps', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 055', name: 'B. Soundararajan', company: 'Suguna Foods', category: 'Food and Agriculture', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 056', name: 'M. Manickam', company: 'Sakthi Group', category: 'Industrialists and Major Business Groups', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 057', name: 'M. Srinivasan', company: 'Sakthi Auto Component', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 058', name: 'Vanitha Mohan', company: 'Pricol', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 059', name: 'Vikram Mohan', company: 'Pricol', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 060', name: 'Jairam Varadaraj', company: 'ELGi Equipments', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 061', name: 'Jayaram Varadaraj', company: 'ELGi Ultra / Precision Mfg', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 062', name: 'Ravi Sam', company: 'Lakshmi Machine Works', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 063', name: 'G. K. Sundaram', company: 'Lakshmi Mills', category: 'Textiles, Retail and Consumer Brands', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 064', name: 'Rajshree Pathy', company: 'Rajshree Sugars & Chemicals', category: 'Food and Agriculture', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 065', name: 'Nalla G. Palaniswami', company: 'KMCH', category: 'Healthcare', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 066', name: 'G. Bakthavathsalam', company: 'KG Hospital', category: 'Healthcare', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 067', name: 'K. Easwaran', company: 'Easun Group', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 068', name: 'K. Shanmuga Sundaram', company: 'Manufacturing & Industrial Enterprise', category: 'Manufacturing and Engineering', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 069', name: 'K. G. Balakrishnan', company: 'KG Denim', category: 'Textiles, Retail and Consumer Brands', region: 'C. Coimbatore — Industrial, Engineering, Manufacturing & Healthcare Hub' },
+  { serial: 'NO. 070', name: 'S. K. M. Maeilanandhan', company: 'SKM Animal Feeds & Foods', category: 'Food and Agriculture', region: 'D. Tiruppur, Erode & Salem — Textiles, Garments & Agri Business' },
+  { serial: 'NO. 071', name: 'K. R. Nagarajan', company: 'Ramraj Cotton', category: 'Textiles, Retail and Consumer Brands', region: 'D. Tiruppur, Erode & Salem — Textiles, Garments & Agri Business' },
+  { serial: 'NO. 072', name: 'A. Sakthivel', company: 'Poppys Knitwear', category: 'Textiles, Retail and Consumer Brands', region: 'D. Tiruppur, Erode & Salem — Textiles, Garments & Agri Business' },
+  { serial: 'NO. 073', name: 'T. K. Chandiran', company: 'SCM Garments', category: 'Textiles, Retail and Consumer Brands', region: 'D. Tiruppur, Erode & Salem — Textiles, Garments & Agri Business' },
+  { serial: 'NO. 074', name: 'K. M. Subramanian', company: 'KM Knitwear', category: 'Textiles, Retail and Consumer Brands', region: 'D. Tiruppur, Erode & Salem — Textiles, Garments & Agri Business' },
+  { serial: 'NO. 075', name: 'P. S. Sundaram', company: 'Regional Textile & Export House', category: 'Textiles, Retail and Consumer Brands', region: 'D. Tiruppur, Erode & Salem — Textiles, Garments & Agri Business' },
+  { serial: 'NO. 076', name: 'V. R. Muthu', company: 'Idhayam Group', category: 'Food and Agriculture', region: 'E. Madurai, Sivakasi & Trichy — Regional Business Leaders' },
+  { serial: 'NO. 077', name: 'S. K. M. Siddha', company: 'SKM Siddha and Ayurvedha', category: 'Healthcare', region: 'E. Madurai, Sivakasi & Trichy — Regional Business Leaders' },
+  { serial: 'NO. 078', name: 'C. K. Kumaravel', company: 'Naturals Salon & Spa', category: 'Textiles, Retail and Consumer Brands', region: 'E. Madurai, Sivakasi & Trichy — Regional Business Leaders' },
+  { serial: 'NO. 079', name: 'Veena Kumaravel', company: 'Naturals Salon & Spa', category: 'Textiles, Retail and Consumer Brands', region: 'E. Madurai, Sivakasi & Trichy — Regional Business Leaders' },
+  { serial: 'NO. 080', name: 'Arunachalam Muruganantham', company: 'Jayaashree Industries', category: 'Manufacturing and Engineering', region: 'E. Madurai, Sivakasi & Trichy — Regional Business Leaders' },
+  { serial: 'NO. 081', name: 'A. D. Padmasingh Isaac', company: 'Aachi Group', category: 'Food and Agriculture', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 082', name: 'Prathap C. Reddy', company: 'Apollo Hospitals', category: 'Healthcare', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 083', name: 'Preetha Reddy', company: 'Apollo Hospitals', category: 'Healthcare', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 084', name: 'Suneeta Reddy', company: 'Apollo Hospitals', category: 'Healthcare', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 085', name: 'Shobana Kamineni', company: 'Apollo Hospitals', category: 'Healthcare', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 086', name: 'Sangita Reddy', company: 'Apollo Hospitals', category: 'Healthcare', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 087', name: 'P. R. Ramasubrahmaneya Rajha', company: 'Ramco Cements', category: 'Industrialists and Major Business Groups', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 088', name: 'Nalli Kuppuswami Chetti', company: 'Nalli Silk Sarees', category: 'Textiles, Retail and Consumer Brands', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 089', name: 'K. M. Mammen Mappillai', company: 'MRF Founder Lineage', category: 'Manufacturing and Engineering', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 090', name: 'T. V. Sundram Iyengar', company: 'TVS Group Founder Lineage', category: 'Industrialists and Major Business Groups', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 091', name: 'Shiv Nadar', company: 'HCL Technologies', category: 'Technology and Startups', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 092', name: 'Roshni Nadar Malhotra', company: 'HCL Technologies', category: 'Technology and Startups', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 093', name: 'M. G. Muthu', company: 'MGM Group', category: 'Other Business Leaders', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 094', name: 'V. G. Santhosam', company: 'VGP Group', category: 'Other Business Leaders', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 095', name: 'H. Vijay Vasanth', company: 'Vasanth & Co', category: 'Textiles, Retail and Consumer Brands', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 096', name: 'P. C. Duraisamy', company: 'Sakthi Masala', category: 'Food and Agriculture', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 097', name: 'Shanthi Duraisamy', company: 'Sakthi Masala', category: 'Food and Agriculture', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 098', name: 'M. P. Purushothaman', company: 'Empee Group', category: 'Other Business Leaders', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 099', name: 'P. Subramanian', company: 'Shanthi Gears', category: 'Manufacturing and Engineering', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
+  { serial: 'NO. 100', name: 'Karumuttu T. Kannan', company: 'Thiagarajar Mills', category: 'Textiles, Retail and Consumer Brands', region: 'F. Other Tamil Nadu Business Founders & Leaders' },
 ];
+
+export const ADDITIONAL_PROMINENT_LEADERS: EntrepreneurEntry[] = [
+  { serial: 'EXT. 01', name: 'A. Vellayan', company: 'Murugappa Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 02', name: 'B. N. Kalyani', company: 'Kalyani Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 03', name: 'N. Kumar', company: 'Sanmar Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 04', name: 'G. R. Karthikeyan', company: 'PSG Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 05', name: 'Vijay Mohan', company: 'Pricol', category: 'Manufacturing and Engineering', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 06', name: 'L. G. Varadaraj', company: 'Elgi Equipments', category: 'Manufacturing and Engineering', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 07', name: 'Aravind Srinivas', company: 'Perplexity AI', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 08', name: 'Vembu Subramanian', company: 'Gofrugal', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 09', name: 'Ashok Soota', company: 'Happiest Minds', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 10', name: 'S. Ramadorai', company: 'TCS', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 11', name: 'N. Chandrasekaran', company: 'Tata Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 12', name: 'C. Vijayakumar', company: 'HCLTech', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 13', name: 'Jay Vijayan', company: 'Tekion', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 14', name: 'S. D. Shibulal', company: 'Infosys', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 15', name: 'Lakshmi Narayanan', company: 'Cognizant', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 16', name: 'K. Ganesh', company: 'GrowthStory', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 17', name: 'Meena Ganesh', company: 'Portea Medical', category: 'Healthcare', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 18', name: 'R. Narayanan', company: 'IT & SaaS Sector', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 19', name: 'D. S. Ravishankar', company: 'Tech Entrepreneur', category: 'Technology and Startups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 20', name: 'H. Vasanthakumar', company: 'Vasanth & Co', category: 'Textiles, Retail and Consumer Brands', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 21', name: 'P. Rajagopal', company: 'Saravana Bhavan', category: 'Food and Agriculture', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 22', name: 'V. G. Panneerdas', company: 'VGP Group', category: 'Other Business Leaders', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 23', name: 'V. G. Selvaraj', company: 'VGP Group', category: 'Other Business Leaders', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 24', name: 'C. K. Rajkumar', company: 'Velvette Group', category: 'Textiles, Retail and Consumer Brands', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 25', name: 'C. K. Ashok Kumar', company: 'CavinKare', category: 'Textiles, Retail and Consumer Brands', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 26', name: 'K. P. Kandasamy', company: 'Dinakaran / Media', category: 'Other Business Leaders', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 27', name: 'S. P. Adithanar', company: 'Daily Thanthi', category: 'Other Business Leaders', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 28', name: 'Sivanthi Adithan', company: 'Daily Thanthi', category: 'Other Business Leaders', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 29', name: 'K. P. P. Baskar', company: 'Textiles & Apparels', category: 'Textiles, Retail and Consumer Brands', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 30', name: 'M. A. M. Ramaswamy', company: 'Chettinad Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 31', name: 'G. D. Naidu', company: 'Industrialist', category: 'Manufacturing and Engineering', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 32', name: 'N. Mahalingam', company: 'Sakthi Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 33', name: 'P. D. G. K. Rajan', company: 'Industrial & Textile Sector', category: 'Textiles, Retail and Consumer Brands', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 34', name: 'G. B. Sundararajan', company: 'Industrial & Pump Sector', category: 'Manufacturing and Engineering', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 35', name: 'G. K. Devarajulu', company: 'LMW Group', category: 'Manufacturing and Engineering', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 36', name: 'G. Kuppuswamy Naidu', company: 'Lakshmi Mills', category: 'Textiles, Retail and Consumer Brands', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 37', name: 'P. S. Govindaswamy Naidu', company: 'PSG Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 38', name: 'D. Balasundaram Naidu', company: 'PSG Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 39', name: 'L. G. Balakrishnan', company: 'LGB Group', category: 'Manufacturing and Engineering', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 40', name: 'B. S. Abdur Rahman', company: 'BSA Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+  { serial: 'EXT. 41', name: 'Palani G. Periasamy', company: 'PGP Group', category: 'Industrialists and Major Business Groups', region: 'Extended Directory — Additional National & Global Leaders (1–100)' },
+];
+
+export const ALL_DIRECTORY_ENTREPRENEURS: EntrepreneurEntry[] = (() => {
+  const seen = new Set<string>();
+  const merged: EntrepreneurEntry[] = [];
+  for (const item of [...ENTREPRENEURS_100, ...ADDITIONAL_PROMINENT_LEADERS]) {
+    const key = item.name.toLowerCase().trim();
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(item);
+    }
+  }
+  return merged;
+})();
 
 export const WOMEN_ENTREPRENEURS = [
   { serial: '1', name: 'Mallika Srinivasan', company: 'TAFE', sector: 'Manufacturing' },
@@ -141,11 +223,11 @@ export const WOMEN_ENTREPRENEURS = [
   { serial: '13', name: 'Divya Murthy Vinaayak', company: 'ListEz', sector: 'Real Estate Technology' },
   { serial: '14', name: 'E. Menaka', company: 'Mannvasanai', sector: 'Organic Food & Agriculture' },
   { serial: '15', name: 'Sri Vidhya Bhavani M.', company: 'Startup Entrepreneur', sector: 'Startup Business' },
-  { serial: '16', name: 'Kalaiyarasi Ramachandran', company: 'Entrepreneurial Venture', sector: 'Consumer & Services' },
-  { serial: '17', name: 'Deepa Sai', company: 'Startup Leadership', sector: 'Technology & Advisory' },
-  { serial: '18', name: 'P. Yamuna', company: 'Business Enterprise', sector: 'Manufacturing & Trade' },
-  { serial: '19', name: 'Swarnamugi Raghupathy', company: 'Regional Enterprise', sector: 'Engineering & Growth' },
-  { serial: '20', name: 'Keerthana Chandrasekaran', company: 'Emerging Business Founder', sector: 'Innovation & Operations' },
+  { serial: '16', name: 'Kalaiyarasi Ramachandran', company: 'Startup Entrepreneur', sector: 'Startup Business' },
+  { serial: '17', name: 'Deepa Sai', company: 'Entrepreneur & Startup Mentor', sector: 'Business Development' },
+  { serial: '18', name: 'P. Yamuna', company: 'FlexaLimb', sector: 'Healthcare Innovation' },
+  { serial: '19', name: 'Swarnamugi Raghupathy', company: 'BGR NEO', sector: 'Startup Business' },
+  { serial: '20', name: 'Keerthana Chandrasekaran', company: 'Bunjy', sector: 'Startup Business' },
 ];
 
 export interface AssociationEntry {
@@ -170,8 +252,8 @@ export const ASSOCIATIONS_15: AssociationEntry[] = [
   { no: 11, badge: 'SIMA', name: "Southern India Mills' Association (SIMA)", focus: 'Textile Manufacturing', category: 'Textiles' },
   { no: 12, badge: 'ASSOCIATION', name: 'Tamil Nadu Vanigar Sangankalin Peramaippu', focus: 'Traders & Merchants', category: 'Trade & Chambers' },
   { no: 13, badge: 'FICCI', name: 'Federation of Indian Chambers of Commerce & Industry (FICCI) – Tamil Nadu', focus: 'Business & Investment', category: 'Trade & Chambers' },
-  { no: 14, badge: 'CII', name: 'Confederation of Indian Industry (CII) – Tamil Nadu', focus: 'Industry & Enterprise', category: 'Industry & Manufacturing' },
-  { no: 15, badge: 'TNCCI', name: 'Tamil Nadu Chamber of Commerce and Industry', focus: 'Regional Trade & MSMEs', category: 'Trade & Chambers' },
+  { no: 14, badge: 'CII', name: 'Confederation of Indian Industry (CII) – Tamil Nadu', focus: 'Corporate & Manufacturing', category: 'Industry & Manufacturing' },
+  { no: 15, badge: 'TNCCI', name: 'Tamil Nadu Chamber of Commerce and Industry (TNCCI)', focus: 'Trade, Industry & Entrepreneurs', category: 'Trade & Chambers' },
 ];
 
 export interface BankEntry {
@@ -418,6 +500,17 @@ export const FINANCIAL_BRANDS_50: FinancialBrandEntry[] = [
   { rank: '49', initials: 'AV', name: 'Aptus Value Housing Finance', focus: 'Affordable housing & SME loans', category: 'Insurance, Housing & Other Financial Brands' },
   { rank: '50', initials: 'MF', name: 'Mahaveer Finance India', focus: 'Commercial vehicle & regional finance', category: 'Insurance, Housing & Other Financial Brands' },
 ];
+
+export const FINANCIAL_BRAND_CATEGORY_NOTES = {
+  indexDisclaimer:
+    'Important Note: Ranked representation of major, well-known financial brands and active investment institutions in Tamil Nadu across NBFCs, banks, angels/VCs, wealth/broking, and insurance/housing — not strictly ordered by financial turnover.',
+  priorityStartupNote:
+    'Investor Outreach Priority: For Startup Investment Networking and Early-Stage Matchmaking, The Chennai Angels (150+ active angel investors) and Nativelead Foundation (Madurai, Coimbatore, Trichy & Salem chapters) represent key ecosystem syndicates.',
+  institutionalNotes: [
+    'ESAF Small Finance Bank operates prominently in Tamil Nadu micro-enterprise and inclusive retail banking while being headquartered outside the state.',
+    'TSF Investments represents core holding and strategic equity investments within the broader Sundaram wealth and financial services ecosystem.',
+  ],
+};
 
 export const FEATURED_25_BRANDS = [
   'JCB',

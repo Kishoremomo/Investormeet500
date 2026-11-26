@@ -1,5 +1,6 @@
 import React from 'react';
 import { getInitials } from '../lib/domain';
+import { resolvePortraitObjectPositionClass } from '../data/portraits';
 
 interface AvatarPortraitProps {
   name: string;
@@ -35,6 +36,7 @@ export function AvatarPortrait({
       : 'rounded-2xl';
 
   if (src) {
+    const objectPosCls = resolvePortraitObjectPositionClass(src);
     return (
       <div
         className={`${sizeCls} ${radiusCls} overflow-hidden shrink-0 portrait-ring bg-[#091326] shadow-sm ring-1 ring-[#c49a45]/35 ${className}`}
@@ -43,7 +45,7 @@ export function AvatarPortrait({
           src={src}
           alt={name}
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-top interactive-media"
+          className={`w-full h-full object-cover ${objectPosCls} interactive-media`}
         />
       </div>
     );

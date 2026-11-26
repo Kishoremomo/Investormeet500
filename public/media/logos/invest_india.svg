@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Invest India">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <rect x="0" y="0" width="220" height="5" fill="#FF9933"/>
+  <rect x="0" y="67" width="220" height="5" fill="#138808"/>
+  <g transform="translate(14,14)">
+    <circle cx="22" cy="22" r="20" fill="#0B2559"/>
+    <path d="M12 29l7-14 6 8 7-11" fill="none" stroke="#FF9933" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="32" cy="12" r="2.6" fill="#2DD4BF"/>
+  </g>
+  <text x="68" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="18" fill="#0B2559" letter-spacing="0.6">INVEST INDIA</text>
+  <text x="68" y="51" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9.5" fill="#475569" letter-spacing="1.1">NATIONAL PROMOTION AGENCY</text>
+</svg>

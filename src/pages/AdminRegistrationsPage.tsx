@@ -325,6 +325,48 @@ export function AdminRegistrationsPage() {
           </button>
         </div>
 
+        {/* Executive Command Header: Baseline Progress & Strategy */}
+        <div className="rounded-2xl border border-[#c49a45]/45 bg-gradient-to-r from-[#091326] via-[#0f1c3a] to-[#172554] text-white p-5 sm:p-6 shadow-md">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/15">
+            <div>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#e6c67e] block">
+                ORGANISER COMMAND DECK · 20-02-2027 CHENNAI SUMMIT
+              </span>
+              <h2 className="font-display text-2xl sm:text-3xl font-semibold text-white mt-0.5">
+                Completed – 100 · Pending – 400 · Target – 500
+              </h2>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <span className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-[#5eead4]">
+                Strategy: {REGISTRATION_STRATEGY}
+              </span>
+              <span className="px-3 py-1.5 rounded-lg bg-[#e6c67e]/15 border border-[#e6c67e]/40 text-[#e6c67e]">
+                Cutoff: {REGISTRATION_CUTOFF_DATE_CODE}
+              </span>
+            </div>
+          </div>
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div className="rounded-xl bg-[#0c182f] border border-white/10 p-3">
+              <span className="text-[#94a3b8] block">Baseline Completed</span>
+              <strong className="font-mono text-xl font-bold text-[#5eead4]">100 Slots</strong>
+            </div>
+            <div className="rounded-xl bg-[#0c182f] border border-white/10 p-3">
+              <span className="text-[#94a3b8] block">Remaining Pending</span>
+              <strong className="font-mono text-xl font-bold text-[#e6c67e]">400 Slots</strong>
+            </div>
+            <div className="rounded-xl bg-[#0c182f] border border-white/10 p-3">
+              <span className="text-[#94a3b8] block">Summit Total Cap</span>
+              <strong className="font-mono text-xl font-bold text-white">500 Seats</strong>
+            </div>
+            <div className="rounded-xl bg-[#0c182f] border border-white/10 p-3 min-w-0">
+              <span className="text-[#94a3b8] block">Alert Inbox</span>
+              <strong className="font-mono text-xs sm:text-sm font-semibold text-[#93c5fd] break-all">
+                {ORGANISER_NOTIFICATION_EMAIL}
+              </strong>
+            </div>
+          </div>
+        </div>
+
         {/* Live Database Operations KPIs & Interactive Charts */}
         {liveFilteredStats && (
           <div className="space-y-6">

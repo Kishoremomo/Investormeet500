@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Ministry of Finance Government of India">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,14)">
+    <rect width="44" height="44" rx="8" fill="#172554"/>
+    <path d="M22 9l13 7H9l13-7z" fill="#E6C67E"/>
+    <rect x="12" y="18" width="4" height="14" fill="#F8FAFC"/>
+    <rect x="20" y="18" width="4" height="14" fill="#F8FAFC"/>
+    <rect x="28" y="18" width="4" height="14" fill="#F8FAFC"/>
+    <rect x="9" y="33" width="26" height="3.5" fill="#E6C67E"/>
+  </g>
+  <text x="68" y="31" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="14" fill="#172554">MINISTRY OF</text>
+  <text x="68" y="47" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="15.5" fill="#B45309">FINANCE · GOI</text>
+</svg>

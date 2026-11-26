@@ -60,6 +60,7 @@ export const REVIEWER_PORTRAIT_BY_NAME: Record<string, string> = {
  * remain null so AvatarPortrait renders an accurate monogram crest rather than substituting a wrong face.
  */
 export const VERIFIED_LEADER_PORTRAIT_BY_NAME: Record<string, string> = {
+  // Women Entrepreneurs & Industrialists (existing clean portraits preserved)
   'Mallika Srinivasan': '/media/people/mallika_srinivasan.jpg',
   'Indra Nooyi': '/media/people/indra_nooyi.jpg',
   'Revathi Advaithi': '/media/people/revathi_advaithi.jpg',
@@ -70,22 +71,82 @@ export const VERIFIED_LEADER_PORTRAIT_BY_NAME: Record<string, string> = {
   'Santhi Duraisamy': '/media/people/santhi_duraisamy.jpg',
   'Shanthi Duraisamy': '/media/people/santhi_duraisamy.jpg',
   'Kavitha Subramanian': '/media/people/kavitha_subramanian.png',
-  'Venu Srinivasan': '/media/people/venu_srinivasan.jpg',
-  'Sudarshan Venu': '/media/people/sudarshan_venu.jpg',
-  'Kalanithi Maran': '/media/people/kalanithi_maran.jpg',
-  'Sridhar Vembu': '/media/people/sridhar_vembu.jpg',
-  'Girish Mathrubootham': '/media/people/girish_mathrubootham.webp',
-  'Arun Jain': '/media/people/arun_jain.jpg',
   'Rajshree Pathy': '/media/people/rajshree_pathy.jpg',
-  'Arunachalam Muruganantham': '/media/people/arunachalam_muruganantham.jpg',
-  'Prathap C. Reddy': '/media/people/prathap_c_reddy.jpg',
   'Preetha Reddy': '/media/people/preetha_reddy.jpg',
   'Shobana Kamineni': '/media/people/shobana_kamineni.jpg',
   'Sangita Reddy': '/media/people/sangita_reddy.jpg',
-  'Nalli Kuppuswami Chetti': '/media/people/nalli_kuppuswami_chetti.jpg',
+  'Roshni Nadar Malhotra': '/assets/aistudio/135_Roshni_Nadar_Malhotra_HCL_04bdb757.jpg',
+
+  // Group A–F Industrialists, Tech Founders & Business Leaders (existing clean portraits preserved)
   'Shiv Nadar': '/media/people/shiv_nadar.jpg',
+  'Venu Srinivasan': '/media/people/venu_srinivasan.jpg',
+  'Sudarshan Venu': '/media/people/sudarshan_venu.jpg',
+  'Kalanithi Maran': '/media/people/kalanithi_maran.jpg',
+  'Sridhar Vembu': '/assets/aistudio/039_Sridhar_Vembu_Zoho_faee8861.jpg',
+  'Girish Mathrubootham': '/media/people/girish_mathrubootham.webp',
+  'Arun Jain': '/media/people/arun_jain.jpg',
+  'Arunachalam Muruganantham': '/media/people/arunachalam_muruganantham.jpg',
+  'Prathap C. Reddy': '/media/people/prathap_c_reddy.jpg',
+  'P. C. Reddy': '/media/people/prathap_c_reddy.jpg',
+  'Nalli Kuppuswami Chetti': '/media/people/nalli_kuppuswami_chetti.jpg',
   'P. C. Duraisamy': '/media/people/p_c_duraisamy.jpg',
+
+  // Newly Integrated Audited Portraits from Uploaded Batch
+  'Gopal Srinivasan': '/assets/aistudio/005_Gopal_Srinivasan_TVS_Capital_Funds_9040fd44.jpg',
+  'M. M. Murugappan': '/assets/aistudio/008_M_M_Murugappan_Murugappa_Group_ab54b526.jpg',
+  'Vellayan Subbiah': '/assets/aistudio/012_Vellayan_Subbiah_Cholamandalam_34b7f483.jpg',
+  'P. R. Ramasubrahmaneya Rajha':
+    '/assets/aistudio/014_P_R_Ramasubrahmaneya_Rajha_Ramco_Group_7885fdfc.jpg',
+  'N. Srinivasan': '/assets/aistudio/015_N_Srinivasan_India_Cements_a1c95faa.jpg',
+  'A. C. Muthiah': '/assets/aistudio/019_A_C_Muthiah_SPIC_d2646ea4.jpg',
+  'C. K. Ranganathan': '/assets/aistudio/023_C_K_Ranganathan_CavinKare_3c893d99.jpg',
+  'Rahul Mammen Mappillai': '/assets/aistudio/029_Rahul_Mammen_Mappillai_MRF_6cc93661.jpg',
+  'B. N. Kalyani': '/assets/aistudio/031_B_N_Kalyani_Kalyani_Group_a711f073.jpg',
+  'Vikram Mohan': '/assets/aistudio/036_Vikram_Mohan_Pricol_5c550f3e.jpg',
+  'Jairam Varadaraj': '/assets/aistudio/038_Jairam_Varadaraj_Elgi_Equipments_b0117f8d.jpg',
+  'Suresh Sambandam': '/assets/aistudio/045_Suresh_Sambandam_Kissflow_298449e7.jpg',
+  'Murugavel Janakiraman': '/assets/aistudio/046_Murugavel_Janakiraman_Matrimony_com_de7d3041.jpg',
+  'Krish Subramanian': '/assets/aistudio/047_Krish_Subramanian_Chargebee_9f0bd713.jpg',
+  'Rajaraman Santhanam': '/assets/aistudio/048_Rajaraman_Santhanam_Chargebee_1f801818.jpg',
+  'Saravana Kumar': '/assets/aistudio/049_Saravana_Kumar_Kovai_co_9d10298d.jpg',
+  'Aravind Srinivas': '/assets/aistudio/050_Aravind_Srinivas_Perplexity_AI_9c8f91f7.jpg',
+  'N. Chandrasekaran': '/assets/aistudio/056_N_Chandrasekaran_Tata_Group_81018af4.jpg',
+  'C. Vijayakumar': '/assets/aistudio/057_C_Vijayakumar_HCLTech_f1d6c8c7.jpg',
+  'Jay Vijayan': '/assets/aistudio/058_Jay_Vijayan_Tekion_f877fce6.jpg',
+  // Source upload 059 was mislabeled under D_S_Ravishankar but visually depicts Infosys co-founder S. D. Shibulal (064 was unrelated).
+  'S. D. Shibulal': '/assets/aistudio/059_D_S_Ravishankar_Brickwork_Ratings_68cb66c4.jpg',
+  'M. R. Rangaswami': '/assets/aistudio/068_M_R_Rangaswami_Indiaspora_12022a93.jpg',
+  'Umesh Sachdev': '/assets/aistudio/070_Umesh_Sachdev_Uniphore_c68916d7.jpg',
+  'Ravi Saraogi': '/assets/aistudio/071_Ravi_Saraogi_Uniphore_82df555a.jpg',
+  'Agnishwar Jayaprakash':
+    '/assets/aistudio/074_Agnishwar_Jayaprakash_Garuda_Aerospace_236307b0.jpg',
+  'K. R. Nagarajan': '/assets/aistudio/079_K_R_Nagarajan_Ramraj_Cotton_ba56d4ba.jpg',
+  'A. D. Padmasingh Isaac': '/assets/aistudio/080_A_D_Padmasingh_Isaac_Aachi_Group_e852beed.jpg',
+  'V. R. Muthu': '/assets/aistudio/083_V_R_Muthu_Idhayam_198759ca.jpg',
+  'H. Vasanthakumar': '/assets/aistudio/085_H_Vasanthakumar_Vasanth_Co_4edd3af0.jpg',
+  'H. Vijay Vasanth': '/assets/aistudio/086_H_Vijay_Vasanth_Vasanth_Co_6cefc6f6.jpg',
+  'P. Rajagopal': '/assets/aistudio/087_P_Rajagopal_Saravana_Bhavan_60e629e7.jpg',
+  'S. P. Adithanar': '/assets/aistudio/095_S_P_Adithanar_Dina_Thanthi_5730ccc6.jpg',
+  'Sivanthi Adithan': '/assets/aistudio/096_Sivanthi_Adithan_Dina_Thanthi_c7496e1a.jpg',
+  'K. P. D. Sigamani': '/assets/aistudio/101_K_P_D_Sigamani_KPR_Mill_5c763f9f.jpg',
+  'G. K. Sundaram': '/assets/aistudio/113_G_K_Sundaram_Lakshmi_Mills_ce9a8b8f.jpg',
+  'G. Bakthavathsalam': '/assets/aistudio/118_K_G_Bakthavathsalam_KG_Hospital_7394dbc9.jpg',
+  'Palani G. Periasamy': '/assets/aistudio/130_Palani_G_Periasamy_PGP_Group_0bebc919.jpg',
+  'A. Sakthivel': '/assets/aistudio/136_A_Sakthivel_Poppys_Knitwear_cdcb90b0.jpg',
 };
+
+const PORTRAIT_OBJECT_POSITION_BY_SRC: Record<string, string> = {
+  '/assets/aistudio/012_Vellayan_Subbiah_Cholamandalam_34b7f483.jpg': 'object-[50%_12%]',
+  '/assets/aistudio/015_N_Srinivasan_India_Cements_a1c95faa.jpg': 'object-[55%_8%]',
+  '/assets/aistudio/039_Sridhar_Vembu_Zoho_faee8861.jpg': 'object-[54%_12%]',
+  '/assets/aistudio/071_Ravi_Saraogi_Uniphore_82df555a.jpg': 'object-[58%_14%]',
+  '/assets/aistudio/074_Agnishwar_Jayaprakash_Garuda_Aerospace_236307b0.jpg': 'object-[4%_6%]',
+};
+
+export function resolvePortraitObjectPositionClass(src?: string | null): string {
+  if (!src) return 'object-top';
+  return PORTRAIT_OBJECT_POSITION_BY_SRC[src] ?? 'object-top';
+}
 
 export const PARTICIPANT_HIGHLIGHTS: ParticipantProfileHighlight[] = [
   {

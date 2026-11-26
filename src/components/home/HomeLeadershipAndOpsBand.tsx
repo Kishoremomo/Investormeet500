@@ -285,7 +285,7 @@ export function HomeLeadershipAndOpsBand({
 
               <div>
                 <Link
-                  href="/speakers"
+                  href="/chief-guests"
                   className="btn-gold inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold"
                 >
                   <span>Inspect All 30 Chief Guest Seats</span>
@@ -856,12 +856,13 @@ export function HomeLeadershipAndOpsBand({
               </Link>
             </ScrollReveal>
 
-            <StaggerGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
+            <StaggerGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
               {COMMITTEES.map((committee, idx) => {
                 const Icon = committeeIcons[idx % committeeIcons.length];
                 const isExpanded = expandedCommitteeTitle === committee.title;
+                const spanClass = idx < 2 ? 'lg:col-span-3 h-full' : 'lg:col-span-2 h-full';
                 return (
-                  <StaggerCard key={committee.title} className="h-full">
+                  <StaggerCard key={committee.title} className={spanClass}>
                     <InteractiveCard
                       as="button"
                       ariaExpanded={isExpanded}
@@ -873,7 +874,7 @@ export function HomeLeadershipAndOpsBand({
                       }`}
                     >
                       <div className="w-full">
-                        <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#091326]">
+                        <div className="relative h-56 sm:h-64 w-full overflow-hidden bg-[#091326]">
                           <img
                             src={committee.image}
                             alt={committee.imageAlt}
@@ -883,25 +884,25 @@ export function HomeLeadershipAndOpsBand({
                             aria-hidden="true"
                             className="absolute inset-0 bg-gradient-to-t from-[#091326]/80 via-[#091326]/15 to-transparent"
                           />
-                          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
-                            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#e6c67e]">
+                          <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between gap-2">
+                            <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#e6c67e]">
                               COMMITTEE 0{idx + 1}
                             </span>
-                            <div className="w-7 h-7 rounded-md bg-white/15 backdrop-blur-sm text-white flex items-center justify-center">
-                              <Icon className="w-3.5 h-3.5" aria-hidden="true" />
+                            <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-sm text-white flex items-center justify-center">
+                              <Icon className="w-4 h-4" aria-hidden="true" />
                             </div>
                           </div>
                         </div>
 
-                        <div className="p-5 pb-3">
-                          <h3 className="font-display text-xl font-semibold text-[#0f172a] leading-snug">
+                        <div className="p-6 pb-4">
+                          <h3 className="font-display text-2xl font-semibold text-[#0f172a] leading-snug">
                             {committee.title}
                           </h3>
-                          <p className="mt-2 text-xs text-[#334155] leading-relaxed">
+                          <p className="mt-2 text-sm text-[#334155] leading-relaxed">
                             {committee.description}
                           </p>
                           {isExpanded && (
-                            <p className="mt-3 pt-3 border-t border-[#e4dfd5] text-[11px] text-[#1d4ed8] font-medium">
+                            <p className="mt-3 pt-3 border-t border-[#e4dfd5] text-xs text-[#1d4ed8] font-medium">
                               Governs 90 Days Policy pre-summit eligibility verification and hall
                               slot alignment.
                             </p>
@@ -909,10 +910,10 @@ export function HomeLeadershipAndOpsBand({
                         </div>
                       </div>
 
-                      <p className="px-5 pb-4 pt-3 border-t border-[#e4dfd5] font-mono text-[10px] uppercase tracking-wider text-[#526075] w-full flex items-center justify-between">
+                      <p className="px-6 pb-5 pt-3 border-t border-[#e4dfd5] font-mono text-[11px] uppercase tracking-wider text-[#526075] w-full flex items-center justify-between">
                         <span>Awaiting confirmation</span>
                         <ChevronRight
-                          className={`w-3.5 h-3.5 transition-transform ${
+                          className={`w-4 h-4 transition-transform ${
                             isExpanded ? 'rotate-90 text-[#1d4ed8]' : ''
                           }`}
                           aria-hidden="true"

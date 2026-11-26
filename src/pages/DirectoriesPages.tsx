@@ -13,13 +13,16 @@ import {
   Users,
 } from 'lucide-react';
 import {
+  ALL_DIRECTORY_ENTREPRENEURS,
   ASSOCIATIONS_15,
   BANKS_120,
+  COIMBATORE_HUB_NOTE,
   CORPORATE_500_DIRECTORY,
-  ENTREPRENEURS_100,
   ENTREPRENEUR_CATEGORIES,
+  ENTREPRENEUR_REGIONS,
   FEATURED_25_BRANDS,
   FINANCIAL_BRANDS_50,
+  FINANCIAL_BRAND_CATEGORY_NOTES,
   WOMEN_ENTREPRENEURS,
 } from '../data/directories';
 import { MEDIA_ASSETS, VIDEO_ASSETS } from '../data/homeAndPrograms';
@@ -97,6 +100,7 @@ function highlightToDossier(p: ParticipantProfileHighlight): RegistrationRecord 
 export function EntrepreneursPage() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string>('All');
+  const [regionFilter, setRegionFilter] = useState<string>('All Regions');
   const [onlyVerifiedPortraits, setOnlyVerifiedPortraits] = useState(false);
   const [sortPhotosFirst, setSortPhotosFirst] = useState(true);
   const [selectedLeader, setSelectedLeader] = useState<DirectoryLeaderSummary | null>(null);
@@ -108,17 +112,18 @@ export function EntrepreneursPage() {
   );
 
   const verifiedPortraitCount = useMemo(
-    () => ENTREPRENEURS_100.filter((e) => Boolean(resolvePortraitUrl(e.name))).length,
+    () => ALL_DIRECTORY_ENTREPRENEURS.filter((e) => Boolean(resolvePortraitUrl(e.name))).length,
     []
   );
 
   const filtered = useMemo(() => {
     const base = filterDirectoryItems(
-      ENTREPRENEURS_100,
+      ALL_DIRECTORY_ENTREPRENEURS,
       query,
       category,
-      (e) => `${e.serial} ${e.company}`
-    );
+      (e) => `${e.serial} ${e.company} ${e.region ?? ''}`
+    ).filter((e) => regionFilter === 'All Regions' || e.region === regionFilter);
+
     const maybeFiltered = onlyVerifiedPortraits
       ? base.filter((e) => Boolean(resolvePortraitUrl(e.name)))
       : base;
@@ -128,20 +133,20 @@ export function EntrepreneursPage() {
       const bHas = resolvePortraitUrl(b.name) ? 1 : 0;
       return bHas - aHas;
     });
-  }, [query, category, onlyVerifiedPortraits, sortPhotosFirst]);
+  }, [query, category, regionFilter, onlyVerifiedPortraits, sortPhotosFirst]);
 
   return (
     <div className="bg-[#fafaf8] text-[#0f172a]">
       <PageHero
-        kicker="ENTREPRENEURS DIRECTORY"
-        title="Summit Cohort & 100 Business Leaders."
-        subtitle="Explore our active 2027 summit founder cohort alongside the reference directory of 100 Tamil Nadu & Indian industrialists, tech pioneers, and enterprise builders."
+        kicker="ENTREPRENEURS & BUSINESS LEADERS DIRECTORY"
+        title="Summit Cohort & Regional Hub Leaders."
+        subtitle="Explore our active 2027 summit founder cohort alongside the deduplicated reference directory spanning Tamil Nadu Groups A–F and National & Global Industrial and Tech Leaders."
         image={MEDIA_ASSETS.trackStartups}
         imageAlt="Indian startup founders collaborating over laptops"
         stats={[
-          { value: '100', label: 'Leaders' },
+          { value: String(ALL_DIRECTORY_ENTREPRENEURS.length), label: 'Distinct Leaders' },
           { value: String(cohortFounders.length + verifiedPortraitCount), label: 'With Portraits' },
-          { value: '7', label: 'Sectors' },
+          { value: '6 Hubs', label: 'TN Regions A–F' },
         ]}
       />
 
@@ -234,16 +239,16 @@ export function EntrepreneursPage() {
         <div className="space-y-6">
           <div>
             <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#6d28d9]">
-              ECOSYSTEM REFERENCE DIRECTORY
+              ECOSYSTEM REFERENCE DIRECTORY · TN GROUPS A–F &amp; NATIONAL LEADERS
             </p>
             <h2 className="mt-1 font-display text-3xl font-semibold text-[#0f172a]">
-              100 Prominent Indian &amp; Tamil Nadu Leaders
+              {ALL_DIRECTORY_ENTREPRENEURS.length} Prominent Indian &amp; Tamil Nadu Leaders
             </h2>
           </div>
 
           <div className="bg-white rounded-2xl border border-[#e4dfd5] p-5 sm:p-6 space-y-4 shadow-[0_4px_20px_-14px_rgba(9,19,38,0.12)]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-              <div className="lg:col-span-5 relative">
+              <div className="lg:col-span-4 relative">
                 <Search
                   className="w-4 h-4 text-[#94a3b8] absolute left-3.5 top-1/2 -translate-y-1/2"
                   aria-hidden="true"
@@ -253,12 +258,12 @@ export function EntrepreneursPage() {
                   aria-label="Search entrepreneurs directory"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search by name, company, serial (e.g. NO. 026) or sector..."
+                  placeholder="Search by name, company, serial (NO. 026 / EXT. 07) or hub..."
                   className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#cfc8b8] bg-[#fafaf8] text-sm text-[#0f172a] focus:outline-none focus:border-[#1d4ed8]"
                 />
               </div>
 
-              <div className="lg:col-span-7 flex flex-wrap sm:flex-nowrap items-center gap-2.5">
+              <div className="lg:col-span-8 flex flex-wrap sm:flex-nowrap items-center gap-2.5">
                 <select
                   aria-label="Filter by entrepreneur category"
                   value={category}
@@ -268,6 +273,19 @@ export function EntrepreneursPage() {
                   {ENTREPRENEUR_CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>
                       {cat}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  aria-label="Filter by Tamil Nadu regional hub"
+                  value={regionFilter}
+                  onChange={(e) => setRegionFilter(e.target.value)}
+                  className="min-w-0 flex-1 px-3.5 py-2.5 rounded-lg border border-[#cfc8b8] bg-[#fafaf8] text-sm text-[#0f172a] focus:outline-none focus:border-[#1d4ed8]"
+                >
+                  {ENTREPRENEUR_REGIONS.map((reg) => (
+                    <option key={reg} value={reg}>
+                      {reg}
                     </option>
                   ))}
                 </select>
@@ -298,12 +316,13 @@ export function EntrepreneursPage() {
                   Verified Photos ({verifiedPortraitCount})
                 </button>
 
-                {(query || category !== 'All' || onlyVerifiedPortraits) && (
+                {(query || category !== 'All' || regionFilter !== 'All Regions' || onlyVerifiedPortraits) && (
                   <button
                     type="button"
                     onClick={() => {
                       setQuery('');
                       setCategory('All');
+                      setRegionFilter('All Regions');
                       setOnlyVerifiedPortraits(false);
                     }}
                     className="px-3.5 py-2.5 rounded-lg border border-[#cfc8b8] hover:border-[#1d4ed8] text-xs font-medium text-[#0f172a] whitespace-nowrap cursor-pointer shrink-0"
@@ -322,7 +341,7 @@ export function EntrepreneursPage() {
                     key={cat}
                     type="button"
                     onClick={() => setCategory(cat)}
-                    className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                    className={`max-w-full px-3.5 py-1.5 rounded-lg text-xs font-medium text-left transition-colors cursor-pointer whitespace-normal sm:whitespace-nowrap ${
                       active
                         ? 'bg-[#091326] text-[#e6c67e]'
                         : 'bg-[#fafaf8] text-[#334155] border border-[#e4dfd5] hover:border-[#1d4ed8]'
@@ -334,17 +353,46 @@ export function EntrepreneursPage() {
               })}
             </div>
 
+            <div className="flex flex-wrap gap-1.5 pt-1 border-t border-[#ece8df]">
+              {ENTREPRENEUR_REGIONS.map((reg) => {
+                const active = regionFilter === reg;
+                const shortLabel = reg.includes('—') ? reg.split('—')[0].trim() : reg.split('—')[0].trim();
+                return (
+                  <button
+                    key={reg}
+                    type="button"
+                    onClick={() => setRegionFilter(reg)}
+                    title={reg}
+                    className={`max-w-full px-3 py-1 rounded-md text-[11px] font-mono font-semibold text-left transition-colors cursor-pointer whitespace-normal sm:whitespace-nowrap ${
+                      active
+                        ? 'bg-[#6d28d9] text-white'
+                        : 'bg-[#f8fafc] text-[#475569] border border-[#e4dfd5] hover:border-[#6d28d9]'
+                    }`}
+                  >
+                    {shortLabel}
+                  </button>
+                );
+              })}
+            </div>
+
+            {(regionFilter === 'All Regions' || regionFilter.startsWith('C.')) && (
+              <div className="rounded-xl border border-[#e4dfd5] bg-[#f8fafc] px-4 py-3 text-xs text-[#334155] leading-relaxed">
+                <strong className="font-semibold text-[#0f172a]">Coimbatore Industrial Cluster Note:</strong>{' '}
+                {COIMBATORE_HUB_NOTE.replace('Note on Coimbatore (Group C): ', '')}
+              </div>
+            )}
+
             <p className="text-xs font-medium text-[#526075] tabular-nums">
               Showing <strong className="text-[#0f172a]">{filtered.length}</strong> of{' '}
-              {ENTREPRENEURS_100.length} reference entries · {verifiedPortraitCount} verified real
-              photographs displayed prominently in medium portrait framing.
+              {ALL_DIRECTORY_ENTREPRENEURS.length} deduplicated leaders · {verifiedPortraitCount} verified real
+              photographs displayed alongside clean monogram crests where verified portraits are unavailable.
             </p>
           </div>
 
           {filtered.length === 0 ? (
             <div className="bg-white rounded-2xl border border-[#e4dfd5] p-12 text-center">
               <p className="text-sm text-[#526075]">
-                No entries match your search or category filter.
+                No entries match your search, sector, or regional hub filter.
               </p>
             </div>
           ) : (
@@ -352,17 +400,18 @@ export function EntrepreneursPage() {
               {filtered.map((item) => {
                 const portraitUrl = resolvePortraitUrl(item.name);
                 const accent = getSectorAccent(item.category);
+                const shortRegion = item.region ? item.region.split('—')[0].trim() : item.category;
                 return (
                   <InteractiveCard
-                    key={item.serial}
+                    key={`${item.serial}-${item.name}`}
                     as="button"
                     onClick={() =>
                       setSelectedLeader({
                         serial: item.serial,
                         name: item.name,
                         company: item.company,
-                        sector: item.category,
-                        directoryLabel: '100 Tamil Nadu & Indian Business Leaders',
+                        sector: item.region ? `${item.category} · ${shortRegion}` : item.category,
+                        directoryLabel: 'Tamil Nadu & Indian Business Leaders Directory',
                       })
                     }
                     className="rounded-2xl overflow-hidden flex flex-col justify-between group min-h-[214px]"
@@ -376,17 +425,24 @@ export function EntrepreneursPage() {
                             <span className={`font-mono text-[11px] font-bold block tabular-nums ${accent.text}`}>
                               {item.serial}
                             </span>
-                            {portraitUrl && (
-                              <span className="mt-1 inline-block font-mono text-[10px] font-semibold uppercase tracking-wider text-[#0d9488]">
-                                Verified Photo
-                              </span>
-                            )}
+                            <span
+                              className={`mt-1 inline-block font-mono text-[10px] font-semibold uppercase tracking-wider ${
+                                portraitUrl ? 'text-[#0d9488]' : 'text-[#64748b]'
+                              }`}
+                            >
+                              {portraitUrl ? 'Verified Photo' : 'Monogram Crest'}
+                            </span>
                           </div>
                         </div>
                         <h3 className="font-display text-2xl font-semibold text-[#0f172a] leading-snug group-hover:text-[#1d4ed8] transition-colors">
                           {item.name}
                         </h3>
                         <p className="mt-1 text-sm font-medium text-[#334155]">{item.company}</p>
+                        {item.region && (
+                          <p className="mt-1.5 font-mono text-[10px] text-[#64748b] truncate">
+                            {shortRegion}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -739,11 +795,14 @@ export function WomenEntrepreneursPage() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filtered.map((w) => {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5">
+              {filtered.map((w, idx) => {
                 const serialText = `NO. ${String(w.serial).padStart(2, '0')}`;
                 const portraitUrl = resolvePortraitUrl(w.name);
                 const accent = getSectorAccent(w.sector);
+                const cycleIdx = idx % 5;
+                const isFeaturedWide = cycleIdx === 0 || cycleIdx === 1;
+                const spanClass = isFeaturedWide ? 'lg:col-span-3' : 'lg:col-span-2';
                 return (
                   <InteractiveCard
                     key={w.serial + w.name}
@@ -757,35 +816,47 @@ export function WomenEntrepreneursPage() {
                         directoryLabel: 'Women Business Leaders Reference',
                       })
                     }
-                    className="rounded-2xl overflow-hidden flex flex-col justify-between group min-h-[222px]"
+                    className={`${spanClass} rounded-2xl overflow-hidden flex flex-col justify-between group ${
+                      isFeaturedWide ? 'min-h-[236px]' : 'min-h-[214px]'
+                    }`}
                   >
                     <div>
-                      <div className={`h-1.5 w-full bg-gradient-to-r ${accent.bar}`} />
-                      <div className="p-6 pb-4">
-                        <div className="flex items-start justify-between gap-3 mb-4">
-                          <AvatarPortrait name={w.name} src={portraitUrl} size="md" />
+                      <div className={`h-2 w-full bg-gradient-to-r ${accent.bar}`} />
+                      <div className={`${isFeaturedWide ? 'p-6 sm:p-7' : 'p-5'} pb-4 ${accent.bgTint}/65`}>
+                        <div className="flex items-start justify-between gap-3 mb-3.5">
+                          <AvatarPortrait
+                            name={w.name}
+                            src={portraitUrl}
+                            size={isFeaturedWide ? 'lg' : 'md'}
+                          />
                           <div className="text-right">
-                            <span className={`font-mono text-xs font-bold block tabular-nums ${accent.text}`}>
+                            <span
+                              className={`font-mono text-xs font-bold block tabular-nums px-2.5 py-0.5 rounded-md bg-white border border-[#e4dfd5] ${accent.text}`}
+                            >
                               {serialText}
                             </span>
                             {portraitUrl && (
-                              <span className="mt-1 inline-block font-mono text-[10px] font-semibold uppercase tracking-wider text-[#0d9488]">
+                              <span className="mt-1.5 inline-block font-mono text-[10px] font-semibold uppercase tracking-wider text-[#0d9488]">
                                 Verified Photo
                               </span>
                             )}
                           </div>
                         </div>
-                        <h3 className="font-display text-2xl font-semibold text-[#0f172a] group-hover:text-[#6d28d9] transition-colors leading-snug">
+                        <h3
+                          className={`font-display font-semibold text-[#0f172a] group-hover:text-[#6d28d9] transition-colors leading-snug ${
+                            isFeaturedWide ? 'text-2xl sm:text-[26px]' : 'text-xl sm:text-2xl'
+                          }`}
+                        >
                           {w.name}
                         </h3>
-                        <p className="mt-1 text-sm font-medium text-[#334155]">{w.company}</p>
+                        <p className="mt-1 text-sm font-semibold text-[#334155]">{w.company}</p>
                       </div>
                     </div>
-                    <div className="px-6 py-3 bg-[#fafaf8] border-t border-[#e4dfd5] flex items-center justify-between gap-2 w-full">
-                      <span className="text-xs font-medium text-[#526075] truncate">
+                    <div className="px-6 py-3 bg-white border-t border-[#e4dfd5] flex items-center justify-between gap-2 w-full">
+                      <span className={`text-xs font-semibold truncate ${accent.text}`}>
                         {w.sector}
                       </span>
-                      <span className={`inline-flex items-center gap-0.5 text-xs font-semibold shrink-0 ${accent.text}`}>
+                      <span className={`inline-flex items-center gap-0.5 text-xs font-bold shrink-0 ${accent.text}`}>
                         <span>Inspect</span>
                         <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
                       </span>
@@ -921,20 +992,21 @@ export function CorporatePage() {
             {FEATURED_25_BRANDS.map((brand, idx) => (
               <InteractiveCard
                 key={brand}
-                className="rounded-xl p-4 flex flex-col justify-between gap-3 border border-[#e4e4e7] bg-white hover:border-[#d97706] shadow-xs"
+                dark
+                className="rounded-2xl p-4 flex flex-col justify-between gap-3 !bg-gradient-to-br from-[#091326] via-[#0f1c3a] to-[#172554] border border-[#c49a45]/45 hover:border-[#fbbf24] shadow-sm"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-[10px] font-bold text-[#b45309] tabular-nums">
+                  <span className="font-mono text-[11px] font-bold text-[#e6c67e] tabular-nums">
                     NO. {String(idx + 1).padStart(2, '0')}
                   </span>
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#71717a]">
-                    Featured
+                  <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-white/10 text-[#fcd34d]">
+                    Featured Brand
                   </span>
                 </div>
-                <div className="flex justify-center py-1">
+                <div className="flex justify-center py-1 bg-white rounded-xl p-2 border border-white/20">
                   <InstitutionLogoMark name={brand} size="marquee" />
                 </div>
-                <span className="text-xs sm:text-sm font-bold text-[#18181b] leading-snug line-clamp-2 text-center">
+                <span className="text-xs sm:text-sm font-bold text-white leading-snug line-clamp-2 text-center">
                   {brand}
                 </span>
               </InteractiveCard>
@@ -1055,17 +1127,34 @@ export function CorporatePage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#e4dfd5] text-sm">
-                  {slice.map((c) => (
-                    <tr key={c.rank + c.symbol} className="hover:bg-[#fef3c7]/35 transition-colors">
-                      <td className="py-3 px-4 font-mono text-xs text-[#b45309] font-semibold tabular-nums">
-                        #{String(c.rank).padStart(3, '0')}
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-[#0f172a]">{c.name}</td>
-                      <td className="py-3 px-4 font-mono text-xs text-[#526075]">{c.symbol}</td>
-                      <td className="py-3 px-4 text-[#334155]">{c.category}</td>
-                      <td className="py-3 px-4 text-[#526075]">{c.headquarters}</td>
-                    </tr>
-                  ))}
+                  {slice.map((c) => {
+                    const isTn = TAMIL_NADU_HUBS.has(c.headquarters.toLowerCase());
+                    return (
+                      <tr
+                        key={c.rank + c.symbol}
+                        className={`transition-colors ${
+                          isTn ? 'bg-[#fffbeb]/70 hover:bg-[#fef3c7]/60' : 'hover:bg-[#fef3c7]/35'
+                        }`}
+                      >
+                        <td className="py-3 px-4 font-mono text-xs text-[#b45309] font-semibold tabular-nums">
+                          #{String(c.rank).padStart(3, '0')}
+                        </td>
+                        <td className="py-3 px-4 font-semibold text-[#0f172a]">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span>{c.name}</span>
+                            {isTn && (
+                              <span className="font-mono text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-[#091326] text-[#e6c67e]">
+                                TN HQ
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 font-mono text-xs text-[#526075]">{c.symbol}</td>
+                        <td className="py-3 px-4 text-[#334155]">{c.category}</td>
+                        <td className="py-3 px-4 font-medium text-[#334155]">{c.headquarters}</td>
+                      </tr>
+                    );
+                  })}
                   {slice.length === 0 && (
                     <tr>
                       <td colSpan={5} className="py-10 text-center text-sm text-[#526075]">
@@ -1304,14 +1393,19 @@ export function BanksPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {FEATURED_SHOWCASE_BANKS.map((bankName) => (
               <div
                 key={bankName}
-                className="rounded-xl border border-[#e4dfd5] bg-[#f8fafc] hover:border-[#0d9488] p-3 flex flex-col items-center justify-between gap-2 text-center transition-colors"
+                className="rounded-xl border-2 border-[#ccfbf1] bg-[#f8fafc] hover:border-[#0d9488] p-4 flex flex-col items-center justify-between gap-3 text-center transition-colors shadow-xs"
               >
-                <InstitutionLogoMark name={bankName} size="md" className="w-full" />
-                <span className="text-xs font-semibold text-[#042f2e] leading-tight line-clamp-2">
+                <InstitutionLogoMark
+                  name={bankName}
+                  size="marquee"
+                  variant="bank"
+                  className="w-full h-24 sm:h-28"
+                />
+                <span className="text-xs sm:text-sm font-bold text-[#042f2e] leading-snug line-clamp-2">
                   {bankName.replace(' Limited', '')}
                 </span>
               </div>
@@ -1394,29 +1488,35 @@ export function BanksPage() {
           {filtered.map((bank, idx) => (
             <InteractiveCard
               key={bank.category + bank.serial + idx}
-              className="rounded-2xl overflow-hidden flex flex-col justify-between bg-white border border-[#d1fae5] hover:border-[#0d9488] shadow-xs"
+              className="rounded-2xl overflow-hidden flex flex-col justify-between bg-white border border-[#99f6e4] hover:border-[#0d9488] shadow-xs"
             >
               <div>
-                <div className="h-1.5 w-full bg-gradient-to-r from-[#0d9488] via-[#10b981] to-[#1d4ed8]" />
-                <div className="p-6 pb-4">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <InstitutionLogoMark name={bank.name} size="md" />
-                    <div className="text-right min-w-0">
-                      <span className="font-mono text-xs font-bold text-[#0f766e] tabular-nums block">
-                        {bank.serial}
-                      </span>
-                      <span className="mt-1 inline-block text-[11px] font-semibold uppercase tracking-wider text-[#526075] truncate max-w-[180px]">
-                        {bank.category}
-                      </span>
-                    </div>
+                <div className="h-2 w-full bg-gradient-to-r from-[#0d9488] via-[#10b981] to-[#1d4ed8]" />
+                <div className="p-5 sm:p-6 pb-4 space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-mono text-xs font-bold text-[#0f766e] tabular-nums">
+                      {bank.serial}
+                    </span>
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-[#526075] truncate max-w-[210px] text-right">
+                      {bank.category}
+                    </span>
                   </div>
-                  <h2 className="font-display text-2xl sm:text-[26px] font-bold text-[#042f2e] leading-snug">
-                    {bank.name}
-                  </h2>
+                  <InstitutionLogoMark
+                    name={bank.name}
+                    size="marquee"
+                    variant="bank"
+                    bankCategory={bank.category}
+                    className="w-full h-24 sm:h-28 px-5 py-3"
+                  />
+                  <div className="rounded-xl border-2 border-[#0d9488]/30 bg-[#f0fdfa] px-4 py-3">
+                    <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#042f2e] leading-snug">
+                      {bank.name}
+                    </h2>
+                  </div>
                 </div>
               </div>
 
-              <div className="px-6 py-3.5 bg-[#f0fdfa] border-t border-[#ccfbf1] flex items-center justify-between">
+              <div className="px-6 py-3.5 bg-[#f8fafc] border-t border-[#ccfbf1] flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#065f46]">
                   <Landmark className="w-3.5 h-3.5 text-[#0d9488]" aria-hidden="true" />
                   <span>RBI Scheduled Bank</span>
@@ -1479,8 +1579,46 @@ export function FinancialBrandsPage() {
         ]}
       />
 
-      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
-        <div className="bg-white rounded-2xl border border-[#e4dfd5] p-5 sm:p-6 mb-8 space-y-4">
+      <section className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14 space-y-8">
+        {/* Curator Index Notes & Priority Investor Syndicates */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div className="lg:col-span-7 rounded-2xl border border-[#e4dfd5] bg-white p-6 space-y-3">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#1d4ed8]">
+              ECOSYSTEM RANKING SCOPE &amp; NOTES
+            </span>
+            <p className="text-sm text-[#334155] leading-relaxed">
+              {FINANCIAL_BRAND_CATEGORY_NOTES.indexDisclaimer}
+            </p>
+            <ul className="pt-2 border-t border-[#ece8df] space-y-1.5 text-xs text-[#526075]">
+              {FINANCIAL_BRAND_CATEGORY_NOTES.institutionalNotes.map((note) => (
+                <li key={note} className="leading-relaxed">
+                  • {note}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <InteractiveCard
+            dark
+            tilt={false}
+            className="lg:col-span-5 rounded-2xl p-6 !bg-gradient-to-br from-[#091326] to-[#172554] border border-[#c49a45]/35 flex flex-col justify-between"
+          >
+            <div>
+              <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#e6c67e]">
+                PRIORITY TARGETS · STARTUP &amp; ANGEL NETWORKING
+              </span>
+              <p className="mt-2.5 text-sm text-[#e2e8f0] leading-relaxed">
+                {FINANCIAL_BRAND_CATEGORY_NOTES.priorityStartupNote}
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap gap-2 text-[11px] font-mono text-[#fcd34d]">
+              <span className="px-2.5 py-1 rounded bg-white/10">The Chennai Angels (150+ Investors)</span>
+              <span className="px-2.5 py-1 rounded bg-white/10">Nativelead (Madurai / Kovai / Trichy / Salem)</span>
+            </div>
+          </InteractiveCard>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-[#e4dfd5] p-5 sm:p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             <div className="md:col-span-7 relative">
               <Search
@@ -1560,18 +1698,29 @@ export function FinancialBrandsPage() {
                 className="rounded-2xl overflow-hidden flex flex-col justify-between"
               >
                 <div>
-                  <div className={`h-1 w-full bg-gradient-to-r ${accent.bar}`} />
-                  <div className="p-6 pb-4">
-                    <div className="flex items-center justify-between gap-3 pb-3 border-b border-[#e4dfd5]">
-                      <InstitutionLogoMark name={brand.name} size="sm" />
-                      <span className={`font-mono text-[11px] font-bold tabular-nums ${accent.text}`}>
+                  <div className={`h-1.5 w-full bg-gradient-to-r ${accent.bar}`} />
+                  <div className="p-5 sm:p-6 pb-4 space-y-3.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className={`font-mono text-xs font-bold tabular-nums ${accent.text}`}>
                         RANK #{brand.rank}
                       </span>
+                      <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#526075]">
+                        {brand.initials} · INSTITUTION
+                      </span>
                     </div>
-                    <h2 className="mt-3 font-display text-xl font-semibold text-[#0f172a] leading-snug">
-                      {brand.name}
-                    </h2>
-                    <p className="mt-1.5 text-sm text-[#334155]">{brand.focus}</p>
+                    <InstitutionLogoMark
+                      name={brand.name}
+                      initials={brand.initials}
+                      size="marquee"
+                      variant={brand.category === 'Banks & Financial Institutions' ? 'bank' : 'default'}
+                      className="w-full h-22 sm:h-24 px-5 py-2.5"
+                    />
+                    <div>
+                      <h2 className="font-display text-xl font-semibold text-[#0f172a] leading-snug">
+                        {brand.name}
+                      </h2>
+                      <p className="mt-1.5 text-sm text-[#334155]">{brand.focus}</p>
+                    </div>
                   </div>
                 </div>
                 <p className="px-6 py-3 bg-[#fafaf8] border-t border-[#e4dfd5] text-[11px] font-medium text-[#526075]">

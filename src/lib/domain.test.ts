@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   EVENT_DATE_CODE,
   ORGANISER_NOTIFICATION_EMAIL,
@@ -29,9 +31,31 @@ import {
   type RegistrationRecord,
   type RegistrationTargets,
 } from './domain';
-import { INSTITUTION_LOGOS } from '../data/logos';
-import { resolvePortraitUrl } from '../data/portraits';
-import { EVENT_TEAMS, PAYMENT_OPTIONS } from '../data/homeAndPrograms';
+import { FEATURED_SHOWCASE_BANKS, INSTITUTION_LOGOS } from '../data/logos';
+import {
+  ALL_DIRECTORY_ENTREPRENEURS,
+  ASSOCIATIONS_15,
+  BANKS_120,
+  ENTREPRENEURS_100,
+  FEATURED_25_BRANDS,
+  FINANCIAL_BRANDS_50,
+  FINANCIAL_BRAND_CATEGORY_NOTES,
+  WOMEN_ENTREPRENEURS,
+} from '../data/directories';
+import {
+  VERIFIED_LEADER_PORTRAIT_BY_NAME,
+  resolvePortraitObjectPositionClass,
+  resolvePortraitUrl,
+} from '../data/portraits';
+import {
+  CENTRAL_GOVT_RESOURCES,
+  EVENT_TEAMS,
+  MANDATORY_REGISTRATION_POLICY,
+  NINETY_DAY_POLICY_GROUPS,
+  PAYMENT_OPTIONS,
+  STATE_GOVT_RESOURCES,
+} from '../data/homeAndPrograms';
+import { HEADER_DROPDOWNS, QUICK_LINKS } from '../data/siteNavigation';
 
 const sampleRegistrations: RegistrationRecord[] = [
   {
@@ -278,8 +302,110 @@ test('resolvePortraitUrl maps verified real leader portraits uniquely and preser
   assert.equal(resolvePortraitUrl('Santhi Duraisamy'), '/media/people/santhi_duraisamy.jpg');
   assert.equal(resolvePortraitUrl('Shanthi Duraisamy'), '/media/people/santhi_duraisamy.jpg');
   assert.equal(resolvePortraitUrl('Girish Mathrubootham'), '/media/people/girish_mathrubootham.webp');
+  assert.equal(
+    resolvePortraitUrl('Sridhar Vembu'),
+    '/assets/aistudio/039_Sridhar_Vembu_Zoho_faee8861.jpg'
+  );
   assert.equal(resolvePortraitUrl('Ashwini Asokan'), null);
   assert.equal(resolvePortraitUrl('Archana Stalin'), null);
+
+  // Verify newly integrated entrepreneur portraits
+  assert.equal(
+    resolvePortraitUrl('Gopal Srinivasan'),
+    '/assets/aistudio/005_Gopal_Srinivasan_TVS_Capital_Funds_9040fd44.jpg'
+  );
+  assert.equal(
+    resolvePortraitUrl('Aravind Srinivas'),
+    '/assets/aistudio/050_Aravind_Srinivas_Perplexity_AI_9c8f91f7.jpg'
+  );
+  assert.equal(
+    resolvePortraitUrl('N. Chandrasekaran'),
+    '/assets/aistudio/056_N_Chandrasekaran_Tata_Group_81018af4.jpg'
+  );
+  assert.equal(
+    resolvePortraitUrl('Roshni Nadar Malhotra'),
+    '/assets/aistudio/135_Roshni_Nadar_Malhotra_HCL_04bdb757.jpg'
+  );
+  assert.equal(
+    resolvePortraitUrl('S. D. Shibulal'),
+    '/assets/aistudio/059_D_S_Ravishankar_Brickwork_Ratings_68cb66c4.jpg'
+  );
+  assert.equal(resolvePortraitUrl('D. S. Ravishankar'), null);
+
+  // Ensure every mapped file exists on disk under public/ and reject mismatched/duplicate files
+  const rejectedPrefixes = [
+    '007_',
+    '020_',
+    '034_',
+    '051_',
+    '052_',
+    '061_',
+    '062_',
+    '064_',
+    '069_',
+    '075_',
+    '077_',
+    '092_',
+    '093_',
+    '098_',
+    '100_',
+    '105_',
+    '109_',
+    '110_',
+    '111_',
+    '119_',
+    '120_',
+    '123_',
+    '125_',
+    '128_',
+    '129_',
+    '131_',
+    '132_',
+    '133_',
+    '134_',
+  ];
+  const seenSrcToNames = new Map<string, string[]>();
+  for (const [leaderName, portraitPath] of Object.entries(VERIFIED_LEADER_PORTRAIT_BY_NAME)) {
+    const absPath = path.join(process.cwd(), 'public', portraitPath.replace(/^\/+/, ''));
+    assert.ok(fs.existsSync(absPath), `Missing portrait file on disk: ${portraitPath}`);
+    for (const bad of rejectedPrefixes) {
+      assert.equal(
+        portraitPath.includes(`/${bad}`),
+        false,
+        `Rejected portrait asset (${bad}) must not be mapped (${leaderName})`
+      );
+    }
+    const group = seenSrcToNames.get(portraitPath) ?? [];
+    group.push(leaderName);
+    seenSrcToNames.set(portraitPath, group);
+  }
+  for (const [src, names] of seenSrcToNames.entries()) {
+    if (names.length > 1) {
+      const normalizedSet = new Set(
+        names.map((n) =>
+          n === 'Shanthi Duraisamy'
+            ? 'Santhi Duraisamy'
+            : n === 'P. C. Reddy'
+            ? 'Prathap C. Reddy'
+            : n
+        )
+      );
+      assert.equal(
+        normalizedSet.size,
+        1,
+        `Duplicate portrait asset ${src} shared by distinct leaders: ${names.join(', ')}`
+      );
+    }
+  }
+
+  // Verify custom object-position focus class for off-center landscape portraits
+  assert.equal(
+    resolvePortraitObjectPositionClass(
+      '/assets/aistudio/074_Agnishwar_Jayaprakash_Garuda_Aerospace_236307b0.jpg'
+    ),
+    'object-[4%_6%]'
+  );
+  assert.equal(resolvePortraitObjectPositionClass('/media/people/mallika_srinivasan.jpg'), 'object-top');
 });
 
 test('chart analytics helpers compute category slices, status breakdowns, participant comparisons, and trend accurately', () => {
@@ -378,6 +504,85 @@ test('42-point compliance: 9 payment options have 5 points, 5 teams have 5 membe
   });
   assert.equal(notif.recipient, 'sevenidatamanager@gmail.com');
   assert.equal(notif.deliveryChannel, 'Notification Outbox');
+});
+
+test('all 10 Govt agencies, 25 Featured Brands, scheduled banks, and Chief Guest routes resolve cleanly', () => {
+  for (const agency of [...CENTRAL_GOVT_RESOURCES, ...STATE_GOVT_RESOURCES]) {
+    const logo = resolveInstitutionLogo(agency.name, INSTITUTION_LOGOS);
+    assert.ok(logo && logo.src.endsWith('.svg'), `Missing SVG logo for govt agency: ${agency.name}`);
+  }
+
+  assert.equal(FEATURED_25_BRANDS.length, 25);
+  for (const brand of FEATURED_25_BRANDS) {
+    const logo = resolveInstitutionLogo(brand, INSTITUTION_LOGOS);
+    assert.ok(logo && logo.src.length > 0, `Missing logo for Featured Brand: ${brand}`);
+  }
+
+  const nonRrbNonForeignBanks = BANKS_120.filter(
+    (b) => b.category !== 'Regional Rural Banks' && b.category !== 'Foreign banks in India'
+  );
+  for (const bank of nonRrbNonForeignBanks) {
+    const logo = resolveInstitutionLogo(bank.name, INSTITUTION_LOGOS);
+    assert.ok(logo && logo.src.length > 0, `Missing logo for scheduled bank: ${bank.name}`);
+  }
+
+  for (const q of QUICK_LINKS) {
+    assert.equal(q.href.startsWith('/speakers'), false, `Legacy /speakers link found in QUICK_LINKS: ${q.href}`);
+  }
+  for (const nav of HEADER_DROPDOWNS) {
+    for (const item of nav.items) {
+      assert.equal(item.href.startsWith('/speakers'), false, `Legacy /speakers link found in HEADER_DROPDOWNS: ${item.href}`);
+    }
+  }
+});
+
+test('deduplicated entrepreneur directories, Women Entrepreneurs 16-20, 90-day policy, and associations compliance', () => {
+  assert.equal(ENTREPRENEURS_100.length, 100);
+  const lowerNames = ALL_DIRECTORY_ENTREPRENEURS.map((e) => e.name.toLowerCase().trim());
+  assert.equal(new Set(lowerNames).size, lowerNames.length, 'ALL_DIRECTORY_ENTREPRENEURS must contain zero duplicate names');
+  assert.ok(ALL_DIRECTORY_ENTREPRENEURS.length > 130);
+  assert.ok(ALL_DIRECTORY_ENTREPRENEURS.some((e) => e.name === 'Aravind Srinivas' && e.company === 'Perplexity AI'));
+  assert.ok(ALL_DIRECTORY_ENTREPRENEURS.some((e) => e.name === 'N. Chandrasekaran' && e.company === 'Tata Group'));
+
+  assert.equal(WOMEN_ENTREPRENEURS.length, 19);
+  assert.equal(WOMEN_ENTREPRENEURS.find((w) => w.serial === '18')?.company, 'FlexaLimb');
+  assert.equal(WOMEN_ENTREPRENEURS.find((w) => w.serial === '19')?.company, 'BGR NEO');
+  assert.equal(WOMEN_ENTREPRENEURS.find((w) => w.serial === '20')?.company, 'Bunjy');
+
+  assert.equal(ASSOCIATIONS_15.find((a) => a.no === 14)?.focus, 'Corporate & Manufacturing');
+  assert.equal(ASSOCIATIONS_15.find((a) => a.no === 15)?.focus, 'Trade, Industry & Entrepreneurs');
+
+  assert.equal(NINETY_DAY_POLICY_GROUPS.flatMap((g) => g.items).length, 20);
+  assert.equal(MANDATORY_REGISTRATION_POLICY.rules.length, 4);
+  assert.equal(MANDATORY_REGISTRATION_POLICY.objectiveSteps.length, 4);
+  assert.ok(FINANCIAL_BRAND_CATEGORY_NOTES.priorityStartupNote.includes('Chennai Angels'));
+  assert.ok(FINANCIAL_BRAND_CATEGORY_NOTES.priorityStartupNote.includes('Nativelead Foundation'));
+});
+
+test('featured bank showcase, RBI banks, and financial brand logos resolve to real files on disk', () => {
+  assert.equal(FEATURED_SHOWCASE_BANKS.length, 20);
+  for (const bankName of FEATURED_SHOWCASE_BANKS) {
+    const logo = resolveInstitutionLogo(bankName, INSTITUTION_LOGOS);
+    assert.ok(logo && logo.src.length > 0, `Missing logo for FEATURED_SHOWCASE_BANKS: ${bankName}`);
+    const absPath = path.join(process.cwd(), 'public', logo.src.replace(/^\/+/, ''));
+    assert.ok(fs.existsSync(absPath), `Missing bank logo file on disk: ${logo.src}`);
+  }
+
+  const matchedBanks = BANKS_120.filter((b) => resolveInstitutionLogo(b.name, INSTITUTION_LOGOS));
+  assert.equal(matchedBanks.length, 65);
+  for (const bank of matchedBanks) {
+    const logo = resolveInstitutionLogo(bank.name, INSTITUTION_LOGOS)!;
+    const absPath = path.join(process.cwd(), 'public', logo.src.replace(/^\/+/, ''));
+    assert.ok(fs.existsSync(absPath), `Missing bank logo file on disk: ${logo.src}`);
+  }
+
+  const matchedBrands = FINANCIAL_BRANDS_50.filter((b) => resolveInstitutionLogo(b.name, INSTITUTION_LOGOS));
+  assert.equal(matchedBrands.length, 23);
+  for (const brand of matchedBrands) {
+    const logo = resolveInstitutionLogo(brand.name, INSTITUTION_LOGOS)!;
+    const absPath = path.join(process.cwd(), 'public', logo.src.replace(/^\/+/, ''));
+    assert.ok(fs.existsSync(absPath), `Missing financial brand logo file on disk: ${logo.src}`);
+  }
 });
 
 

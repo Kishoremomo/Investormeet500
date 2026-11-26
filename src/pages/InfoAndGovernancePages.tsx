@@ -31,6 +31,7 @@ import {
   EVENT_TEAMS,
   FIRST_LEVEL_GUIDANCE_STEPS,
   INTERNATIONAL_GROUPS,
+  MANDATORY_REGISTRATION_POLICY,
   MEDIA_ASSETS,
   NINETY_DAY_POLICY_GROUPS,
   STATE_GOVT_RESOURCES,
@@ -58,6 +59,7 @@ import { Link, useQueryParam } from '../lib/router';
 import { PageHero } from '../components/PageHero';
 import { CtaBanner } from '../components/CtaBanner';
 import { AvatarPortrait } from '../components/AvatarPortrait';
+import { InstitutionLogoMark } from '../components/BrandMark';
 import { ImageCard } from '../components/ImageCard';
 import { ParticipantDossierModal, ReviewerProfileModal } from '../components/ProfileModal';
 import {
@@ -350,6 +352,47 @@ export function AboutPage() {
             </Link>
           </MagneticAction>
         </InteractiveCard>
+
+        {/* Ecosystem & Opportunities Navigation Strip */}
+        <div className="bg-white rounded-2xl border border-[#e4dfd5] p-6 sm:p-8 space-y-5 shadow-xs">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#1d4ed8]">
+                ECOSYSTEM &amp; OPPORTUNITIES DIRECTORY
+              </p>
+              <h2 className="mt-1 font-display text-2xl sm:text-3xl font-medium text-[#0f172a]">
+                Explore Cross-Border Tracks, Leaders &amp; Venue Layouts
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-[#526075]">
+              Direct access to summit directories
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {[
+              { href: '/international', label: 'International & National Opportunities (40)', desc: 'FDI, Exclusive Programs & Target Participants' },
+              { href: '/entrepreneurs', label: 'Business Leaders & TN Hubs (A–F)', desc: 'Deduplicated 140+ industrial, tech & regional leaders' },
+              { href: '/women-entrepreneurs', label: 'Women Entrepreneurs Showcase', desc: '19 profiled leaders, startup founders & six pillars' },
+              { href: '/associations', label: '15 Trade & Industry Associations', desc: 'CII, TNCCI, FICCI, TANSTIA, CODISSIA & sector guilds' },
+              { href: '/financial-brands', label: 'Top 50 Financial Brands in TN', desc: 'NBFCs, banks, angel networks & VC ecosystems' },
+              { href: '/venue', label: 'Hall Layout Diagrams & Venue', desc: 'Official Layout Map A & Map B floor specifications' },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-xl border border-[#e4dfd5] bg-[#fafaf8] hover:border-[#1d4ed8] hover:bg-white p-4 flex items-center justify-between gap-3 transition-colors group"
+              >
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold text-[#0f172a] group-hover:text-[#1d4ed8] truncate">
+                    {item.label}
+                  </div>
+                  <div className="mt-0.5 text-xs text-[#526075] truncate">{item.desc}</div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#1d4ed8] shrink-0 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
 
       <CtaBanner />
@@ -616,12 +659,19 @@ export function SpeakersPage() {
             <div className="h-1.5 w-full bg-gradient-to-r from-[#e6c67e] via-[#fb7185] to-[#c49a45]" />
             <div className="p-6 sm:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                <AvatarPortrait
-                  name="Mr. Srinivasan Raja"
-                  src={null}
-                  size="xl"
-                  theme="dark"
-                />
+                <div className="relative shrink-0">
+                  <AvatarPortrait
+                    name="Mr. Srinivasan Raja"
+                    src={null}
+                    size="xl"
+                    theme="dark"
+                  />
+                  <img
+                    src="/media/logos/a2b_emblem.svg"
+                    alt="Adyar Ananda Bhavan (A2B) emblem"
+                    className="w-14 h-9 rounded-md border border-[#fde68a]/60 bg-white p-0.5 object-contain shadow-md -mt-4 mx-auto relative z-10"
+                  />
+                </div>
                 <div className="space-y-2 max-w-2xl">
                   <div className="flex flex-wrap items-center gap-3">
                     <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#fde68a]">
@@ -855,25 +905,49 @@ export function SpeakersPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {visibleSlots.map((s, idx) => (
-              <div
-                key={s.slot}
-                className={`rounded-xl border p-4 ${
-                  idx === 0 && roleFilter === 'All'
-                    ? 'bg-[#fff1f2] border-[#fda4af]'
-                    : 'bg-white border-[#e4dfd5]'
-                }`}
-              >
-                <div className="font-mono text-[11px] font-bold text-[#881337]">{s.slot}</div>
-                <div className="mt-1 font-display text-lg font-medium text-[#0f172a]">
-                  {idx === 0 && roleFilter === 'All' ? 'Mr. Srinivasan Raja (A2B)' : s.role}
+            {visibleSlots.map((s, idx) => {
+              const isA2bFeatured = idx === 0 && roleFilter === 'All';
+              const guestDisplayName = isA2bFeatured ? 'Mr. Srinivasan Raja (A2B)' : s.role;
+              return (
+                <div
+                  key={s.slot}
+                  className={`rounded-2xl border p-4 flex flex-col justify-between gap-3 transition-shadow ${
+                    isA2bFeatured
+                      ? 'bg-gradient-to-br from-[#fff1f2] to-[#fef3c7]/50 border-2 border-[#be123c] shadow-sm'
+                      : 'bg-white border-[#e4dfd5] hover:border-[#881337]/40'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <AvatarPortrait
+                        name={isA2bFeatured ? 'Mr. Srinivasan Raja' : `${s.role} ${s.slot}`}
+                        src={null}
+                        size="md"
+                      />
+                      <div className="text-right">
+                        <div className="font-mono text-[11px] font-bold text-[#881337]">
+                          {s.slot}
+                        </div>
+                        {isA2bFeatured && (
+                          <img
+                            src="/media/logos/a2b_emblem.svg"
+                            alt="A2B insignia"
+                            className="mt-1 ml-auto w-11 h-7 rounded border border-[#fda4af] bg-white p-0.5 object-contain"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div className="font-display text-lg font-semibold text-[#0f172a] leading-snug">
+                      {guestDisplayName}
+                    </div>
+                    <p className="mt-1 text-xs text-[#526075] leading-relaxed">{s.focus}</p>
+                  </div>
+                  <span className="pt-2 border-t border-[#f1f5f9] inline-block font-mono text-[11px] font-semibold text-[#881337]">
+                    {s.status}
+                  </span>
                 </div>
-                <p className="mt-1 text-xs text-[#526075]">{s.focus}</p>
-                <span className="mt-2 inline-block font-mono text-[11px] font-semibold text-[#881337]">
-                  {s.status}
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1146,31 +1220,36 @@ export function InvestorsPage() {
           )}
         </ScrollReveal>
 
-        {/* Banks & Investor Team Points — Enlarged Readable Typography */}
+        {/* Banks & Investor Team Points — Enlarged Readable Typography & Metric Highlights (#39) */}
         <div id="banks" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <InteractiveCard className="rounded-2xl p-7 sm:p-9 flex flex-col justify-between bg-white">
+          <InteractiveCard className="rounded-2xl p-8 sm:p-10 flex flex-col justify-between bg-white border-t-4 border-t-[#8a5d14]">
             <div>
-              <Landmark className="w-7 h-7 text-[#8a5d14] mb-3" aria-hidden="true" />
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <Landmark className="w-8 h-8 text-[#8a5d14]" aria-hidden="true" />
+                <span className="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md bg-[#fef3c7] text-[#92400e]">
+                  120 RBI Banks · 50 NBFCs
+                </span>
+              </div>
               <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a]">
                 Banks &amp; Institutional Lending
               </h2>
-              <p className="mt-3 text-base text-[#334155] leading-relaxed">
+              <p className="mt-3.5 text-base sm:text-lg text-[#334155] leading-relaxed">
                 Dedicated banking discussions cover corporate term loans, project finance, MSME
                 working capital and hybrid debt-equity syndication across India’s 120 RBI-scheduled
                 banks and Tamil Nadu’s top 50 financial institutions.
               </p>
             </div>
-            <div className="mt-6 pt-5 border-t border-[#e4dfd5] flex flex-wrap gap-5">
+            <div className="mt-7 pt-5 border-t border-[#e4dfd5] flex flex-wrap gap-5">
               <Link
                 href="/banks"
-                className="text-sm font-semibold text-[#8a5d14] hover:text-[#0c121d] inline-flex items-center gap-1.5 transition-colors"
+                className="text-sm sm:text-base font-bold text-[#8a5d14] hover:text-[#0c121d] inline-flex items-center gap-1.5 transition-colors"
               >
                 <span>Browse 120 RBI Banks</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
               <Link
                 href="/financial-brands"
-                className="text-sm font-semibold text-[#8a5d14] hover:text-[#0c121d] inline-flex items-center gap-1.5 transition-colors"
+                className="text-sm sm:text-base font-bold text-[#8a5d14] hover:text-[#0c121d] inline-flex items-center gap-1.5 transition-colors"
               >
                 <span>Browse Top 50 Financial Brands</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -1178,29 +1257,34 @@ export function InvestorsPage() {
             </div>
           </InteractiveCard>
 
-          <InteractiveCard id="investor-team" dark tilt={false} className="scroll-mt-24 rounded-2xl p-7 sm:p-9">
-            <Users className="w-7 h-7 text-[#e6c67e] mb-3" aria-hidden="true" />
+          <InteractiveCard id="investor-team" dark tilt={false} className="scroll-mt-24 rounded-2xl p-8 sm:p-10 border-t-4 border-t-[#e6c67e]">
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <Users className="w-8 h-8 text-[#e6c67e]" aria-hidden="true" />
+              <span className="font-mono text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md bg-white/10 text-[#e6c67e]">
+                20–30 Min 1-on-1 · 3 Halls
+              </span>
+            </div>
             <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
               Investor Team Points &amp; Matching
             </h2>
-            <ul className="mt-4 space-y-3 text-base text-[#cbd5e1]">
+            <ul className="mt-4 space-y-3.5 text-base sm:text-lg text-[#cbd5e1]">
               <li className="flex items-start gap-2.5">
-                <Check className="w-4 h-4 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
+                <Check className="w-5 h-5 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
                 <span>Sector-wise curation aligned to investor ticket size and stage mandate</span>
               </li>
               <li className="flex items-start gap-2.5">
-                <Check className="w-4 h-4 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
+                <Check className="w-5 h-5 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
                 <span>Pre-screened pitch summaries and financial risk notes ahead of 20 Feb 2027</span>
               </li>
               <li className="flex items-start gap-2.5">
-                <Check className="w-4 h-4 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
+                <Check className="w-5 h-5 text-[#e6c67e] mt-1 shrink-0" aria-hidden="true" />
                 <span>Confidential one-to-one meeting room scheduling across Halls 1–3</span>
               </li>
             </ul>
-            <div className="mt-6 pt-4 border-t border-white/15">
+            <div className="mt-7 pt-5 border-t border-white/15">
               <Link
                 href="/investor-team"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#e6c67e] hover:underline"
+                className="inline-flex items-center gap-1.5 text-sm sm:text-base font-bold text-[#e6c67e] hover:underline"
               >
                 <span>Inspect Full Investor Team Points Desk</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -1212,23 +1296,37 @@ export function InvestorsPage() {
         <div id="terms" className="scroll-mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
             {
+              no: '01',
+              metric: 'Neutral Facilitation',
               title: 'Investor Terms & Conditions',
               desc: 'Organisers facilitate structured introductions only; all term sheets, covenants and valuation agreements are executed solely between investor and investee.',
             },
             {
+              no: '02',
+              metric: '20–30 Min Windows',
               title: 'Investor Interaction Protocol',
               desc: 'Pre-booked 20–30 minute deal slots backed by committee validation dossiers across Hall 1, Hall 2 & Hall 3.',
             },
             {
+              no: '03',
+              metric: '₹50L – ₹500Cr',
               title: 'Investment Opportunities',
               desc: 'Ticket sizes ranging from ₹50 Lakhs seed/working capital up to ₹500 Crore institutional expansion mandates.',
             },
             {
+              no: '04',
+              metric: 'Independent Audit',
               title: 'Risk & Independent Diligence',
               desc: 'Participating investors conduct independent legal, financial and statutory due diligence prior to deploying capital.',
             },
           ].map((card) => (
-            <InteractiveCard key={card.title} className="rounded-xl p-6 sm:p-7">
+            <InteractiveCard key={card.title} className="rounded-2xl p-6 sm:p-7 border-t-4 border-t-[#1d4ed8]">
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="font-mono text-xs font-bold text-[#1d4ed8]">RULE {card.no}</span>
+                <span className="font-mono text-[11px] font-semibold px-2.5 py-0.5 rounded bg-[#eff6ff] text-[#1e40af]">
+                  {card.metric}
+                </span>
+              </div>
               <h3 className="font-display text-2xl font-semibold text-[#0f172a] leading-snug">
                 {card.title}
               </h3>
@@ -1603,7 +1701,7 @@ export function GovernmentPage() {
                 </h2>
               </div>
               <div className="space-y-4">
-                {central.map((res, idx) => (
+                {central.map((res) => (
                   <a
                     key={res.name}
                     href={res.url}
@@ -1614,9 +1712,7 @@ export function GovernmentPage() {
                     <InteractiveCard className="rounded-xl overflow-hidden flex flex-col justify-between bg-white">
                       <div className="h-1.5 w-full bg-[#1d4ed8]" aria-hidden="true" />
                       <div className="p-5 sm:p-6 flex items-start gap-4">
-                        <span className="w-10 h-10 rounded-lg bg-[#eff6ff] border border-[#bfdbfe] text-[#1d4ed8] flex items-center justify-center font-mono text-xs font-bold shrink-0">
-                          GOI {String(idx + 1).padStart(2, '0')}
-                        </span>
+                        <InstitutionLogoMark name={res.name} size="lg" className="shrink-0" />
                         <div className="min-w-0 flex-1">
                           <h3 className="font-display text-xl sm:text-2xl font-medium text-[#0f172a] group-hover:text-[#1d4ed8] transition-colors">
                             {res.name}
@@ -1646,7 +1742,7 @@ export function GovernmentPage() {
                 </h2>
               </div>
               <div className="space-y-4">
-                {state.map((res, idx) => (
+                {state.map((res) => (
                   <a
                     key={res.name}
                     href={res.url}
@@ -1657,9 +1753,7 @@ export function GovernmentPage() {
                     <InteractiveCard className="rounded-xl overflow-hidden flex flex-col justify-between bg-white">
                       <div className="h-1.5 w-full bg-[#0d9488]" aria-hidden="true" />
                       <div className="p-5 sm:p-6 flex items-start gap-4">
-                        <span className="w-10 h-10 rounded-lg bg-[#f0fdfa] border border-[#99f6e4] text-[#0f766e] flex items-center justify-center font-mono text-xs font-bold shrink-0">
-                          TN {String(idx + 1).padStart(2, '0')}
-                        </span>
+                        <InstitutionLogoMark name={res.name} size="lg" className="shrink-0" />
                         <div className="min-w-0 flex-1">
                           <h3 className="font-display text-xl sm:text-2xl font-medium text-[#0f172a] group-hover:text-[#0d9488] transition-colors">
                             {res.name}
@@ -1677,6 +1771,62 @@ export function GovernmentPage() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Central Govt vs Tamil Nadu State Govt — Key Differences Table (#18) */}
+        <div className="bg-white rounded-2xl border border-[#e4dfd5] overflow-hidden shadow-xs">
+          <div className="px-6 py-4 bg-[#091326] text-white flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#e6c67e]">
+                POLICY COMPARISON MATRIX
+              </span>
+              <h2 className="font-display text-2xl font-semibold text-white">
+                Central Government vs Tamil Nadu State Government — Key Differences
+              </h2>
+            </div>
+            <span className="font-mono text-xs text-[#93c5fd]">Clearances · Capital · Land · Exports</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr className="bg-[#f8fafc] border-b border-[#e4dfd5] font-mono text-xs uppercase text-[#334155]">
+                  <th className="py-3.5 px-5 font-bold">Mandate Area</th>
+                  <th className="py-3.5 px-5 font-bold text-[#1d4ed8]">Central Government (Union of India)</th>
+                  <th className="py-3.5 px-5 font-bold text-[#0f766e]">Tamil Nadu State Government</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#e4dfd5] text-[#334155]">
+                {[
+                  {
+                    area: 'Primary Policy Jurisdiction',
+                    central: 'National FDI policy, DPIIT startup tax exemptions, RBI/SIDBI credit schemes & national export promotion (Invest India, ITPO, Ministry of Finance).',
+                    state: 'State single-window industrial clearances, district industrial estates, SIPCOT/TIDCO equity partnerships & Tamil Nadu MSME subsidies.',
+                  },
+                  {
+                    area: 'Financial Schemes & Credit',
+                    central: 'CGTMSE collateral-free guarantees, MUDRA, Fund of Funds for Startups (FFS) & Union Budget PLI manufacturing incentives.',
+                    state: 'TIIC equipment/land term loans, StartupTN TANSEED early grants, NEEDs capital subsidy & state electricity tariff concessions.',
+                  },
+                  {
+                    area: 'Land, Factory & Licensing',
+                    central: 'Customs bonding, national SEZ notifications, trademark/patent filings & pan-India corporate incorporation via MCA.',
+                    state: 'Guidance TN single-window portal approvals, SIPCOT plot allotment, state pollution & factory safety permits.',
+                  },
+                  {
+                    area: 'Best Matched Summit Tracks',
+                    central: 'Startups (DPIIT equity), Bank Loans (National PSU schemes) & International Opportunity (FDI & Trade Expos).',
+                    state: 'Business Expansion (TN plant setup), Business Loan (MSME upgrades) & Mixed Loans (TIDCO JV projects).',
+                  },
+                ].map((row) => (
+                  <tr key={row.area} className="hover:bg-[#f8fafc]">
+                    <td className="py-4 px-5 font-semibold text-[#091326] align-top">{row.area}</td>
+                    <td className="py-4 px-5 leading-relaxed align-top">{row.central}</td>
+                    <td className="py-4 px-5 leading-relaxed align-top">{row.state}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {central.length === 0 && state.length === 0 && (
@@ -2206,40 +2356,128 @@ export function RegistrationPolicyPage() {
           </div>
         </div>
 
-        {/* 4-Phase Interactive Visual Selector Bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {NINETY_DAY_POLICY_GROUPS.map((grp, idx) => {
-            const active = groupFilter === grp.group;
-            const accent = PHASE_ACCENTS[idx % PHASE_ACCENTS.length];
-            return (
-              <button
-                key={grp.group}
-                type="button"
-                onClick={() => setGroupFilter((prev) => (prev === grp.group ? 'All' : grp.group))}
-                className={`text-left rounded-2xl p-5 border transition-all cursor-pointer relative overflow-hidden ${
-                  active
-                    ? 'bg-gradient-to-br from-[#091326] to-[#1e1b4b] text-white border-[#091326] shadow-md'
-                    : 'bg-white border-[#e4dfd5] hover:border-[#4338ca] text-[#0f172a]'
-                }`}
-              >
-                <span className="h-1.5 inset-x-0 top-0 absolute" style={{ backgroundColor: accent }} aria-hidden="true" />
-                <div className="flex items-center justify-between gap-2 pt-1">
-                  <span
-                    className="font-mono text-[11px] font-bold uppercase tracking-wider"
-                    style={{ color: active ? '#fcd34d' : accent }}
+        {/* Mandatory Registration Policy & Our Objective Showcase */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <InteractiveCard
+            dark
+            tilt={false}
+            className="lg:col-span-6 rounded-2xl p-6 sm:p-8 !bg-gradient-to-br from-[#091326] via-[#132247] to-[#1e1b4b] border border-[#e6c67e]/30 flex flex-col justify-between space-y-5"
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2 pb-3 border-b border-white/15">
+                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#e6c67e]">
+                  MANDATORY REGISTRATION POLICY
+                </span>
+                <ShieldCheck className="w-4 h-4 text-[#5eead4]" aria-hidden="true" />
+              </div>
+              <h2 className="mt-4 font-display text-2xl sm:text-3xl font-semibold text-white">
+                {MANDATORY_REGISTRATION_POLICY.headline}
+              </h2>
+              <ul className="mt-4 space-y-2.5 text-sm text-[#e2e8f0]">
+                {MANDATORY_REGISTRATION_POLICY.rules.map((rule) => (
+                  <li key={rule} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#5eead4] mt-0.5 shrink-0" aria-hidden="true" />
+                    <span>{rule}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <p className="pt-3 border-t border-white/10 text-xs text-[#cbd5e1] leading-relaxed">
+              {MANDATORY_REGISTRATION_POLICY.proposedNote}
+            </p>
+          </InteractiveCard>
+
+          <InteractiveCard className="lg:col-span-6 rounded-2xl p-6 sm:p-8 bg-white border border-[#e4dfd5] flex flex-col justify-between space-y-5">
+            <div>
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#0d9488]">
+                OUR OBJECTIVE
+              </span>
+              <h2 className="mt-2 font-display text-2xl sm:text-3xl font-semibold text-[#0f172a] leading-snug">
+                {MANDATORY_REGISTRATION_POLICY.objectiveBanner}
+              </h2>
+              <p className="mt-2 text-sm text-[#526075]">
+                Every advance registration moves sequentially through structured verification and profile matching:
+              </p>
+              <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {MANDATORY_REGISTRATION_POLICY.objectiveSteps.map((step, sIdx) => (
+                  <div
+                    key={step}
+                    className="rounded-xl border border-[#e4dfd5] bg-[#fafaf8] px-4 py-3 flex items-center gap-3"
                   >
-                    PHASE 0{idx + 1} · {grp.group}
-                  </span>
-                  <span className={`font-mono text-[11px] ${active ? 'text-[#c7d2fe]' : 'text-[#526075]'}`}>
-                    {grp.items.length} pts
-                  </span>
-                </div>
-                <h2 className={`mt-2 font-display text-xl font-semibold ${active ? 'text-white' : 'text-[#0f172a]'}`}>
-                  {grp.title}
-                </h2>
-              </button>
-            );
-          })}
+                    <span className="w-7 h-7 rounded-lg bg-[#091326] text-[#e6c67e] font-mono text-xs font-bold flex items-center justify-center shrink-0">
+                      0{sIdx + 1}
+                    </span>
+                    <span className="text-sm font-semibold text-[#0f172a] leading-snug">{step}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="pt-3 border-t border-[#ece8df] flex flex-wrap items-center justify-between gap-3">
+              <span className="text-xs text-[#526075]">
+                Submit dossier early ahead of {REGISTRATION_CUTOFF_DATE_CODE}.
+              </span>
+              <Link
+                href="/apply"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4338ca] hover:underline"
+              >
+                <span>Start Early Application</span>
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+          </InteractiveCard>
+        </div>
+
+        {/* 4-Phase Horizontal Execution Rail & Milestone Bar (#36, #37) */}
+        <div className="bg-white rounded-2xl border border-[#e4dfd5] p-5 sm:p-6 space-y-5 shadow-xs">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#e4dfd5]">
+            <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#4338ca]">
+              CONNECTED 4-PHASE GOVERNANCE RAIL · 20 CONTROL POINTS
+            </span>
+            <span className="font-mono text-xs font-semibold text-[#091326]">
+              Cutoff {REGISTRATION_CUTOFF_DATE_CODE} → Summit Day 20-02-2027
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {NINETY_DAY_POLICY_GROUPS.map((grp, idx) => {
+              const active = groupFilter === grp.group;
+              const accent = PHASE_ACCENTS[idx % PHASE_ACCENTS.length];
+              return (
+                <button
+                  key={grp.group}
+                  type="button"
+                  onClick={() => setGroupFilter((prev) => (prev === grp.group ? 'All' : grp.group))}
+                  className={`text-left rounded-2xl p-5 border transition-all cursor-pointer relative overflow-hidden ${
+                    active
+                      ? 'bg-gradient-to-br from-[#091326] to-[#1e1b4b] text-white border-[#091326] shadow-md'
+                      : 'bg-[#fafaf8] border-[#e4dfd5] hover:border-[#4338ca] text-[#0f172a]'
+                  }`}
+                >
+                  <span className="h-1.5 inset-x-0 top-0 absolute" style={{ backgroundColor: accent }} aria-hidden="true" />
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    <span
+                      className="font-mono text-[11px] font-bold uppercase tracking-wider"
+                      style={{ color: active ? '#fcd34d' : accent }}
+                    >
+                      PHASE 0{idx + 1} · {grp.group}
+                    </span>
+                    <span className={`font-mono text-[11px] font-bold ${active ? 'text-[#c7d2fe]' : 'text-[#526075]'}`}>
+                      {grp.items.length} pts
+                    </span>
+                  </div>
+                  <h2 className={`mt-2 font-display text-xl font-semibold ${active ? 'text-white' : 'text-[#0f172a]'}`}>
+                    {grp.title}
+                  </h2>
+                  <div className="mt-3 h-1.5 rounded-full bg-black/10 overflow-hidden">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${(idx + 1) * 25}%`, backgroundColor: active ? '#fcd34d' : accent }}
+                    />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Filter + Search Bar */}
@@ -2284,8 +2522,8 @@ export function RegistrationPolicyPage() {
           </div>
         </div>
 
-        {/* Interactive 20-Point Visual Matrix */}
-        <div className="space-y-8">
+        {/* Asymmetric 2+3 Varied Editorial Matrix per Phase */}
+        <div className="space-y-9">
           {filteredGroups.map((grp, gIdx) => {
             const accent = PHASE_ACCENTS[gIdx % PHASE_ACCENTS.length];
             return (
@@ -2293,36 +2531,54 @@ export function RegistrationPolicyPage() {
                 <div className="flex items-center justify-between gap-3 border-b border-[#e4dfd5] pb-3">
                   <div>
                     <span className="font-mono text-xs font-bold" style={{ color: accent }}>
-                      {grp.group}
+                      PHASE 0{gIdx + 1} · {grp.group}
                     </span>
                     <h2 className="font-display text-2xl sm:text-3xl font-semibold text-[#0f172a]">
                       {grp.title}
                     </h2>
                   </div>
-                  <span className="font-mono text-xs text-[#526075]">{grp.items.length} Policy Controls</span>
+                  <span className="font-mono text-xs font-semibold px-3 py-1 rounded-md bg-white border border-[#e4dfd5] text-[#334155]">
+                    {grp.items.length} Policy Controls
+                  </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                  {grp.items.map((item) => (
-                    <InteractiveCard
-                      key={item.no}
-                      className="rounded-xl overflow-hidden flex flex-col justify-between bg-white"
-                    >
-                      <div className="h-1 w-full" style={{ backgroundColor: accent }} aria-hidden="true" />
-                      <div className="p-5 flex-1">
-                        <span
-                          className="font-mono text-xs font-bold block"
-                          style={{ color: accent }}
-                        >
-                          REASON {item.no}
-                        </span>
-                        <h3 className="mt-2 font-display text-lg font-semibold text-[#0f172a] leading-snug">
-                          {item.title}
-                        </h3>
-                        <p className="mt-2 text-xs text-[#334155] leading-relaxed">{item.desc}</p>
-                      </div>
-                    </InteractiveCard>
-                  ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+                  {grp.items.map((item, itemIdx) => {
+                    const isLeadCard = itemIdx < 2 && grp.items.length >= 4;
+                    return (
+                      <InteractiveCard
+                        key={item.no}
+                        className={`rounded-2xl overflow-hidden flex flex-col justify-between bg-white ${
+                          isLeadCard ? 'lg:col-span-3' : 'lg:col-span-2'
+                        }`}
+                      >
+                        <div className="h-1.5 w-full" style={{ backgroundColor: accent }} aria-hidden="true" />
+                        <div className={`${isLeadCard ? 'p-6 sm:p-7' : 'p-5'} flex-1`}>
+                          <div className="flex items-center justify-between gap-2">
+                            <span
+                              className="font-mono text-xs font-bold"
+                              style={{ color: accent }}
+                            >
+                              REASON {item.no}
+                            </span>
+                            {isLeadCard && (
+                              <span className="font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-[#f8fafc] border border-[#e4dfd5] text-[#526075]">
+                                Core Mandate
+                              </span>
+                            )}
+                          </div>
+                          <h3
+                            className={`mt-2 font-display font-semibold text-[#0f172a] leading-snug ${
+                              isLeadCard ? 'text-2xl' : 'text-lg sm:text-xl'
+                            }`}
+                          >
+                            {item.title}
+                          </h3>
+                          <p className="mt-2 text-sm text-[#334155] leading-relaxed">{item.desc}</p>
+                        </div>
+                      </InteractiveCard>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -2445,21 +2701,21 @@ export function BusinessGuidancePage() {
           })}
         </div>
 
-        {/* Standout Consultation Desk Box */}
+        {/* Standout Consultation Desk Box with Live Checklist Readout (#33) */}
         <InteractiveCard
           dark
           tilt={false}
           className="rounded-2xl p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6 !bg-gradient-to-r from-[#1e1b4b] via-[#312e81] to-[#1d4ed8]"
         >
-          <div className="max-w-2xl space-y-2">
+          <div className="max-w-2xl space-y-2.5">
             <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#fcd34d]">
-              PRE-SUMMIT BUSINESS CONSULTATION DESK
+              PRE-SUMMIT BUSINESS CONSULTATION DESK · {completed}/10 STEPS READY
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-semibold text-white">
               Need 1-on-1 First Level Business Guidance Before Submitting?
             </h2>
-            <p className="text-sm text-[#e0e7ff] leading-relaxed">
-              Connect directly with {ORGANISER_CONTACT.contactPerson} ({ORGANISER_CONTACT.phone}) to verify track suitability, document readiness, and funding structure ahead of {REGISTRATION_CUTOFF_DATE_CODE}.
+            <p className="text-sm sm:text-base text-[#e0e7ff] leading-relaxed">
+              Connect directly with {ORGANISER_CONTACT.contactPerson} ({ORGANISER_CONTACT.phone}) to verify track suitability, document readiness, and funding structure ahead of {REGISTRATION_CUTOFF_DATE_CODE}. Remaining unchecked items: {10 - completed}.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 shrink-0">
@@ -2561,58 +2817,174 @@ export function InternationalPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Four Distinct Thematic Card Architectural Templates (#32) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {filteredGroups.map((grp, grpIdx) => {
-            const groupVisuals = [
-              {
-                image: MEDIA_ASSETS.fdiBoardroomChennai,
-                alt: 'Indian and global executives reviewing cross-border FDI investment documents in Chennai',
-                accent: '#0284c7',
-              },
-              {
-                image: MEDIA_ASSETS.tnIndustrialPark,
-                alt: 'Modern Tamil Nadu clean-tech precision manufacturing park',
-                accent: '#0d9488',
-              },
-              {
-                image: MEDIA_ASSETS.dealLoungeChennai,
-                alt: 'Curated investor-entrepreneur networking lounge in Chennai',
-                accent: '#1d4ed8',
-              },
-              {
-                image: MEDIA_ASSETS.globalFdiCorridor,
-                alt: 'Senior Indian business leaders seated at high-rise conference roundtable',
-                accent: '#c49a45',
-              },
-            ];
-            const vis = groupVisuals[grpIdx % groupVisuals.length];
-            return (
-              <ImageCard
-                key={grp.group}
-                image={vis.image}
-                imageAlt={vis.alt}
-                accentColor={vis.accent}
-                overlayLabel={`${grp.group} · ${grp.items.length} VERTICALS`}
-                title={grp.title}
-                className="border-[#ccfbf1]"
-              >
-                <ul className="space-y-2 border-t border-[#e4dfd5] pt-3">
-                  {grp.items.map((item, idx) => (
-                    <li
-                      key={item}
-                      className="flex items-center gap-3 text-sm text-[#0f172a] py-1.5 border-b border-[#f0ede5] last:border-b-0"
-                    >
-                      <span
-                        className="font-mono text-xs font-bold"
-                        style={{ color: vis.accent }}
-                      >
-                        {String(idx + 1).padStart(2, '0')}
+            const themeIndex = INTERNATIONAL_GROUPS.findIndex((g) => g.group === grp.group);
+            const effectiveIdx = themeIndex >= 0 ? themeIndex : grpIdx;
+
+            if (effectiveIdx === 0) {
+              // Group 1: Sapphire Navy Wide Horizontal Spotlight Card
+              return (
+                <div
+                  key={grp.group}
+                  className="lg:col-span-12 rounded-2xl overflow-hidden bg-gradient-to-br from-[#091326] via-[#0c2348] to-[#172554] text-white border border-[#38bdf8]/35 grid grid-cols-1 lg:grid-cols-12 shadow-md"
+                >
+                  <div className="lg:col-span-5 relative min-h-[240px]">
+                    <img
+                      src={MEDIA_ASSETS.fdiBoardroomChennai}
+                      alt="Indian and global executives reviewing cross-border FDI investment documents in Chennai"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#091326]/90 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-5 right-5">
+                      <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#67e8f9]">
+                        {grp.group} · CROSS-BORDER CORRIDOR
                       </span>
-                      <span>{item}</span>
-                    </li>
+                      <h2 className="font-display text-2xl sm:text-3xl font-semibold text-white mt-1">
+                        {grp.title}
+                      </h2>
+                    </div>
+                  </div>
+                  <div className="lg:col-span-7 p-6 sm:p-7">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {grp.items.map((item, idx) => (
+                        <div
+                          key={item}
+                          className="rounded-xl border border-white/15 bg-white/5 px-4 py-3 flex items-center gap-3"
+                        >
+                          <span className="font-mono text-xs font-bold text-[#67e8f9]">
+                            {String(idx + 1).padStart(2, '0')}
+                          </span>
+                          <span className="text-sm font-medium text-[#e0f2fe]">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            if (effectiveIdx === 1) {
+              // Group 2: Emerald Growth Clean Pillar-Tag Matrix
+              return (
+                <div
+                  key={grp.group}
+                  className="lg:col-span-6 rounded-2xl overflow-hidden bg-white border-2 border-[#0d9488]/30 shadow-xs flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="relative h-52 w-full bg-[#042f2e]">
+                      <img
+                        src={MEDIA_ASSETS.tnIndustrialPark}
+                        alt="Modern Tamil Nadu clean-tech precision manufacturing park"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#042f2e] via-[#042f2e]/30 to-transparent" />
+                      <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">
+                        <div>
+                          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#5eead4]">
+                            {grp.group} · INDUSTRIAL EXPANSION
+                          </span>
+                          <h2 className="font-display text-2xl font-semibold text-white mt-0.5">
+                            {grp.title}
+                          </h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-6 flex flex-wrap gap-2.5">
+                      {grp.items.map((item, idx) => (
+                        <div
+                          key={item}
+                          className="rounded-xl border border-[#99f6e4] bg-[#f0fdfa] px-3.5 py-2.5 flex items-center gap-2 text-sm text-[#042f2e]"
+                        >
+                          <span className="font-mono text-xs font-bold text-[#0f766e]">
+                            {String(idx + 1).padStart(2, '0')}
+                          </span>
+                          <span className="font-medium">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            if (effectiveIdx === 2) {
+              // Group 3: Indigo Slate Editorial Split List
+              return (
+                <div
+                  key={grp.group}
+                  className="lg:col-span-6 rounded-2xl overflow-hidden bg-[#eef2ff] border-2 border-[#4f46e5]/30 shadow-xs flex flex-col justify-between"
+                >
+                  <div className="p-6 pb-4 bg-gradient-to-r from-[#312e81] to-[#1d4ed8] text-white flex items-center gap-4">
+                    <img
+                      src={MEDIA_ASSETS.dealLoungeChennai}
+                      alt="Curated investor-entrepreneur networking lounge in Chennai"
+                      className="w-24 h-20 rounded-xl object-cover border border-white/25 shrink-0"
+                    />
+                    <div>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#c7d2fe]">
+                        {grp.group} · MANDATE STRUCTURING
+                      </span>
+                      <h2 className="font-display text-2xl font-semibold text-white mt-0.5">
+                        {grp.title}
+                      </h2>
+                    </div>
+                  </div>
+                  <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-white/80 flex-1">
+                    {grp.items.map((item, idx) => (
+                      <div
+                        key={item}
+                        className="rounded-lg bg-white border border-[#e0e7ff] px-3.5 py-2.5 flex items-start gap-2.5 text-sm text-[#1e1b4b]"
+                      >
+                        <span className="font-mono text-xs font-bold text-[#4338ca] mt-0.5">
+                          {String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <span className="font-medium leading-snug">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+
+            // Group 4: Burnished Amber Gold Institutional Executive Strip
+            return (
+              <div
+                key={grp.group}
+                className="lg:col-span-12 rounded-2xl overflow-hidden bg-gradient-to-r from-[#2e1d08] via-[#452a09] to-[#1e293b] text-white border border-[#e6c67e]/45 p-6 sm:p-8"
+              >
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-white/15">
+                  <div>
+                    <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#fde68a]">
+                      {grp.group} · GLOBAL INVESTOR SYNDICATES
+                    </span>
+                    <h2 className="font-display text-2xl sm:text-3xl font-semibold text-white mt-1">
+                      {grp.title}
+                    </h2>
+                  </div>
+                  <img
+                    src={MEDIA_ASSETS.globalFdiCorridor}
+                    alt="Senior Indian business leaders seated at high-rise conference roundtable"
+                    className="w-36 h-20 rounded-xl object-cover border border-[#e6c67e]/50 shrink-0"
+                  />
+                </div>
+                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
+                  {grp.items.map((item, idx) => (
+                    <div
+                      key={item}
+                      className="rounded-xl bg-[#091326]/75 border border-[#e6c67e]/30 p-3.5 flex flex-col justify-between gap-2"
+                    >
+                      <span className="font-mono text-xs font-bold text-[#fde68a]">
+                        DELEGATION {String(idx + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-sm font-medium text-[#f8fafc] leading-snug">
+                        {item}
+                      </span>
+                    </div>
                   ))}
-                </ul>
-              </ImageCard>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -3034,7 +3406,7 @@ export function AiExpertsPage() {
         videoSrc={VIDEO_ASSETS.summitStage.src}
         videoPoster={VIDEO_ASSETS.summitStage.poster}
         ctaLabel="Explore Chief Guests & Panels"
-        ctaHref="/speakers"
+        ctaHref="/chief-guests"
         stats={[
           { value: 'Hall 1', label: 'Main Plenary' },
           { value: 'AI Focus', label: 'Risk & Diligence' },
@@ -3048,7 +3420,7 @@ export function AiExpertsPage() {
             title: 'AI Due Diligence & Financial Stress Testing',
             desc: 'Live walkthroughs showing how institutional investors stress-test startup unit economics, working capital burn, and margin sensitivity using AI models.',
             image: MEDIA_ASSETS.aiExpertsStage,
-            imageAlt: 'AI investment keynote speaker on plenary auditorium stage',
+            imageAlt: 'AI investment keynote expert on plenary auditorium stage',
             accent: '#1d4ed8',
           },
           {
@@ -3078,11 +3450,11 @@ export function AiExpertsPage() {
             description={card.desc}
             footer={
               <Link
-                href="/speakers"
+                href="/chief-guests"
                 className="inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
                 style={{ color: card.accent }}
               >
-                <span>Inspect Speaker Lineup</span>
+                <span>Inspect Chief Guest &amp; Expert Lineup</span>
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             }
@@ -3196,13 +3568,17 @@ export function InvestorTeamPage() {
             desc: 'Structured afternoon follow-up call reports capturing due diligence items and post-summit milestones.',
           },
         ].map((card) => (
-          <InteractiveCard key={card.no} className="rounded-2xl overflow-hidden bg-white">
-            <div className="h-1 w-full bg-[#0d9488]" aria-hidden="true" />
-            <div className="p-6">
-              <card.icon className="w-6 h-6 text-[#0d9488] mb-3" aria-hidden="true" />
-              <span className="font-mono text-xs font-bold text-[#0f766e]">POINT {card.no}</span>
-              <h2 className="mt-1.5 font-display text-xl font-semibold text-[#0f172a]">{card.title}</h2>
-              <p className="mt-2 text-sm text-[#334155] leading-relaxed">{card.desc}</p>
+          <InteractiveCard key={card.no} className="rounded-2xl overflow-hidden bg-white border border-[#99f6e4]">
+            <div className="h-1.5 w-full bg-[#0d9488]" aria-hidden="true" />
+            <div className="p-6 sm:p-7">
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <card.icon className="w-7 h-7 text-[#0d9488]" aria-hidden="true" />
+                <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-[#f0fdfa] text-[#0f766e]">
+                  POINT {card.no}
+                </span>
+              </div>
+              <h2 className="font-display text-2xl font-semibold text-[#0f172a]">{card.title}</h2>
+              <p className="mt-2.5 text-base text-[#334155] leading-relaxed">{card.desc}</p>
             </div>
           </InteractiveCard>
         ))}

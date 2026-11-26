@@ -287,7 +287,7 @@ export function HomeEcosystemBand({
                 key={bank.name}
                 className="rounded-xl p-4 flex flex-col justify-between gap-3 bg-[#fafaf8]"
               >
-                <InstitutionLogoMark name={bank.name} size="md" />
+                <InstitutionLogoMark name={bank.name} size="marquee" variant="bank" />
                 <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#e4dfd5] text-[11px]">
                   <span className="font-mono font-semibold text-[#1d4ed8]">{bank.serial}</span>
                   <span className="text-[#526075] truncate">{bank.category}</span>
@@ -369,7 +369,7 @@ export function HomeEcosystemBand({
                   key={brand}
                   className="rounded-xl p-3.5 bg-white flex flex-col justify-between gap-2.5"
                 >
-                  <InstitutionLogoMark name={brand} size="sm" />
+                  <InstitutionLogoMark name={brand} size="marquee" />
                   <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-[#e4dfd5]">
                     <span className="font-mono text-[10px] text-[#6d28d9] font-semibold">
                       #{String(idx + 1).padStart(2, '0')}

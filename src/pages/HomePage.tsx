@@ -19,11 +19,13 @@ import {
   Rocket,
   Share2,
   ShieldCheck,
+  SlidersHorizontal,
   TrendingUp,
   Users,
   Wallet,
+  X,
 } from 'lucide-react';
-import { motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   CENTRAL_GOVT_RESOURCES,
   COMMITTEES,
@@ -35,6 +37,8 @@ import {
   TRACKS_TERM_EXPLANATION,
   VIDEO_ASSETS,
 } from '../data/homeAndPrograms';
+import { BANKS_120 } from '../data/directories';
+import { FEATURED_SHOWCASE_BANKS } from '../data/logos';
 import { ORGANISER_CONTACT } from '../data/siteNavigation';
 import {
   COMMITTEE_REVIEWER_PROFILES,
@@ -46,7 +50,7 @@ import type { RegistrationRecord } from '../lib/domain';
 import { Link } from '../lib/router';
 import { AvatarPortrait } from '../components/AvatarPortrait';
 import { InstitutionLogoMark } from '../components/BrandMark';
-import { AmbientVideoLayer, CinematicShowcaseVideo } from '../components/CinematicVideo';
+import { CinematicShowcaseVideo } from '../components/CinematicVideo';
 import { CountdownTimer } from '../components/CountdownTimer';
 import {
   InteractiveCard,
@@ -62,6 +66,7 @@ import {
 } from '../components/ProfileModal';
 
 type SpotlightTab = 'All' | 'Founders' | 'Investors' | 'Reviewers';
+type BankShowcaseTab = 'featured' | 'nationalised' | 'private' | 'foreign';
 
 const CAPABILITY_POINTS = [
   {
@@ -72,6 +77,11 @@ const CAPABILITY_POINTS = [
       'Direct structured access between pre-screened founders and institutional lenders, HNIs, and angel syndicates across Halls 1–3.',
     href: '/entrepreneurs',
     cta: 'Browse Entrepreneurs Directory',
+    image: MEDIA_ASSETS.trackMixedLoans,
+    imageAlt: 'Indian entrepreneur and institutional capital partner shaking hands across a boardroom table',
+    spotlightEyebrow: 'CAPABILITY SPOTLIGHT · FOUNDER & INVESTOR DESKS',
+    spotlightTitle: 'Direct Founder–Investor Alignment Across Halls 1–3',
+    spotlightCaption: 'Pre-screened founders meet institutional lenders, HNIs, and syndicate leads in dedicated briefing rooms.',
   },
   {
     id: 'funding',
@@ -81,6 +91,11 @@ const CAPABILITY_POINTS = [
       'Five capital tracks covering ₹50 Lakhs seed equity up to ₹500 Crore expansion & syndication mandates under committee scrutiny.',
     href: '/tracks',
     cta: 'Compare Five Tracks',
+    image: MEDIA_ASSETS.trackBankLoans,
+    imageAlt: 'Senior Indian banking executive reviewing growth financing proposals with founders',
+    spotlightEyebrow: 'CAPABILITY SPOTLIGHT · FIVE CAPITAL TRACKS',
+    spotlightTitle: '₹50 Lakhs to ₹500 Crore Institutional Mandate Desk',
+    spotlightCaption: 'Scheduled bank syndication, term-loan counsel, and growth equity pathways under committee review.',
   },
   {
     id: 'business',
@@ -90,6 +105,11 @@ const CAPABILITY_POINTS = [
       'Engage Tamil Nadu industrial chambers, OEM supply chains, and corporate venturing desks for B2B contracts and joint ventures.',
     href: '/corporate',
     cta: 'Inspect 500+ Corporate Index',
+    image: MEDIA_ASSETS.fdiBoardroomChennai,
+    imageAlt: 'Corporate executives and global investors seated in a Chennai boardroom discussing joint ventures',
+    spotlightEyebrow: 'CAPABILITY SPOTLIGHT · 500+ CORPORATE INDEX',
+    spotlightTitle: 'Industrial Chambers, OEMs & Corporate Venturing',
+    spotlightCaption: 'Engage established business groups for strategic B2B off-take agreements, JV mandates, and distribution.',
   },
   {
     id: 'expansion',
@@ -99,6 +119,11 @@ const CAPABILITY_POINTS = [
       'Dedicated growth capital, equipment leasing, and multi-city capacity expansion desks for revenue-stage manufacturing & service firms.',
     href: '/tracks',
     cta: 'View Expansion Track',
+    image: MEDIA_ASSETS.trackBusinessExpansion,
+    imageAlt: 'Manufacturing directors inspecting automated robotics assembly line during factory expansion review',
+    spotlightEyebrow: 'CAPABILITY SPOTLIGHT · INDUSTRIAL SCALE-UP',
+    spotlightTitle: 'Plant Capacity, Robotics & Multi-City Scale Desks',
+    spotlightCaption: 'Tailored debt-equity structuring for profitable MSMEs expanding facilities and export capacity.',
   },
   {
     id: 'startup',
@@ -108,6 +133,11 @@ const CAPABILITY_POINTS = [
       'A dedicated stream for 100 validated startups preparing crisp pitch decks, 5-year financials, and milestone risk disclosures.',
     href: '/startup',
     cta: 'Open Startup Pathway',
+    image: MEDIA_ASSETS.startupInnovationAtrium,
+    imageAlt: 'Modern innovation atrium showcasing Indian robotics and deep-tech hardware startup prototypes',
+    spotlightEyebrow: 'CAPABILITY SPOTLIGHT · 100 VALIDATED STARTUPS',
+    spotlightTitle: 'Cohort Validation & Hall 1 Venture Pitch Stage',
+    spotlightCaption: 'Dedicated cohort preparation with 5-year financial models, unit economics, and investor readiness.',
   },
   {
     id: 'networking',
@@ -117,8 +147,125 @@ const CAPABILITY_POINTS = [
       'Scheduled 20–30 minute deal-room windows supported by private meeting rooms (M1–M6) rather than ad-hoc trade show queues.',
     href: '/venue',
     cta: 'View Hall Floor Plans',
+    image: MEDIA_ASSETS.dealLoungeChennai,
+    imageAlt: 'Founders and institutional investors seated in private Chennai lounge tables holding scheduled 1-on-1 discussions',
+    spotlightEyebrow: 'CAPABILITY SPOTLIGHT · PRIVATE DEAL ROOMS M1–M6',
+    spotlightTitle: 'Curated 20–30 Minute Deal Lounge Conversations',
+    spotlightCaption: 'Pre-booked table slots linking matched capital seekers and decision-makers without trade-show friction.',
   },
 ] as const;
+
+interface TrackColorTheme {
+  accentHex: string;
+  accentBar: string;
+  badgeBg: string;
+  cardBorder: string;
+  activeRing: string;
+  sublineText: string;
+  specsBg: string;
+  checkColor: string;
+  footerBg: string;
+  specsBtn: string;
+  detailsBtn: string;
+  primaryBtn: string;
+  pillBtnActive: string;
+  pillBtnIdle: string;
+  spotlightBg: string;
+  hall: string;
+}
+
+const TRACK_CARD_THEMES: Record<string, TrackColorTheme> = {
+  startups: {
+    accentHex: '#1d4ed8',
+    accentBar: 'bg-[#1d4ed8]',
+    badgeBg: 'bg-[#1d4ed8] text-white border-[#1e40af]',
+    cardBorder: 'border-[#bfdbfe] hover:border-[#1d4ed8]',
+    activeRing: 'ring-2 ring-[#1d4ed8]/30 border-[#1d4ed8]',
+    sublineText: 'text-[#1d4ed8]',
+    specsBg: 'bg-[#eff6ff] border-[#bfdbfe]',
+    checkColor: 'text-[#1d4ed8]',
+    footerBg: 'bg-[#eff6ff] border-[#dbeafe]',
+    specsBtn: 'border-[#93c5fd] bg-white hover:bg-[#dbeafe] text-[#1e3a8a]',
+    detailsBtn: 'border-[#93c5fd] bg-white hover:bg-[#dbeafe] text-[#1e40af]',
+    primaryBtn: 'bg-[#1d4ed8] hover:bg-[#1e40af] text-white shadow-sm',
+    pillBtnActive: 'bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm',
+    pillBtnIdle: 'bg-[#eff6ff] text-[#1e40af] border-[#bfdbfe] hover:border-[#1d4ed8]',
+    spotlightBg: 'bg-[#eff6ff] border-[#bfdbfe]',
+    hall: 'Hall 1 · Angels & Venture Equity',
+  },
+  'business-loan': {
+    accentHex: '#0f766e',
+    accentBar: 'bg-[#0f766e]',
+    badgeBg: 'bg-[#0f766e] text-white border-[#115e59]',
+    cardBorder: 'border-[#99f6e4] hover:border-[#0f766e]',
+    activeRing: 'ring-2 ring-[#0f766e]/30 border-[#0f766e]',
+    sublineText: 'text-[#0f766e]',
+    specsBg: 'bg-[#f0fdfa] border-[#99f6e4]',
+    checkColor: 'text-[#0f766e]',
+    footerBg: 'bg-[#f0fdfa] border-[#ccfbf1]',
+    specsBtn: 'border-[#5eead4] bg-white hover:bg-[#ccfbf1] text-[#134e4a]',
+    detailsBtn: 'border-[#5eead4] bg-white hover:bg-[#ccfbf1] text-[#0f766e]',
+    primaryBtn: 'bg-[#0f766e] hover:bg-[#115e59] text-white shadow-sm',
+    pillBtnActive: 'bg-[#0f766e] text-white border-[#0f766e] shadow-sm',
+    pillBtnIdle: 'bg-[#f0fdfa] text-[#0f766e] border-[#99f6e4] hover:border-[#0f766e]',
+    spotlightBg: 'bg-[#f0fdfa] border-[#99f6e4]',
+    hall: 'Hall 2 · Enterprise & MSME Credit',
+  },
+  'business-expansion': {
+    accentHex: '#6d28d9',
+    accentBar: 'bg-[#6d28d9]',
+    badgeBg: 'bg-[#6d28d9] text-white border-[#5b21b6]',
+    cardBorder: 'border-[#ddd6fe] hover:border-[#6d28d9]',
+    activeRing: 'ring-2 ring-[#6d28d9]/30 border-[#6d28d9]',
+    sublineText: 'text-[#6d28d9]',
+    specsBg: 'bg-[#f5f3ff] border-[#ddd6fe]',
+    checkColor: 'text-[#6d28d9]',
+    footerBg: 'bg-[#f5f3ff] border-[#ede9fe]',
+    specsBtn: 'border-[#c4b5fd] bg-white hover:bg-[#ede9fe] text-[#4c1d95]',
+    detailsBtn: 'border-[#c4b5fd] bg-white hover:bg-[#ede9fe] text-[#6d28d9]',
+    primaryBtn: 'bg-[#6d28d9] hover:bg-[#5b21b6] text-white shadow-sm',
+    pillBtnActive: 'bg-[#6d28d9] text-white border-[#6d28d9] shadow-sm',
+    pillBtnIdle: 'bg-[#f5f3ff] text-[#6d28d9] border-[#ddd6fe] hover:border-[#6d28d9]',
+    spotlightBg: 'bg-[#f5f3ff] border-[#ddd6fe]',
+    hall: 'Hall 3 · Scale-Up & Capacity Growth',
+  },
+  'bank-loans': {
+    accentHex: '#0369a1',
+    accentBar: 'bg-[#0369a1]',
+    badgeBg: 'bg-[#0369a1] text-white border-[#075985]',
+    cardBorder: 'border-[#bae6fd] hover:border-[#0369a1]',
+    activeRing: 'ring-2 ring-[#0369a1]/30 border-[#0369a1]',
+    sublineText: 'text-[#0369a1]',
+    specsBg: 'bg-[#f0f9ff] border-[#bae6fd]',
+    checkColor: 'text-[#0369a1]',
+    footerBg: 'bg-[#f0f9ff] border-[#e0f2fe]',
+    specsBtn: 'border-[#7dd3fc] bg-white hover:bg-[#e0f2fe] text-[#0c4a6e]',
+    detailsBtn: 'border-[#7dd3fc] bg-white hover:bg-[#e0f2fe] text-[#0369a1]',
+    primaryBtn: 'bg-[#0369a1] hover:bg-[#075985] text-white shadow-sm',
+    pillBtnActive: 'bg-[#0369a1] text-white border-[#0369a1] shadow-sm',
+    pillBtnIdle: 'bg-[#f0f9ff] text-[#0369a1] border-[#bae6fd] hover:border-[#0369a1]',
+    spotlightBg: 'bg-[#f0f9ff] border-[#bae6fd]',
+    hall: 'Hall 2 · Scheduled RBI Bank Desks',
+  },
+  'mixed-loans': {
+    accentHex: '#b45309',
+    accentBar: 'bg-[#b45309]',
+    badgeBg: 'bg-[#b45309] text-white border-[#92400e]',
+    cardBorder: 'border-[#fde68a] hover:border-[#b45309]',
+    activeRing: 'ring-2 ring-[#b45309]/30 border-[#b45309]',
+    sublineText: 'text-[#b45309]',
+    specsBg: 'bg-[#fffbeb] border-[#fde68a]',
+    checkColor: 'text-[#b45309]',
+    footerBg: 'bg-[#fffbeb] border-[#fef3c7]',
+    specsBtn: 'border-[#fcd34d] bg-white hover:bg-[#fef3c7] text-[#78350f]',
+    detailsBtn: 'border-[#fcd34d] bg-white hover:bg-[#fef3c7] text-[#92400e]',
+    primaryBtn: 'bg-[#b45309] hover:bg-[#92400e] text-white shadow-sm',
+    pillBtnActive: 'bg-[#b45309] text-white border-[#b45309] shadow-sm',
+    pillBtnIdle: 'bg-[#fffbeb] text-[#92400e] border-[#fde68a] hover:border-[#b45309]',
+    spotlightBg: 'bg-[#fffbeb] border-[#fde68a]',
+    hall: 'Hall 3 · Blended Debt + Equity Stack',
+  },
+};
 
 const JOURNEY_STEPS = [
   {
@@ -207,7 +354,7 @@ const SOCIAL_CHANNELS = [
   {
     id: 'instagram',
     name: 'Instagram',
-    handle: 'Daily Countdowns & Speaker Cards',
+    handle: 'Daily Countdowns & Chief Guest Cards',
     accent: '#db2777',
     desc: 'Structured registration countdown tiles ahead of 1 February 2027, track spotlights, and verified venue updates.',
     href: '/calendar-plan',
@@ -282,9 +429,14 @@ function SocialPlatformIcon({ id }: { id: (typeof SOCIAL_CHANNELS)[number]['id']
 
 export function HomePage() {
   const [heroTrackId, setHeroTrackId] = useState(INVESTMENT_TRACKS[0].id);
+  const [heroSelectorOpen, setHeroSelectorOpen] = useState(true);
   const [activeCapId, setActiveCapId] = useState<string>(CAPABILITY_POINTS[0].id);
   const [activeJourneyNo, setActiveJourneyNo] = useState<string>('01');
   const [expandedTrackId, setExpandedTrackId] = useState<string | null>(null);
+  const [selectedTrackSpotlightId, setSelectedTrackSpotlightId] = useState<string>(
+    INVESTMENT_TRACKS[0].id
+  );
+  const [showAllTrackSpecs, setShowAllTrackSpecs] = useState(false);
   const [spotlightTab, setSpotlightTab] = useState<SpotlightTab>('All');
   const [activeGuidanceNo, setActiveGuidanceNo] = useState<string>(FIRST_LEVEL_GUIDANCE_STEPS[0].no);
   const [activeAiId, setActiveAiId] = useState<string>(AI_EXPERT_MODULES[0].id);
@@ -292,7 +444,43 @@ export function HomePage() {
     COMMITTEES[0].title
   );
   const [activeSocialId, setActiveSocialId] = useState<string>(SOCIAL_CHANNELS[0].id);
+  const [bankShowcaseTab, setBankShowcaseTab] = useState<BankShowcaseTab>('featured');
   const [copiedInvite, setCopiedInvite] = useState(false);
+
+  const showcasedBanks =
+    bankShowcaseTab === 'featured'
+      ? FEATURED_SHOWCASE_BANKS.map((name, idx) => ({
+          serial: `NO. ${String(idx + 1).padStart(2, '0')}`,
+          name,
+          category:
+            idx < 8
+              ? 'SBI & Nationalised'
+              : idx < 18
+              ? 'Private Sector Bank'
+              : 'Foreign Bank',
+        }))
+      : bankShowcaseTab === 'nationalised'
+      ? BANKS_120.filter((b) => b.category === 'SBI & Nationalised Banks').slice(0, 12)
+      : bankShowcaseTab === 'private'
+      ? BANKS_120.filter((b) => b.category === 'Domestic Private Sector Banks').slice(0, 15)
+      : BANKS_120.filter(
+          (b) =>
+            b.category === 'Small Finance Banks' ||
+            b.category === 'Payments Banks' ||
+            [
+              'Bank of America National Association',
+              'Barclays Bank Plc.',
+              'BNP Paribas',
+              'Citibank N.A.',
+              'DBS Bank India Limited',
+              'Deutsche Bank A.G.',
+              'Hong Kong and Shanghai Banking Corporation Limited',
+              'J.P. Morgan Chase Bank N.A.',
+              'MUFG Bank, Ltd.',
+              'Standard Chartered Bank',
+              'UBS AG',
+            ].includes(b.name)
+        ).slice(0, 15);
 
   const [liveRegistrations, setLiveRegistrations] = useState<RegistrationRecord[]>([]);
   const [activeDossier, setActiveDossier] = useState<RegistrationRecord | null>(null);
@@ -376,28 +564,30 @@ export function HomePage() {
 
   return (
     <div className="bg-[#091326] text-[#f8f7f3]">
-      {/* 1. HERO SECTION (RESTORED ORIGINAL SKYLINE EXECUTIVE + AMBIENT MOTION) */}
+      {/* 1. HERO SECTION (GOLDEN HOUR SKYLINE OVERLOOK) */}
       <section
         id="section-hero"
         data-section-order="1"
         className="relative overflow-hidden bg-[#07111e] text-[#f8f7f3] border-b border-white/10"
       >
-        <AmbientVideoLayer
-          src={VIDEO_ASSETS.heroSummit.src}
-          poster={MEDIA_ASSETS.heroSkyline}
-          alt="Senior executive overlooking metropolitan skyline at twilight"
-          className="opacity-90 hero-image-enhanced object-[52%_25%]"
+        <img
+          src={MEDIA_ASSETS.heroSkyline}
+          alt="Golden hour city skyline overlooking modern skyscrapers with a businessman standing on a balcony"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          className="absolute inset-0 w-full h-full object-cover object-[64%_25%] sm:object-[70%_28%] lg:object-[74%_35%] pointer-events-none select-none"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-[#091326]/92 via-[#091326]/70 to-[#172554]/35 pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-r from-[#07111e]/90 via-[#091326]/68 lg:via-[#091326]/42 lg:via-[46%] to-[#091326]/42 lg:to-transparent pointer-events-none"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-[#0b172c] via-transparent to-[#091326]/45 pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-t from-[#0b172c] via-transparent via-[24%] to-[#07111e]/35 pointer-events-none"
         />
 
-        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24">
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             <motion.div
               initial={reduced ? false : { opacity: 0, y: 14 }}
@@ -420,7 +610,7 @@ export function HomePage() {
                 <span className="text-[#e6c67e]">Lasting Impact.</span>
               </h1>
 
-              <p className="mt-5 text-base sm:text-lg text-[#cbd5e1] max-w-xl leading-relaxed">
+              <p className="mt-5 text-base sm:text-lg text-[#e2e8f0] max-w-xl leading-relaxed [text-shadow:0_1px_6px_rgba(7,17,30,0.85)]">
                 A curated institutional capital summit connecting 500 pre-validated entrepreneurs,
                 growth enterprises, scheduled banks, and investors across three halls in Chennai.
               </p>
@@ -444,7 +634,7 @@ export function HomePage() {
                 ))}
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-[#cbd5e1]">
+              <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono text-[#e2e8f0] [text-shadow:0_1px_6px_rgba(7,17,30,0.9)]">
                 <span>Cutoff: <strong className="text-[#e6c67e]">01-02-2027</strong></span>
                 <span>Strategy: <strong className="text-[#5eead4]">Available slots only</strong></span>
                 <span>Funding: <strong className="text-white">₹50L – ₹500Cr</strong></span>
@@ -470,99 +660,147 @@ export function HomePage() {
               </div>
             </motion.div>
 
-            <motion.div
-              initial={reduced ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-5 lg:col-start-8"
+            <div
+              className={`lg:col-span-5 lg:col-start-8 ${
+                heroSelectorOpen ? '' : 'lg:self-end flex justify-start lg:justify-end'
+              }`}
             >
-              <InteractiveCard
-                dark
-                className="rounded-2xl p-6 sm:p-7 space-y-5 !bg-[#091326]/85 backdrop-blur-md border-white/15"
-              >
-                <div className="flex items-center justify-between gap-2 pb-4 border-b border-white/10">
-                  <div>
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] block">
-                      INTERACTIVE TRACK SELECTOR
-                    </span>
-                    <h2 className="font-display text-2xl font-semibold text-white mt-0.5">
-                      {heroTrack.title}
-                    </h2>
-                  </div>
-                  <span className="font-mono text-xs font-semibold text-[#e6c67e]">
-                    {heroTrack.number} / 05
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Hero track selector">
-                  {INVESTMENT_TRACKS.map((t) => {
-                    const active = t.id === heroTrack.id;
-                    return (
-                      <button
-                        key={t.id}
-                        type="button"
-                        role="tab"
-                        aria-selected={active}
-                        onClick={() => setHeroTrackId(t.id)}
-                        className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer whitespace-nowrap ${
-                          active
-                            ? 'bg-[#c49a45] text-[#091326] font-semibold'
-                            : 'bg-white/5 text-[#cbd5e1] hover:bg-white/10 hover:text-white'
-                        }`}
-                      >
-                        {t.title}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="space-y-3 pt-1">
-                  <p className="text-sm font-medium text-[#e6c67e]">
-                    {heroTrack.lead} {heroTrack.subline}
-                  </p>
-                  <p className="text-xs sm:text-sm text-[#cbd5e1] leading-relaxed">
-                    {heroTrack.description}
-                  </p>
-                  <ul className="space-y-1.5 pt-2">
-                    {heroTrack.eligibility.slice(0, 2).map((req) => (
-                      <li key={req} className="flex items-start gap-2 text-xs text-[#cbd5e1]">
-                        <Check className="w-3.5 h-3.5 text-[#14b8a6] mt-0.5 shrink-0" aria-hidden="true" />
-                        <span>{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex -space-x-2">
-                      {PARTICIPANT_HIGHLIGHTS.slice(0, 4).map((p) => (
-                        <img
-                          key={p.id}
-                          src={p.portraitUrl}
-                          alt={p.fullName}
-                          className="w-8 h-8 rounded-full object-cover object-top ring-2 ring-[#091326]"
-                        />
-                      ))}
-                    </div>
-                    <Link
-                      href="/investors#pipeline"
-                      className="text-xs text-[#cbd5e1] hover:text-[#e6c67e] transition-colors"
-                    >
-                      Live Deal Pipeline →
-                    </Link>
-                  </div>
-
-                  <Link
-                    href={`/apply?track=${encodeURIComponent(heroTrack.title)}`}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#e6c67e] hover:underline"
+              <AnimatePresence mode="wait" initial={false}>
+                {heroSelectorOpen ? (
+                  <motion.div
+                    key="hero-track-card"
+                    initial={reduced ? false : { opacity: 0, y: 12, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={reduced ? undefined : { opacity: 0, y: 8, scale: 0.98 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <span>Apply for {heroTrack.title}</span>
-                    <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                  </Link>
-                </div>
-              </InteractiveCard>
-            </motion.div>
+                    <InteractiveCard
+                      dark
+                      className="rounded-2xl p-6 sm:p-7 space-y-5 !bg-[#091326]/74 backdrop-blur-md border-white/15"
+                    >
+                      <div className="flex items-center justify-between gap-2 pb-4 border-b border-white/10">
+                        <div>
+                          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] block">
+                            INTERACTIVE TRACK SELECTOR
+                          </span>
+                          <h2 className="font-display text-2xl font-semibold text-white mt-0.5">
+                            {heroTrack.title}
+                          </h2>
+                        </div>
+                        <div className="flex items-center gap-2.5 shrink-0">
+                          <span className="font-mono text-xs font-semibold text-[#e6c67e]">
+                            {heroTrack.number} / 05
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setHeroSelectorOpen(false)}
+                            aria-label="Close Interactive Track Selector"
+                            title="Close card"
+                            className="w-8 h-8 rounded-lg border border-white/15 bg-white/5 hover:bg-white/15 hover:border-[#e6c67e]/60 text-[#cbd5e1] hover:text-white inline-flex items-center justify-center transition-colors cursor-pointer"
+                          >
+                            <X className="w-4 h-4" aria-hidden="true" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Hero track selector">
+                        {INVESTMENT_TRACKS.map((t) => {
+                          const active = t.id === heroTrack.id;
+                          return (
+                            <button
+                              key={t.id}
+                              type="button"
+                              role="tab"
+                              aria-selected={active}
+                              onClick={() => setHeroTrackId(t.id)}
+                              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                                active
+                                  ? 'bg-[#c49a45] text-[#091326] font-semibold'
+                                  : 'bg-white/5 text-[#cbd5e1] hover:bg-white/10 hover:text-white'
+                              }`}
+                            >
+                              {t.title}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <div className="space-y-3 pt-1">
+                        <p className="text-sm font-medium text-[#e6c67e]">
+                          {heroTrack.lead} {heroTrack.subline}
+                        </p>
+                        <p className="text-xs sm:text-sm text-[#cbd5e1] leading-relaxed">
+                          {heroTrack.description}
+                        </p>
+                        <ul className="space-y-1.5 pt-2">
+                          {heroTrack.eligibility.slice(0, 2).map((req) => (
+                            <li key={req} className="flex items-start gap-2 text-xs text-[#cbd5e1]">
+                              <Check className="w-3.5 h-3.5 text-[#14b8a6] mt-0.5 shrink-0" aria-hidden="true" />
+                              <span>{req}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex -space-x-2">
+                            {PARTICIPANT_HIGHLIGHTS.slice(0, 4).map((p) => (
+                              <img
+                                key={p.id}
+                                src={p.portraitUrl}
+                                alt={p.fullName}
+                                className="w-8 h-8 rounded-full object-cover object-top ring-2 ring-[#091326]"
+                              />
+                            ))}
+                          </div>
+                          <Link
+                            href="/investors#pipeline"
+                            className="text-xs text-[#cbd5e1] hover:text-[#e6c67e] transition-colors"
+                          >
+                            Live Deal Pipeline →
+                          </Link>
+                        </div>
+
+                        <Link
+                          href={`/apply?track=${encodeURIComponent(heroTrack.title)}`}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#e6c67e] hover:underline"
+                        >
+                          <span>Apply for {heroTrack.title}</span>
+                          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                        </Link>
+                      </div>
+                    </InteractiveCard>
+                  </motion.div>
+                ) : (
+                  <motion.button
+                    key="hero-track-trigger"
+                    type="button"
+                    initial={reduced ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduced ? undefined : { opacity: 0, y: 6 }}
+                    transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={() => setHeroSelectorOpen(true)}
+                    aria-label="Open Interactive Track Selector"
+                    className="inline-flex items-center gap-3 px-4 py-3 rounded-xl border border-white/20 bg-[#091326]/75 hover:bg-[#091326]/90 hover:border-[#e6c67e]/60 backdrop-blur-md text-left transition-colors shadow-xl cursor-pointer group"
+                  >
+                    <SlidersHorizontal className="w-4 h-4 text-[#e6c67e] shrink-0" aria-hidden="true" />
+                    <div>
+                      <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#e6c67e]">
+                        Track Selector · {heroTrack.number} / 05
+                      </span>
+                      <span className="block text-sm font-semibold text-white">
+                        {heroTrack.title}
+                      </span>
+                    </div>
+                    <ChevronRight
+                      className="w-4 h-4 text-[#94a3b8] group-hover:text-[#e6c67e] transition-colors shrink-0"
+                      aria-hidden="true"
+                    />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>
@@ -575,52 +813,54 @@ export function HomePage() {
       >
         <div className="architectural-grid-blue absolute inset-0 pointer-events-none opacity-60" aria-hidden="true" />
         <div className="ambient-glow-blue absolute inset-0 pointer-events-none" aria-hidden="true" />
-        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-          <ScrollReveal className="lg:col-span-6 space-y-5">
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] mb-2">
-                02 · PLATFORM ARCHITECTURE
-              </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
-                About Investor Meet 500
-              </h2>
-              <p className="mt-3 text-[15px] sm:text-base text-[#cbd5e1] leading-relaxed max-w-xl">
-                Investor Meet 500 unites Indian entrepreneurs, expansion-stage businesses, scheduled
-                banks, and institutional capital under structured committee validation—replacing noisy
-                trade fairs with scheduled deal-room workflows.
-              </p>
-            </div>
+        <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-stretch">
+          <ScrollReveal className="lg:col-span-6 flex flex-col justify-between gap-5">
+            <div className="space-y-5">
+              <div>
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] mb-2">
+                  02 · PLATFORM ARCHITECTURE
+                </p>
+                <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
+                  About Investor Meet 500
+                </h2>
+                <p className="mt-3 text-[15px] sm:text-base text-[#cbd5e1] leading-relaxed max-w-xl">
+                  Investor Meet 500 unites Indian entrepreneurs, expansion-stage businesses, scheduled
+                  banks, and institutional capital under structured committee validation—replacing noisy
+                  trade fairs with scheduled deal-room workflows.
+                </p>
+              </div>
 
-            <div
-              className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
-              role="tablist"
-              aria-label="Platform capabilities"
-            >
-              {CAPABILITY_POINTS.map((item) => {
-                const active = item.id === activeCap.id;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setActiveCapId(item.id)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left text-sm font-medium transition-all cursor-pointer ${
-                      active
-                        ? 'bg-[#e6c67e] text-[#091326] border-[#e6c67e] font-semibold shadow-sm'
-                        : 'bg-[#15284c]/90 text-[#e2e8f0] border-white/15 hover:border-[#60a5fa]/60 hover:bg-[#19305b]'
-                    }`}
-                  >
-                    <item.Icon
-                      className={`w-4 h-4 shrink-0 ${
-                        active ? 'text-[#091326]' : 'text-[#e6c67e]'
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+                role="tablist"
+                aria-label="Platform capabilities"
+              >
+                {CAPABILITY_POINTS.map((item) => {
+                  const active = item.id === activeCap.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => setActiveCapId(item.id)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left text-sm font-medium transition-all cursor-pointer ${
+                        active
+                          ? 'bg-[#e6c67e] text-[#091326] border-[#e6c67e] font-semibold shadow-sm'
+                          : 'bg-[#15284c]/90 text-[#e2e8f0] border-white/15 hover:border-[#60a5fa]/60 hover:bg-[#19305b]'
                       }`}
-                      aria-hidden="true"
-                    />
-                    <span className="truncate">{item.label}</span>
-                  </button>
-                );
-              })}
+                    >
+                      <item.Icon
+                        className={`w-4 h-4 shrink-0 ${
+                          active ? 'text-[#091326]' : 'text-[#e6c67e]'
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <InteractiveCard
@@ -646,6 +886,26 @@ export function HomePage() {
 
               <p className="text-sm text-[#cbd5e1] leading-relaxed">{activeCap.detail}</p>
 
+              {/* Visible All-6 Capabilities Quick Summary Strip (#2) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-white/10 text-xs">
+                {CAPABILITY_POINTS.map((cap, cIdx) => (
+                  <div
+                    key={cap.id}
+                    className={`rounded-lg px-3 py-2 border transition-colors ${
+                      cap.id === activeCap.id
+                        ? 'border-[#e6c67e]/60 bg-[#182e57] text-white'
+                        : 'border-white/10 bg-[#0d1c36]/75 text-[#cbd5e1]'
+                    }`}
+                  >
+                    <span className="font-mono text-[10px] font-bold text-[#e6c67e] mr-1.5">
+                      0{cIdx + 1}
+                    </span>
+                    <strong className="font-semibold text-white">{cap.label}:</strong>{' '}
+                    <span className="text-[#94a3b8] line-clamp-1 inline">{cap.detail}</span>
+                  </div>
+                ))}
+              </div>
+
               <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
                 <Link
                   href={activeCap.href}
@@ -665,13 +925,13 @@ export function HomePage() {
             </InteractiveCard>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.06} className="lg:col-span-6">
+          <ScrollReveal delay={0.06} className="lg:col-span-6 flex flex-col gap-5 h-full">
             <Link href="/about" className="block group">
               <InteractiveCard
                 dark
                 className="rounded-2xl overflow-hidden flex flex-col !bg-[#132547]/95 border-white/15"
               >
-                <ParallaxFrame offset={18} className="aspect-[16/10] w-full bg-[#091326] relative">
+                <ParallaxFrame offset={14} className="aspect-[16/9] w-full bg-[#091326] relative">
                   <img
                     src={MEDIA_ASSETS.aboutReception}
                     alt="Indian startup founders, women business leaders, and institutional investors conversing inside the Chennai summit atrium"
@@ -693,13 +953,65 @@ export function HomePage() {
                     </div>
                   </div>
                 </ParallaxFrame>
-                <div className="p-6 flex flex-wrap items-center justify-between gap-4 bg-[#10203d] border-t border-white/10">
+                <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-4 bg-[#10203d] border-t border-white/10">
                   <p className="text-xs sm:text-sm text-[#cbd5e1] max-w-md leading-relaxed">
                     Structured 20–30 minute scheduled meetings across Halls 1, 2, and 3 backed by
                     90-day committee screening.
                   </p>
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#e6c67e] shrink-0 group-hover:translate-x-0.5 transition-transform">
                     <span>About Summit</span>
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </span>
+                </div>
+              </InteractiveCard>
+            </Link>
+
+            <Link
+              href={activeCap.href}
+              className="group flex-1 flex flex-col"
+              data-testid="capability-spotlight-visual"
+            >
+              <InteractiveCard
+                dark
+                className="rounded-2xl overflow-hidden flex-1 flex flex-col !bg-[#132547]/95 border-white/15"
+              >
+                <div className="relative flex-1 min-h-[260px] aspect-[16/10] lg:aspect-auto w-full bg-[#091326] overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeCap.id}
+                      initial={reduced ? false : { opacity: 0.45, scale: 1.015 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={reduced ? undefined : { opacity: 0.45 }}
+                      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute inset-0 w-full h-full"
+                    >
+                      <img
+                        src={activeCap.image}
+                        alt={activeCap.imageAlt}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-0 bg-gradient-to-t from-[#091326]/95 via-[#091326]/35 to-transparent"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#93c5fd] block">
+                          {activeCap.spotlightEyebrow}
+                        </span>
+                        <p className="mt-1 font-display text-lg sm:text-xl font-medium text-white leading-snug">
+                          {activeCap.spotlightTitle}
+                        </p>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+                <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-4 bg-[#10203d] border-t border-white/10">
+                  <p className="text-xs sm:text-sm text-[#cbd5e1] max-w-md leading-relaxed">
+                    {activeCap.spotlightCaption}
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#e6c67e] shrink-0 group-hover:translate-x-0.5 transition-transform">
+                    <span>{activeCap.cta}</span>
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
                   </span>
                 </div>
@@ -809,31 +1121,29 @@ export function HomePage() {
         <CountdownTimer />
       </div>
 
-      {/* 5. INVESTMENT TRACK (COORDINATED SAPPHIRE-SLATE TEMPLATE + MEANING CLARIFICATION #3 & #4) */}
+      {/* 5. INVESTMENT TRACK (COLOR-CODED PATHWAYS + INTERACTIVE ACTIONS) */}
       <section
         id="section-tracks"
         data-section-order="5"
-        className="relative overflow-hidden bg-gradient-to-b from-[#0d1c36] via-[#14284b] to-[#1a3461] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
+        className="relative overflow-hidden bg-white text-[#0f172a] py-14 sm:py-16 border-y border-[#e4dfd5]"
       >
-        <div className="architectural-grid-blue absolute inset-0 pointer-events-none opacity-55" aria-hidden="true" />
-        <div className="ambient-glow-blue absolute inset-0 pointer-events-none" aria-hidden="true" />
         <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <ScrollReveal className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div className="max-w-2xl">
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e] mb-2">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1d4ed8] mb-2">
                 05 · FIVE DEDICATED PATHWAYS · INSTITUTIONAL MANDATES
               </p>
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white">
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#091326]">
                 Explore Our Investment Tracks
               </h2>
-              <p className="mt-2.5 text-sm sm:text-base text-[#cbd5e1] leading-relaxed">
+              <p className="mt-2.5 text-sm sm:text-base text-[#334155] leading-relaxed">
                 Choose the pathway that matches how your company raises capital—equity venture pitches,
                 enterprise credit, growth expansion, scheduled banking, or blended capital.
               </p>
             </div>
             <Link
               href="/tracks"
-              className="btn-gold inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap"
+              className="btn-obsidian inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0"
             >
               <span>Compare All 5 Tracks &amp; Meanings</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -841,57 +1151,176 @@ export function HomePage() {
           </ScrollReveal>
 
           {/* Plain-English meaning of "Investment Tracks" */}
-          <div className="rounded-2xl border border-[#60a5fa]/30 bg-[#102242]/90 p-5 sm:p-6 space-y-1.5">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#93c5fd] block">
-              TERMINOLOGY CLARIFICATION
-            </span>
-            <h3 className="font-display text-xl sm:text-2xl font-semibold text-white">
-              {TRACKS_TERM_EXPLANATION.heading}
-            </h3>
-            <p className="text-sm text-[#cbd5e1] leading-relaxed max-w-4xl">
-              {TRACKS_TERM_EXPLANATION.summary}
-            </p>
+          <div className="rounded-2xl border border-[#cbd5e1] bg-[#f8fafc] overflow-hidden shadow-xs">
+            <div className="grid grid-cols-5 h-1.5 w-full" aria-hidden="true">
+              <span className="bg-[#1d4ed8]" />
+              <span className="bg-[#0f766e]" />
+              <span className="bg-[#6d28d9]" />
+              <span className="bg-[#0369a1]" />
+              <span className="bg-[#b45309]" />
+            </div>
+            <div className="p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div className="space-y-1.5 max-w-4xl">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#1d4ed8] block">
+                  WHAT &ldquo;INVESTMENT TRACKS&rdquo; MEANS
+                </span>
+                <h3 className="font-display text-xl sm:text-2xl font-semibold text-[#091326]">
+                  {TRACKS_TERM_EXPLANATION.heading}
+                </h3>
+                <p className="text-sm text-[#334155] leading-relaxed">
+                  {TRACKS_TERM_EXPLANATION.summary}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAllTrackSpecs((prev) => !prev)}
+                aria-pressed={showAllTrackSpecs}
+                className={`shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+                  showAllTrackSpecs
+                    ? 'bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm'
+                    : 'bg-white text-[#091326] border-[#94a3b8] hover:border-[#1d4ed8] hover:text-[#1d4ed8]'
+                }`}
+              >
+                <Check className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>{showAllTrackSpecs ? 'Collapse All Track Specs' : 'Compare All 5 Specs'}</span>
+              </button>
+            </div>
           </div>
 
-          <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {/* Interactive Color-Coded Track Switcher Bar */}
+          {(() => {
+            const focusedTrack =
+              INVESTMENT_TRACKS.find((t) => t.id === selectedTrackSpotlightId) ??
+              INVESTMENT_TRACKS[0];
+            const focusedTheme =
+              TRACK_CARD_THEMES[focusedTrack.id] ?? TRACK_CARD_THEMES.startups;
+            return (
+              <div className="space-y-3">
+                <div
+                  className="flex flex-wrap items-center gap-2"
+                  role="tablist"
+                  aria-label="Highlight investment track"
+                >
+                  {INVESTMENT_TRACKS.map((track) => {
+                    const theme = TRACK_CARD_THEMES[track.id] ?? TRACK_CARD_THEMES.startups;
+                    const isFocused = focusedTrack.id === track.id;
+                    return (
+                      <button
+                        key={track.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={isFocused}
+                        onClick={() => {
+                          setSelectedTrackSpotlightId(track.id);
+                          setExpandedTrackId(track.id);
+                        }}
+                        className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                          isFocused ? theme.pillBtnActive : theme.pillBtnIdle
+                        }`}
+                      >
+                        <span className="font-mono text-[10px] opacity-85">
+                          {track.number}
+                        </span>
+                        <span>{track.title}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div
+                  data-testid="active-track-mandate-bar"
+                  className={`rounded-xl border px-4 sm:px-5 py-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 transition-colors ${focusedTheme.spotlightBg}`}
+                >
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+                    <span
+                      className={`px-2.5 py-1 rounded-md font-mono text-[10px] font-bold uppercase tracking-wider border ${focusedTheme.badgeBg}`}
+                    >
+                      TRACK {focusedTrack.number} · {focusedTheme.hall}
+                    </span>
+                    <span className="text-[#091326] font-semibold">
+                      Ideal For:{' '}
+                      <span className="font-normal text-[#334155]">{focusedTrack.idealFor}</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Link
+                      href={`/tracks?track=${focusedTrack.id}`}
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border text-xs font-semibold transition-colors whitespace-nowrap ${focusedTheme.detailsBtn}`}
+                    >
+                      <span>Open {focusedTrack.title} Guide</span>
+                    </Link>
+                    <Link
+                      href={`/apply?track=${encodeURIComponent(focusedTrack.title)}`}
+                      className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${focusedTheme.primaryBtn}`}
+                    >
+                      <span>Apply for {focusedTrack.title}</span>
+                      <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          <StaggerGrid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-stretch">
             {INVESTMENT_TRACKS.map((track) => {
-              const expanded = expandedTrackId === track.id;
+              const theme = TRACK_CARD_THEMES[track.id] ?? TRACK_CARD_THEMES.startups;
+              const isSelected = selectedTrackSpotlightId === track.id;
+              const expanded = showAllTrackSpecs || expandedTrackId === track.id;
               return (
                 <StaggerCard key={track.id} className="h-full">
                   <InteractiveCard
                     as="article"
-                    dark
-                    className="rounded-xl overflow-hidden flex flex-col justify-between h-full group !bg-[#112445]/95 border-white/15"
+                    data-testid={`track-card-${track.id}`}
+                    className={`rounded-xl overflow-hidden flex flex-col justify-between h-full group bg-white border transition-all shadow-[0_8px_24px_-16px_rgba(9,19,38,0.14)] ${
+                      isSelected ? theme.activeRing : theme.cardBorder
+                    }`}
                   >
-                    <div>
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#091326]">
+                    <div className="flex-1 flex flex-col">
+                      <div className={`h-2 w-full ${theme.accentBar}`} aria-hidden="true" />
+                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#f1f5f9]">
                         <img
                           src={track.image}
                           alt={track.imageAlt}
                           referrerPolicy="no-referrer"
                           className="w-full h-full object-cover object-center hero-image-enhanced interactive-media"
                         />
-                        <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded bg-[#091326]/90 border border-[#e6c67e]/40 text-[#e6c67e] font-mono text-[10px] font-bold tracking-wider shadow-sm">
+                        <div
+                          aria-hidden="true"
+                          className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#091326]/80 to-transparent"
+                        />
+                        <div
+                          className={`absolute top-2.5 left-2.5 px-2.5 py-1 rounded border font-mono text-[10px] font-bold tracking-wider shadow-sm ${theme.badgeBg}`}
+                        >
                           TRACK {track.number}
+                        </div>
+                        <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[10px] font-mono text-white/95">
+                          <span className="truncate font-semibold">{theme.hall.split(' · ')[0]}</span>
+                          <span className="font-semibold text-[#fde68a] shrink-0">₹50L – ₹500Cr</span>
                         </div>
                       </div>
 
-                      <div className="p-5 pb-3">
-                        <h3 className="font-display text-2xl font-semibold text-white">
+                      <div className="p-4 sm:p-5 pb-3 flex-1 flex flex-col">
+                        <h3 className="font-display text-[22px] xl:text-2xl font-semibold text-[#091326] leading-tight lg:min-h-[3.2rem]">
                           {track.title}
                         </h3>
-                        <p className="mt-1.5 text-xs font-semibold text-[#93c5fd]">
+                        <p className={`mt-1.5 text-xs font-bold leading-snug ${theme.sublineText}`}>
                           {track.lead} {track.subline}
                         </p>
-                        <p className="mt-2 text-xs text-[#cbd5e1] leading-relaxed">
+                        <p className="mt-2 text-xs text-[#334155] leading-relaxed">
                           {track.meaning}
                         </p>
 
                         {expanded && (
-                          <ul className="mt-3 pt-3 border-t border-white/10 space-y-1.5 text-[11px] text-[#e2e8f0]">
+                          <ul
+                            className={`mt-3 rounded-lg border p-3 space-y-1.5 text-[11px] text-[#1e293b] ${theme.specsBg}`}
+                          >
                             {track.eligibility.map((item) => (
                               <li key={item} className="flex items-start gap-1.5">
-                                <Check className="w-3 h-3 text-[#5eead4] mt-0.5 shrink-0" aria-hidden="true" />
+                                <Check
+                                  className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${theme.checkColor}`}
+                                  aria-hidden="true"
+                                />
                                 <span>{item}</span>
                               </li>
                             ))}
@@ -900,30 +1329,42 @@ export function HomePage() {
                       </div>
                     </div>
 
-                    <div className="p-4 pt-3 border-t border-white/10 bg-[#0d1c36]/90 space-y-2">
+                    <div className={`p-4 pt-3 border-t space-y-2 ${theme.footerBg}`}>
                       <button
                         type="button"
-                        onClick={() => setExpandedTrackId(expanded ? null : track.id)}
+                        onClick={() => {
+                          setSelectedTrackSpotlightId(track.id);
+                          setExpandedTrackId(expandedTrackId === track.id ? null : track.id);
+                        }}
                         aria-expanded={expanded}
-                        className="w-full inline-flex items-center justify-between px-3 py-1.5 rounded-lg border border-white/15 bg-[#152b52] hover:border-[#e6c67e]/60 text-[11px] font-semibold text-[#e2e8f0] cursor-pointer transition-colors"
+                        className={`w-full inline-flex items-center justify-between px-3 py-2 rounded-lg border text-[11px] font-semibold cursor-pointer transition-colors whitespace-nowrap ${theme.specsBtn}`}
                       >
                         <span>{expanded ? 'Hide Eligibility Specs' : 'Quick Eligibility Specs'}</span>
                         <ChevronRight
-                          className={`w-3.5 h-3.5 transition-transform ${
-                            expanded ? 'rotate-90 text-[#e6c67e]' : ''
+                          className={`w-3.5 h-3.5 shrink-0 transition-transform ${
+                            expanded ? 'rotate-90' : ''
                           }`}
                           aria-hidden="true"
                         />
                       </button>
 
-                      <Link
-                        href={`/apply?track=${encodeURIComponent(track.title)}`}
-                        aria-label={`Apply for ${track.title}`}
-                        className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#1d4ed8] hover:bg-[#2563eb] text-white text-xs font-semibold transition-colors"
-                      >
-                        <span>Apply for {track.title}</span>
-                        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                      </Link>
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/tracks?track=${track.id}`}
+                          aria-label={`View full guide for ${track.title}`}
+                          className={`inline-flex items-center justify-center px-3 py-2.5 rounded-lg border text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${theme.detailsBtn}`}
+                        >
+                          <span>Guide</span>
+                        </Link>
+                        <Link
+                          href={`/apply?track=${encodeURIComponent(track.title)}`}
+                          aria-label={`Apply for ${track.title}`}
+                          className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${theme.primaryBtn}`}
+                        >
+                          <span>Apply Now</span>
+                          <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        </Link>
+                      </div>
                     </div>
                   </InteractiveCard>
                 </StaggerCard>
@@ -981,6 +1422,26 @@ export function HomePage() {
                     </span>
                     <span className="text-[11px] text-[#cbd5e1]">Pitch Allocation</span>
                   </div>
+                </div>
+
+                {/* 7-Stage Startup Pathway Highlights (#2 More Points) */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono text-[#e2e8f0]">
+                  {[
+                    '01 Register',
+                    '02 Screening',
+                    '03 Status Track',
+                    '04 Pitch Deck',
+                    '05 Shortlist',
+                    '06 Pitch Day',
+                    '07 ₹50L+ Raise',
+                  ].map((stageLabel) => (
+                    <span
+                      key={stageLabel}
+                      className="rounded-lg border border-white/15 bg-[#0c1933]/80 px-2.5 py-1.5 truncate"
+                    >
+                      {stageLabel}
+                    </span>
+                  ))}
                 </div>
 
                 <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
@@ -1244,7 +1705,7 @@ export function HomePage() {
                   <Landmark className="w-6 h-6 text-[#5eead4]" aria-hidden="true" />
                 </div>
 
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   {STATE_GOVT_RESOURCES.map((agency) => (
                     <a
                       key={agency.name}
@@ -1253,14 +1714,17 @@ export function HomePage() {
                       rel="noopener noreferrer"
                       className="block group"
                     >
-                      <div className="rounded-xl border border-white/12 bg-[#0a1a28]/85 hover:border-[#14b8a6] hover:bg-[#0e273a] p-4 flex items-center justify-between gap-4 transition-colors">
-                        <div className="min-w-0">
-                          <h4 className="font-display text-lg font-semibold text-white group-hover:text-[#5eead4] transition-colors truncate">
-                            {agency.name}
-                          </h4>
-                          <p className="mt-0.5 text-xs text-[#cbd5e1] line-clamp-2">
-                            {agency.description}
-                          </p>
+                      <div className="rounded-xl border border-white/12 bg-[#0a1a28]/90 hover:border-[#14b8a6] hover:bg-[#0e273a] p-4 flex items-center justify-between gap-4 transition-colors">
+                        <div className="flex items-center gap-4 min-w-0">
+                          <InstitutionLogoMark name={agency.name} size="lg" className="shrink-0" />
+                          <div className="min-w-0">
+                            <h4 className="font-display text-lg font-semibold text-white group-hover:text-[#5eead4] transition-colors truncate">
+                              {agency.name}
+                            </h4>
+                            <p className="mt-0.5 text-xs text-[#cbd5e1] line-clamp-2">
+                              {agency.description}
+                            </p>
+                          </div>
                         </div>
                         <ExternalLink className="w-4 h-4 text-[#5eead4] shrink-0" aria-hidden="true" />
                       </div>
@@ -1283,7 +1747,7 @@ export function HomePage() {
                   <Globe className="w-6 h-6 text-[#93c5fd]" aria-hidden="true" />
                 </div>
 
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   {CENTRAL_GOVT_RESOURCES.map((agency) => (
                     <a
                       key={agency.name}
@@ -1292,20 +1756,71 @@ export function HomePage() {
                       rel="noopener noreferrer"
                       className="block group"
                     >
-                      <div className="rounded-xl border border-white/12 bg-[#0b1936]/85 hover:border-[#60a5fa] hover:bg-[#10254f] p-4 flex items-center justify-between gap-4 transition-colors">
-                        <div className="min-w-0">
-                          <h4 className="font-display text-lg font-semibold text-white group-hover:text-[#93c5fd] transition-colors truncate">
-                            {agency.name}
-                          </h4>
-                          <p className="mt-0.5 text-xs text-[#cbd5e1] line-clamp-2">
-                            {agency.description}
-                          </p>
+                      <div className="rounded-xl border border-white/12 bg-[#0b1936]/90 hover:border-[#60a5fa] hover:bg-[#10254f] p-4 flex items-center justify-between gap-4 transition-colors">
+                        <div className="flex items-center gap-4 min-w-0">
+                          <InstitutionLogoMark name={agency.name} size="lg" className="shrink-0" />
+                          <div className="min-w-0">
+                            <h4 className="font-display text-lg font-semibold text-white group-hover:text-[#93c5fd] transition-colors truncate">
+                              {agency.name}
+                            </h4>
+                            <p className="mt-0.5 text-xs text-[#cbd5e1] line-clamp-2">
+                              {agency.description}
+                            </p>
+                          </div>
                         </div>
                         <ExternalLink className="w-4 h-4 text-[#93c5fd] shrink-0" aria-hidden="true" />
                       </div>
                     </a>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            {/* State vs Central Govt Key Differences Comparison Matrix (#18) */}
+            <div className="rounded-2xl border border-white/15 bg-[#0b172c]/95 overflow-hidden">
+              <div className="px-5 py-3.5 border-b border-white/10 flex flex-wrap items-center justify-between gap-2">
+                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#e6c67e]">
+                  KEY DIFFERENCES · TAMIL NADU STATE GOVT vs CENTRAL GOVT OF INDIA
+                </span>
+                <span className="text-xs text-[#94a3b8]">Side-by-side policy &amp; clearance guide</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/10 text-xs">
+                {[
+                  {
+                    dimension: 'Domain Focus',
+                    state: 'State industrial parks, SIPCOT/TIDCO land & Tamil Nadu single-window licensing.',
+                    central: 'National FDI facilitation, pan-India DPIIT startup tax rules & sovereign MSME credit.',
+                  },
+                  {
+                    dimension: 'Clearances & Land',
+                    state: 'Guidance TN & TN MSME fast-track factory permits, power & pollution consents.',
+                    central: 'Invest India & ITPO handle national export approvals, customs & global trade fairs.',
+                  },
+                  {
+                    dimension: 'Funding & Subsidies',
+                    state: 'TIIC term loans, TN capital subsidies & StartupTN TANSEED early-stage grants.',
+                    central: 'CGTMSE collateral-free guarantees, SIDBI Fund of Funds & Ministry of Finance incentives.',
+                  },
+                  {
+                    dimension: 'Ideal Applicant',
+                    state: 'Units establishing manufacturing, R&D or EV clusters inside Tamil Nadu districts.',
+                    central: 'Interstate expansion ventures, exporters, & DPIIT-recognised national startups.',
+                  },
+                ].map((row) => (
+                  <div key={row.dimension} className="p-4 space-y-2.5">
+                    <h4 className="font-mono text-[11px] font-bold uppercase tracking-wider text-white">
+                      {row.dimension}
+                    </h4>
+                    <div>
+                      <span className="font-mono text-[10px] font-semibold text-[#5eead4] block">TN STATE</span>
+                      <p className="text-[#cbd5e1] leading-relaxed mt-0.5">{row.state}</p>
+                    </div>
+                    <div className="pt-2 border-t border-white/10">
+                      <span className="font-mono text-[10px] font-semibold text-[#93c5fd] block">CENTRAL GOVT</span>
+                      <p className="text-[#cbd5e1] leading-relaxed mt-0.5">{row.central}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -1450,20 +1965,20 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 8. AI EXPERT */}
+      {/* 8. AI EXPERT (HIGHLIGHTED KEYNOTE STAGE #29) */}
       <section
         id="section-ai-expert"
         data-section-order="8"
-        className="relative overflow-hidden bg-gradient-to-b from-[#0d1c36] via-[#091326] to-[#112242] text-[#f8f7f3] py-12 sm:py-16 border-b border-white/10"
+        className="relative overflow-hidden bg-gradient-to-b from-[#0d1c36] via-[#13193f] to-[#112242] text-[#f8f7f3] py-14 sm:py-16 border-b border-[#8b5cf6]/30"
       >
         <div className="ambient-glow-blue absolute inset-0 pointer-events-none" aria-hidden="true" />
         <div className="relative max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <ScrollReveal className="lg:col-span-6">
-            <InteractiveCard dark className="rounded-2xl overflow-hidden group !bg-[#111e38] border-white/15">
+            <InteractiveCard dark className="rounded-2xl overflow-hidden group !bg-[#111e38] border-2 border-[#8b5cf6]/60 shadow-[0_0_40px_-14px_rgba(139,92,246,0.45)]">
               <ParallaxFrame offset={16} className="relative h-64 sm:h-80 w-full bg-[#0c121d]">
                 <img
                   src={MEDIA_ASSETS.aiExpertsStage}
-                  alt="Indian AI & venture keynote speaker addressing plenary summit audience in Chennai"
+                  alt="Indian AI & venture keynote expert addressing plenary summit audience in Chennai"
                   referrerPolicy="no-referrer"
                   className="w-full h-[112%] -mt-[6%] object-cover object-center interactive-media"
                 />
@@ -1471,6 +1986,9 @@ export function HomePage() {
                   aria-hidden="true"
                   className="absolute inset-0 bg-gradient-to-t from-[#111e38] via-[#111e38]/35 to-transparent"
                 />
+                <div className="absolute top-4 left-4 px-3 py-1 rounded-md bg-[#6d28d9] border border-[#a78bfa]/60 text-white font-mono text-[10px] font-bold uppercase tracking-widest shadow">
+                  AI EXPERT PLENARY · FEATURED
+                </div>
                 <div className="absolute inset-x-0 bottom-0 p-6 flex items-center justify-between gap-2">
                   <div className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#e6c67e]">
                     <Cpu className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1491,7 +2009,7 @@ export function HomePage() {
                 </p>
                 <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
                   <Link
-                    href="/speakers#ai-experts"
+                    href="/chief-guests#ai-experts"
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#e6c67e] hover:underline"
                   >
                     <span>Inspect Chief Guests, AI &amp; CFO Tracks</span>
@@ -1532,7 +2050,7 @@ export function HomePage() {
               })}
             </div>
 
-            <InteractiveCard dark className="rounded-2xl p-6 sm:p-7 space-y-5 !bg-[#111e38] border-white/15">
+            <InteractiveCard dark className="rounded-2xl p-6 sm:p-7 space-y-5 !bg-[#111e38] border-[#8b5cf6]/40">
               <div>
                 <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[#14b8a6]">
                   PLENARY TRACK FOCUS · {activeAi.kicker}
@@ -1554,7 +2072,7 @@ export function HomePage() {
 
               <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
                 <span className="text-xs text-[#94a3b8]">
-                  Speaker profiles remain TBC until written confirmation.
+                  Chief Guest profiles remain TBC until written confirmation.
                 </span>
                 <Link
                   href="/event-program"
@@ -1599,12 +2117,13 @@ export function HomePage() {
             </Link>
           </ScrollReveal>
 
-          <StaggerGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <StaggerGrid className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
             {COMMITTEES.map((committee, idx) => {
               const Icon = committeeIcons[idx % committeeIcons.length];
               const isExpanded = expandedCommitteeTitle === committee.title;
+              const spanClass = idx < 2 ? 'lg:col-span-3 h-full' : 'lg:col-span-2 h-full';
               return (
-                <StaggerCard key={committee.title} className="h-full">
+                <StaggerCard key={committee.title} className={spanClass}>
                   <InteractiveCard
                     as="button"
                     dark
@@ -1620,7 +2139,7 @@ export function HomePage() {
                   >
                     <div className="w-full">
                       {/* Large Individual Committee Scene Photo (#20) */}
-                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#091326]">
+                      <div className="relative h-56 sm:h-64 w-full overflow-hidden bg-[#091326]">
                         <img
                           src={committee.image}
                           alt={committee.imageAlt}
@@ -1631,35 +2150,35 @@ export function HomePage() {
                           aria-hidden="true"
                           className="absolute inset-0 bg-gradient-to-t from-[#0d1c36]/90 via-[#0d1c36]/20 to-transparent"
                         />
-                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
-                          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#e6c67e]">
+                        <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between gap-2">
+                          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#e6c67e]">
                             COMMITTEE 0{idx + 1}
                           </span>
-                          <div className="w-7 h-7 rounded-md bg-white/15 backdrop-blur-sm text-white flex items-center justify-center">
-                            <Icon className="w-3.5 h-3.5" aria-hidden="true" />
+                          <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-sm text-white flex items-center justify-center">
+                            <Icon className="w-4 h-4" aria-hidden="true" />
                           </div>
                         </div>
                       </div>
 
-                      <div className="p-5 pb-3">
-                        <h3 className="font-display text-xl font-semibold text-white leading-snug">
+                      <div className="p-6 pb-4">
+                        <h3 className="font-display text-2xl font-semibold text-white leading-snug">
                           {committee.title}
                         </h3>
-                        <p className="mt-2 text-xs text-[#cbd5e1] leading-relaxed">
+                        <p className="mt-2 text-sm text-[#cbd5e1] leading-relaxed">
                           {committee.description}
                         </p>
                         {isExpanded && (
-                          <p className="mt-3 pt-3 border-t border-white/10 text-[11px] text-[#93c5fd] font-medium">
+                          <p className="mt-3 pt-3 border-t border-white/10 text-xs text-[#93c5fd] font-medium">
                             Governs 90 Days Policy pre-summit eligibility verification and hall slot alignment.
                           </p>
                         )}
                       </div>
                     </div>
 
-                    <p className="px-5 pb-4 pt-3 border-t border-white/10 font-mono text-[10px] uppercase tracking-wider text-[#94a3b8] w-full flex items-center justify-between">
+                    <p className="px-6 pb-5 pt-3 border-t border-white/10 font-mono text-[11px] uppercase tracking-wider text-[#94a3b8] w-full flex items-center justify-between">
                       <span>Awaiting confirmation</span>
                       <ChevronRight
-                        className={`w-3.5 h-3.5 transition-transform ${
+                        className={`w-4 h-4 transition-transform ${
                           isExpanded ? 'rotate-90 text-[#e6c67e]' : ''
                         }`}
                         aria-hidden="true"
@@ -1845,7 +2364,7 @@ export function HomePage() {
               </div>
               <div className="px-4 pb-4 flex items-center justify-between text-[11px] font-mono text-[#60a5fa]">
                 <span>Organiser: {ORGANISER_CONTACT.contactPerson}</span>
-                <Link href="/speakers" className="underline hover:text-white">
+                <Link href="/chief-guests" className="underline hover:text-white">
                   Chief Guests →
                 </Link>
               </div>
@@ -1968,6 +2487,105 @@ export function HomePage() {
                 </InteractiveCard>
               </a>
             ))}
+          </div>
+
+          {/* Prominent RBI Scheduled Banks & Lending Partners Pavilion */}
+          <div
+            id="section-banks"
+            className="rounded-2xl border border-[#93c5fd]/25 bg-[#0a1730]/95 p-5 sm:p-7 space-y-6 shadow-[0_16px_40px_-22px_rgba(0,0,0,0.7)]"
+          >
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 border-b border-white/10 pb-5">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5eead4] mb-1.5">
+                  <Landmark className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>INSTITUTIONAL BANKING PAVILION · 120 RBI BANKS</span>
+                </div>
+                <h3 className="font-display text-2xl sm:text-3xl font-semibold text-white">
+                  Banks in India &amp; Lending Desks
+                </h3>
+                <p className="mt-1 text-xs sm:text-sm text-[#cbd5e1] leading-relaxed">
+                  Official institutional logos across SBI &amp; Nationalised Banks, Private Sector
+                  Banks, Small Finance Banks, Payments Banks, and Foreign Banks in India.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter showcased banks">
+                {(
+                  [
+                    { id: 'featured', label: 'Featured 20 Banks' },
+                    { id: 'nationalised', label: 'SBI & Nationalised' },
+                    { id: 'private', label: 'Private Sector' },
+                    { id: 'foreign', label: 'SFB & Foreign' },
+                  ] as const
+                ).map((tab) => {
+                  const active = bankShowcaseTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => setBankShowcaseTab(tab.id)}
+                      className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+                        active
+                          ? 'bg-[#c49a45] text-[#091326]'
+                          : 'bg-[#122546] text-[#e2e8f0] border border-white/15 hover:border-[#e6c67e]'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+              {showcasedBanks.map((bank) => (
+                <div
+                  key={bank.name}
+                  className="rounded-xl border border-white/15 bg-[#112242] hover:border-[#5eead4]/70 p-3 sm:p-3.5 flex flex-col justify-between gap-2.5 transition-colors"
+                >
+                  <InstitutionLogoMark
+                    name={bank.name}
+                    size="marquee"
+                    variant="bank"
+                    bankCategory={bank.category}
+                    className="w-full h-22 sm:h-28 px-3 sm:px-4 py-2 sm:py-2.5"
+                  />
+                  <div className="space-y-0.5 pt-1">
+                    <p className="text-xs sm:text-sm font-semibold text-white leading-snug line-clamp-1">
+                      {bank.name.replace(' Limited', '')}
+                    </p>
+                    <div className="flex items-center justify-between gap-1.5 text-[10px] font-mono text-[#94a3b8]">
+                      <span className="text-[#5eead4] shrink-0 whitespace-nowrap">{bank.serial}</span>
+                      <span className="truncate">{bank.category}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/10">
+              <span className="text-xs text-[#94a3b8]">
+                Showing curated institutional bank marks from the 120 RBI Scheduled Banks &amp; 50
+                Financial Brands directories.
+              </span>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href="/financial-brands"
+                  className="px-4 py-2 rounded-lg border border-white/20 text-xs font-semibold text-[#e6c67e] hover:border-[#e6c67e] transition-colors whitespace-nowrap"
+                >
+                  Top 50 Financial Brands →
+                </Link>
+                <Link
+                  href="/banks"
+                  className="btn-gold inline-flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap"
+                >
+                  <span>Inspect All 120 Banks in India</span>
+                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
           </div>
 
           {/* 4 Searchable Institutional Ecosystem Indexes */}

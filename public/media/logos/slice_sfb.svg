@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="slice Small Finance Bank">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,15)">
+    <rect width="42" height="42" rx="8" fill="#6D28D9"/>
+    <path d="M21 9a12 12 0 1 1-12 12h12V9z" fill="#F472B6"/>
+  </g>
+  <text x="66" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="17" fill="#6D28D9">slice <tspan fill="#0F172A">SFB</tspan></text>
+  <text x="66" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9" fill="#64748B" letter-spacing="0.6">SMALL FINANCE BANK</text>
+</svg>

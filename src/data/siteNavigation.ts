@@ -15,13 +15,19 @@ export const MAIN_NAV_LINKS: NavItem[] = [
 ];
 
 export const QUICK_LINKS: NavItem[] = [
-  { label: 'Payments', href: '/payments' },
+  { label: 'Investment Tracks', href: '/tracks' },
+  { label: 'Startup', href: '/startup' },
   { label: 'Validation Team', href: '/validation-team' },
   { label: 'Pitch Area', href: '/pitch-area' },
   { label: 'AI Experts', href: '/ai-experts' },
   { label: 'CFO Points', href: '/cfo-points' },
-  { label: 'Investor Team Points', href: '/investor-team' },
+  { label: 'Investor Team', href: '/investor-team' },
+  { label: 'Payments', href: '/payments' },
+  { label: 'Chief Guests', href: '/chief-guests' },
+  { label: 'Banks (120)', href: '/banks' },
+  { label: 'Corporates', href: '/corporate' },
   { label: '90 Days Policy', href: '/registration-policy' },
+  { label: 'Dashboard', href: '/admin/registrations' },
 ];
 
 export interface HeaderDropdownItem {
@@ -44,7 +50,7 @@ export const HEADER_DROPDOWNS: HeaderDropdownGroup[] = [
       { label: 'About Investor Meet 500', href: '/about', desc: 'Objectives, halls & mandate' },
       { label: 'Event Schedule (8 AM – 6 PM)', href: '/schedule', desc: 'Morning pitches & afternoon wrap' },
       { label: 'Venue & Hall Maps', href: '/venue', desc: 'Halls 1–3, Layout A/B & M1–M6' },
-      { label: 'Chief Guests & VIPs', href: '/speakers', desc: 'Top 30 seats & Mr. Srinivasan Raja' },
+      { label: 'Chief Guests & VIPs (Top 30)', href: '/chief-guests', desc: 'A2B Mr. Srinivasan Raja & VIP seats' },
       { label: 'Committees & Teams (5 × 5)', href: '/team', desc: 'Validation & floor operations' },
       { label: '90 Days Policy & Dates', href: '/registration-policy', desc: '01-02-2027 cutoff framework' },
     ],
@@ -53,13 +59,15 @@ export const HEADER_DROPDOWNS: HeaderDropdownGroup[] = [
     id: 'tracks',
     label: 'Tracks & Desks',
     items: [
-      { label: '5 Investment Tracks', href: '/tracks', desc: '₹50L to ₹500Cr pathways' },
+      { label: '5 Investment Tracks', href: '/tracks', desc: '₹50L to ₹500Cr pathways & meaning' },
       { label: 'Startup Stream (100)', href: '/startup', desc: 'Validation & equity readiness' },
+      { label: 'Validation Team Desk', href: '/validation-team', desc: 'Background, financials & risk audit' },
+      { label: 'Pitch Area Allocation', href: '/pitch-area', desc: 'Hall 1–3 stage & room slots' },
+      { label: 'AI Experts Plenary', href: '/ai-experts', desc: 'AI due diligence & future capital' },
+      { label: 'CFO Points Desk', href: '/cfo-points', desc: '5-year financial governance' },
+      { label: 'Investor Team Points', href: '/investor-team', desc: 'Ticket-size & mandate matching' },
       { label: 'Central & State Govt Guidance', href: '/government', desc: 'Invest India, MSME, StartupTN & TIIC' },
       { label: 'First Level Business Guidance', href: '/business-guidance', desc: '10-step readiness clinic' },
-      { label: 'Pitch Area Allocation', href: '/pitch-area', desc: 'Hall assignment & timing' },
-      { label: 'AI Experts & CFO Points', href: '/ai-experts', desc: 'Diligence & 5-year finance discipline' },
-      { label: 'Investor Team Points', href: '/investor-team', desc: 'Ticket-size & mandate matching' },
     ],
   },
   {
@@ -126,7 +134,7 @@ export const MENU_DIRECTORY_COLUMNS: NavItem[][] = [
   [
     { label: 'Registration Dashboard', href: '/admin/registrations', keywords: 'admin kpi approve reject reviewer csv sevenidata' },
     { label: 'Entrepreneurs', href: '/entrepreneurs', keywords: '100 business leaders directory' },
-    { label: 'Chief Guests', href: '/speakers', keywords: 'bank managers cfos srinivasan raja a2b top 30 vip' },
+    { label: 'Chief Guests', href: '/chief-guests', keywords: 'bank managers cfos srinivasan raja a2b top 30 vip' },
     { label: 'International', href: '/international', keywords: 'fdi joint ventures cross-border global' },
     { label: 'Government & Guidance', href: '/government', keywords: 'startuptn tiic invest india itpo msme state central' },
     { label: 'First Level Business Guidance', href: '/business-guidance', keywords: '10 steps checklist consultation' },
@@ -159,7 +167,7 @@ export const FOOTER_COLUMNS: { title: string; links: NavItem[] }[] = [
     links: [
       { label: 'Registration Dashboard', href: '/admin/registrations' },
       { label: 'Entrepreneurs', href: '/entrepreneurs' },
-      { label: 'Chief Guests (Top 30)', href: '/speakers' },
+      { label: 'Chief Guests (Top 30)', href: '/chief-guests' },
       { label: 'International', href: '/international' },
       { label: 'Government & Guidance', href: '/government' },
       { label: 'First Level Business Guidance', href: '/business-guidance' },
@@ -175,7 +183,9 @@ export const FOOTER_COLUMNS: { title: string; links: NavItem[] }[] = [
       { label: 'Investors & Team Points', href: '/investors' },
       { label: 'Validation Team', href: '/validation-team' },
       { label: 'Pitch Area', href: '/pitch-area' },
-      { label: 'AI Experts & CFO Points', href: '/ai-experts' },
+      { label: 'AI Experts', href: '/ai-experts' },
+      { label: 'CFO Points', href: '/cfo-points' },
+      { label: 'Investor Team Points', href: '/investor-team' },
       { label: 'Corporate (500 Directory)', href: '/corporate' },
       { label: 'Associations', href: '/associations' },
       { label: 'Payments (9 Options)', href: '/payments' },

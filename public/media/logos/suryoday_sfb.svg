@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Suryoday Small Finance Bank">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,15)">
+    <rect width="42" height="42" rx="8" fill="#7C2D12"/>
+    <circle cx="21" cy="23" r="9" fill="#F59E0B"/>
+    <path d="M9 28h24" stroke="#FEF3C7" stroke-width="2.5"/>
+  </g>
+  <text x="66" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="15.5" fill="#7C2D12">SURYODAY <tspan fill="#0F172A">SFB</tspan></text>
+  <text x="66" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9" fill="#64748B" letter-spacing="0.6">SMALL FINANCE BANK</text>
+</svg>

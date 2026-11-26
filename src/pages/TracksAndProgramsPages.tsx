@@ -39,7 +39,7 @@ import {
   InteractiveCard,
   MagneticAction,
 } from '../components/MotionPrimitives';
-import { Link } from '../lib/router';
+import { Link, useQueryParam } from '../lib/router';
 
 const TRACK_ACCENT_MAP: Record<string, string> = {
   startups: '#1d4ed8',
@@ -52,9 +52,19 @@ const TRACK_ACCENT_MAP: Record<string, string> = {
 const TIER_ACCENTS = ['#c49a45', '#1d4ed8', '#0d9488', '#6d28d9', '#4338ca', '#0284c7'];
 
 export function TracksPage() {
-  const [selectedId, setSelectedId] = useState(INVESTMENT_TRACKS[0].id);
+  const trackQuery = useQueryParam('track');
+  const initialTrack =
+    INVESTMENT_TRACKS.find((t) => t.id === trackQuery)?.id ?? INVESTMENT_TRACKS[0].id;
+  const [selectedId, setSelectedId] = useState(initialTrack);
   const [ticketLakhs, setTicketLakhs] = useState(250);
   const reduced = useReducedMotion();
+
+  React.useEffect(() => {
+    if (trackQuery && INVESTMENT_TRACKS.some((t) => t.id === trackQuery)) {
+      setSelectedId(trackQuery);
+    }
+  }, [trackQuery]);
+
   const activeTrack =
     INVESTMENT_TRACKS.find((t) => t.id === selectedId) ?? INVESTMENT_TRACKS[0];
   const activeAccent = TRACK_ACCENT_MAP[activeTrack.id] ?? '#1d4ed8';
@@ -909,10 +919,10 @@ export function VenuePage() {
 
         <div>
           <p className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase text-[#6d28d9] mb-2">
-            INTERACTIVE ARCHITECTURAL DIAGRAMS
+            OFFICIAL HALL LAYOUT DIAGRAMS &amp; ARCHITECTURAL SCHEMATICS
           </p>
           <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[#0f172a] mb-6">
-            Draft Hall Floor Plans (Layout A &amp; Layout B)
+            Hall Floor Plans (Layout Map A &amp; Layout Map B)
           </h2>
           <VenueFloorPlans />
         </div>

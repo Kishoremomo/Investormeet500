@@ -1,5 +1,5 @@
 export const MEDIA_ASSETS = {
-  heroSkyline: '/src/assets/images/hero_skyline_executive_1794980609314.jpg',
+  heroSkyline: '/assets/aistudio/Golden_Hour_Skyline_Overlook_7659a368.png',
   aboutReception: '/src/assets/images/india_networking_atrium_1795067001149.jpg',
   trackStartups: '/src/assets/images/track_startups_1794980612650.jpg',
   trackBusinessLoan: '/src/assets/images/india_msme_credit_meeting_1795067001237.jpg',
@@ -21,7 +21,7 @@ export const MEDIA_ASSETS = {
 export const VIDEO_ASSETS = {
   heroSummit: {
     src: '/media/videos/hero-summit-ambient.mp4',
-    poster: '/src/assets/images/hero_skyline_executive_1794980609314.jpg',
+    poster: '/assets/aistudio/Golden_Hour_Skyline_Overlook_7659a368.png',
     title: 'Investor Meet 500 · Chennai Executive Outlook',
     caption: 'Structured capital pathways uniting 500 vetted Indian founders, funds, and scheduled lenders across three Chennai halls.',
   },
@@ -523,7 +523,7 @@ export const NINETY_DAY_POLICY_GROUPS = [
     group: 'GROUP 1',
     title: 'Registration & Verification',
     items: [
-      { no: '01', title: 'Participant Verification', desc: 'Verify the identity and business credentials of registered participants.' },
+      { no: '01', title: 'Participant Verification', desc: 'Verify the identity and business credentials of all registered participants.' },
       { no: '02', title: 'Investor Background Verification', desc: 'Assess investor profiles and investment interests.' },
       { no: '03', title: 'Business Profile Collection', desc: 'Collect complete company and entrepreneur information.' },
       { no: '04', title: 'Investment Requirement Analysis', desc: 'Understand funding requirements and investment expectations.' },
@@ -534,36 +534,55 @@ export const NINETY_DAY_POLICY_GROUPS = [
     group: 'GROUP 2',
     title: 'Investment & Business Matchmaking',
     items: [
-      { no: '06', title: 'Investor–Entrepreneur Matching', desc: 'Identify suitable investors for aligned sectors and ticket sizes.' },
-      { no: '07', title: 'One-to-One Meeting Scheduling', desc: 'Allocate structured discussion windows across three halls.' },
-      { no: '08', title: 'Business Proposal Evaluation', desc: 'Screen pitch decks, financial projections and risk factors prior to event day.' },
-      { no: '09', title: 'Investment Opportunity Shortlisting', desc: 'Prepare curated sector shortlists for participating funds and lenders.' },
-      { no: '10', title: 'International Investor Coordination', desc: 'Align cross-border delegates, visas and sector briefing dossiers.' },
+      { no: '06', title: 'Investor–Entrepreneur Matching', desc: 'Identify suitable investors for each business opportunity.' },
+      { no: '07', title: 'One-to-One Meeting Scheduling', desc: 'Arrange individual investor meetings well in advance.' },
+      { no: '08', title: 'Business Proposal Evaluation', desc: 'Review business plans, project reports and investment proposals.' },
+      { no: '09', title: 'Investment Opportunity Shortlisting', desc: 'Identify promising investment opportunities for participating investors.' },
+      { no: '10', title: 'International Investor Coordination', desc: 'Provide sufficient time for overseas investors to plan their participation.' },
     ],
   },
   {
     group: 'GROUP 3',
     title: 'Event Planning & Arrangements',
     items: [
-      { no: '11', title: 'Meeting Room Allocation', desc: 'Assign private consultation rooms and exhibition booths accurately.' },
-      { no: '12', title: 'Appointment Scheduling', desc: 'Synchronise 500 participants across 8 AM to 6 PM time blocks.' },
-      { no: '13', title: 'Travel & Accommodation Planning', desc: 'Coordinate outstation and international delegate hospitality logistics.' },
-      { no: '14', title: 'Security & Access Management', desc: 'Issue verified entry credentials and hall-access badges.' },
-      { no: '15', title: 'Professional Event Coordination', desc: 'Rehearse stage, audio-visual, moderation and crowd-management teams.' },
+      { no: '11', title: 'Meeting Room Allocation', desc: 'Reserve appropriate meeting rooms based on participant requirements.' },
+      { no: '12', title: 'Appointment Scheduling', desc: 'Prepare individual meeting schedules for investors and entrepreneurs.' },
+      { no: '13', title: 'Travel & Accommodation Planning', desc: 'Help delegates arrange travel and accommodation.' },
+      { no: '14', title: 'Security & Access Management', desc: 'Establish participant identification and controlled access procedures.' },
+      { no: '15', title: 'Professional Event Coordination', desc: 'Finalise the event agenda, meeting sessions and operational arrangements.' },
     ],
   },
   {
     group: 'GROUP 4',
     title: 'Business Development & Investment Preparation',
     items: [
-      { no: '16', title: 'Business Documentation', desc: 'Allow founders sufficient lead time to refine compliance and ROC records.' },
-      { no: '17', title: 'Investor Due Diligence Preparation', desc: 'Organise data rooms, project reports and historical performance metrics.' },
-      { no: '18', title: 'Strategic Partnership Identification', desc: 'Map corporate, technology and distribution synergies ahead of summit day.' },
-      { no: '19', title: 'Association & Corporate Delegation Planning', desc: 'Coordinate group registrations from industrial and trade associations.' },
-      { no: '20', title: 'Maximum Investment Outcomes', desc: 'Ensure participants arrive informed, verified and pitch-ready.' },
+      { no: '16', title: 'Business Documentation', desc: 'Allow entrepreneurs to prepare financial statements, business plans and pitch presentations.' },
+      { no: '17', title: 'Investor Due Diligence Preparation', desc: 'Enable preliminary document reviews and investment discussions.' },
+      { no: '18', title: 'Strategic Partnership Identification', desc: 'Identify opportunities for joint ventures, franchises and business collaborations.' },
+      { no: '19', title: 'Association & Corporate Delegation Planning', desc: 'Give business associations sufficient time to nominate and coordinate delegates.' },
+      { no: '20', title: 'Maximum Investment Outcomes', desc: 'Improve the quality of meetings and increase opportunities for meaningful business partnerships and investment discussions.' },
     ],
   },
 ];
+
+export const MANDATORY_REGISTRATION_POLICY = {
+  headline: 'REGISTER 90 DAYS BEFORE THE EVENT',
+  rules: [
+    'Registration closes 90 days before the event.',
+    'Only verified and approved participants will receive meeting schedules.',
+    'Investor meetings will be arranged based on registered profiles and mutual business interests.',
+    'Spot registration will not be permitted.',
+  ],
+  objectiveBanner: '90 DAYS OF PREPARATION = 3 DAYS OF HIGH-VALUE INVESTMENT MEETINGS',
+  objectiveSteps: [
+    'Register Early',
+    'Get Verified',
+    'Connect with the Right Investors',
+    'Explore Investment Opportunities',
+  ],
+  proposedNote:
+    'Note: These are proposed event policies. Registration and verification do not guarantee funding, investor appointments or investment agreements.',
+};
 
 export const FIRST_LEVEL_GUIDANCE_STEPS = [
   { no: '01', title: 'Basic Business Consultation', desc: 'A first conversation to understand where you are today and what you want to build.' },

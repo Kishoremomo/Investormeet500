@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Shivalik Small Finance Bank">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,15)">
+    <rect width="42" height="42" rx="8" fill="#B45309"/>
+    <path d="M8 31L18 14l5 8 4-6 7 15H8z" fill="#FEF3C7"/>
+  </g>
+  <text x="66" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="15.5" fill="#B45309">SHIVALIK <tspan fill="#0F172A">SFB</tspan></text>
+  <text x="66" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9" fill="#64748B" letter-spacing="0.6">SMALL FINANCE BANK</text>
+</svg>

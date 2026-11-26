@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Ministry of MSME">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,14)">
+    <rect width="44" height="44" rx="8" fill="#0F766E"/>
+    <circle cx="22" cy="22" r="11" fill="none" stroke="#FDE68A" stroke-width="3" stroke-dasharray="5 3"/>
+    <circle cx="22" cy="22" r="5" fill="#ffffff"/>
+  </g>
+  <text x="68" y="33" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#0F172A">MINISTRY OF <tspan fill="#0F766E">MSME</tspan></text>
+  <text x="68" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9.5" fill="#475569" letter-spacing="0.6">MICRO, SMALL &amp; MEDIUM ENTERPRISES</text>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Cholamandalam Investment and Finance">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,15)">
+    <rect width="42" height="42" rx="8" fill="#1E3A8A"/>
+    <circle cx="21" cy="21" r="13" fill="none" stroke="#38BDF8" stroke-width="3"/>
+    <text x="21" y="26" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" font-size="13" fill="#ffffff">Ch</text>
+  </g>
+  <text x="66" y="33" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#1E3A8A">CHOLAMANDALAM</text>
+  <text x="66" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9" fill="#0F766E" letter-spacing="0.6">MURUGAPPA GROUP · FINANCE</text>
+</svg>

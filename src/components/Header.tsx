@@ -146,9 +146,9 @@ export function Header() {
         Skip to content
       </a>
 
-      {/* Three-Zone Sticky Header Bar with Dropdown Navigation */}
+      {/* Three-Zone Sticky Header Bar */}
       <header className="sticky top-0 z-40 bg-[#0c121d]/95 backdrop-blur-md border-b border-white/10 text-[#f8f7f3]">
-        <div className="max-w-[1360px] mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="max-w-[1360px] mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-24 flex items-center justify-between gap-2 sm:gap-4">
           <Link
             href="/"
             aria-label="Investor Meet 500 home"
@@ -160,7 +160,7 @@ export function Header() {
           <nav
             ref={navRef}
             aria-label="Main navigation"
-            className="hidden xl:flex items-center gap-5"
+            className="hidden xl:flex items-center gap-3.5 2xl:gap-5"
           >
             <Link
               href="/"
@@ -298,7 +298,7 @@ export function Header() {
             >
               <Search className="w-4 h-4 text-[#e6c67e]" aria-hidden="true" />
               <span className="hidden sm:inline font-medium">Search</span>
-              <kbd className="hidden md:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-[#cbd5e1]">
+              <kbd className="hidden 2xl:inline font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-[#cbd5e1]">
                 ⌘K
               </kbd>
             </button>
@@ -306,7 +306,7 @@ export function Header() {
             <MagneticAction strength={3}>
               <Link
                 href="/apply"
-                className="btn-gold inline-flex items-center gap-1 px-2.5 sm:px-5 py-2 rounded-lg text-[11px] sm:text-[13px] font-semibold whitespace-nowrap shrink-0"
+                className="btn-gold inline-flex items-center gap-1 px-2.5 sm:px-4 2xl:px-5 py-2 rounded-lg text-[11px] sm:text-[13px] font-semibold whitespace-nowrap shrink-0"
               >
                 <span className="sm:hidden">Apply</span>
                 <span className="hidden sm:inline">Apply Now</span>
@@ -340,7 +340,7 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={reduced ? undefined : { opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 top-16 sm:top-20 z-50 bg-[#0c121d]/98 backdrop-blur-xl text-[#f8f7f3] overflow-y-auto border-t border-white/10"
+            className="fixed inset-0 top-16 sm:top-24 z-50 bg-[#0c121d]/98 backdrop-blur-xl text-[#f8f7f3] overflow-y-auto border-t border-white/10"
           >
             <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
               {/* Quick Navigation Strip */}

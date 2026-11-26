@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="StartupTN">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,14)">
+    <rect width="44" height="44" rx="9" fill="#0F172A"/>
+    <path d="M12 31L22 10l10 21h-5l-5-11-5 11h-5z" fill="#38BDF8"/>
+    <circle cx="22" cy="28" r="3.5" fill="#F59E0B"/>
+  </g>
+  <text x="68" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="18.5" fill="#0F172A">Startup<tspan fill="#0284C7">TN</tspan></text>
+  <text x="68" y="51" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9.5" fill="#475569" letter-spacing="0.6">TAMIL NADU INNOVATION MISSION</text>
+</svg>

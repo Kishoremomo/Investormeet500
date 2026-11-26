@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Guidance Tamil Nadu">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,14)">
+    <rect width="44" height="44" rx="8" fill="#064E3B"/>
+    <polygon points="22,8 34,24 26,24 26,36 18,36 18,24 10,24" fill="#34D399"/>
+  </g>
+  <text x="68" y="33" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16.5" fill="#064E3B">GUIDANCE <tspan fill="#0D9488">TN</tspan></text>
+  <text x="68" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9.5" fill="#475569" letter-spacing="0.6">GOVT OF TAMIL NADU NODAL</text>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Jana Small Finance Bank">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,15)">
+    <rect width="42" height="42" rx="8" fill="#1D4ED8"/>
+    <circle cx="21" cy="14" r="4" fill="#F59E0B"/>
+    <path d="M12 31c0-6 4-10 9-10s9 4 9 10" fill="#ffffff"/>
+  </g>
+  <text x="66" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="17" fill="#1D4ED8">JANA <tspan fill="#0F172A">SFB</tspan></text>
+  <text x="66" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9" fill="#64748B" letter-spacing="0.6">SMALL FINANCE BANK</text>
+</svg>

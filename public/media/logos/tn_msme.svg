@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Tamil Nadu MSME">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,14)">
+    <rect width="44" height="44" rx="8" fill="#134E4A"/>
+    <path d="M10 34V18l7-4v20h-7zm9 0V12l8-3v25h-8zm10 0V20l6 2v12h-6z" fill="#5EEAD4"/>
+  </g>
+  <text x="68" y="33" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="15.5" fill="#134E4A">TAMIL NADU <tspan fill="#0D9488">MSME</tspan></text>
+  <text x="68" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9.5" fill="#475569" letter-spacing="0.7">STATE ENTERPRISE DEPT</text>
+</svg>

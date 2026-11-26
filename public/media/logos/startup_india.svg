@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="Startup India">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,14)">
+    <rect width="44" height="44" rx="9" fill="#0F172A"/>
+    <path d="M22 8c5 6 7 13 7 19H15c0-6 2-13 7-19z" fill="#FF9933"/>
+    <circle cx="22" cy="20" r="3" fill="#ffffff"/>
+    <path d="M17 29l-3 7 8-3 8 3-3-7" fill="#138808"/>
+  </g>
+  <text x="68" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="18" fill="#0F172A">#startup<tspan fill="#EA580C">india</tspan></text>
+  <text x="68" y="51" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9.5" fill="#475569" letter-spacing="0.8">DPIIT · GOVT OF INDIA</text>
+</svg>

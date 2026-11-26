@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 72" width="220" height="72" role="img" aria-label="India Cements">
+  <rect width="220" height="72" rx="10" fill="#ffffff"/>
+  <g transform="translate(14,15)">
+    <rect width="42" height="42" rx="8" fill="#991B1B"/>
+    <path d="M12 31V11h5v20h-5zm8-10a9 9 0 0 1 13-8v5.2a4.5 4.5 0 0 0 0 5.6V29a9 9 0 0 1-13-8z" fill="#FDE68A"/>
+  </g>
+  <text x="66" y="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#991B1B">INDIA <tspan fill="#1E293B">CEMENTS</tspan></text>
+  <text x="66" y="50" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9.5" fill="#64748B" letter-spacing="0.8">INFRASTRUCTURE · CHENNAI</text>
+</svg>
